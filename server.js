@@ -3,7 +3,8 @@ const cors = require("cors");
 const multer = require("multer");
 const upload = multer();
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+;
 
 // Use the CORS middleware
 app.use(cors()); // Allows all origins by default
@@ -2902,6 +2903,6 @@ app.post("/auth/template", (req, res) => {
 });
 
 
-app.listen(3000, () => {
-  console.log(`Server is running on http://localhost:3000`);
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:3000`, port);
 });
