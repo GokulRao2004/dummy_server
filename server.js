@@ -33,7 +33,8 @@ const authenticateToken = (req, res, next) => {
     next(); // Proceed to the next middleware or route handler
   }
 };
-
+const student_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsInVzZXJuYW1lIjoiam9obl9kb2UiLCJyb2xlIjoic3R1ZGVudCJ9.lnP3w6SdsfBEauRkxsZg-XRCFTRd27pbDxrnYIa_jPA"
+const admin_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsInVzZXJuYW1lIjoiam9obl9kb2UiLCJyb2xlIjoiYWRtaW4ifQ.unsHQCc_McbecKoLBUx9hmBgwI-Fed8UuK6IZ-fcBII"
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNCIsInVzZXJfbmFtZSI6IlNocmVlIFJhbWEgVGFsZW50IFNvbHV0aW9ucyIsImV4cCI6MTcyNjkyMzA1MH0.dHgJSYwwOp27LJCmtq3KwoEZfx_2-BrwvHziTCpJrOM";
 
@@ -42,7 +43,7 @@ app.post("/auth/register", (req, res) => {
 
   return res
     .status(200)
-    .json({ message: "User signed up successfully.", token: token });
+    .json({ message: "User signed up successfully.", token: student_token });
 });
 
 app.post("/auth/login", (req, res) => {
@@ -51,10 +52,14 @@ app.post("/auth/login", (req, res) => {
   const { email, password } = req.body;
   // console.log(phone === "a@a.com")
   if (email === "a@a.com" && password === "a") {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNCIsInVzZXJfbmFtZSI6IlNocmVlIFJhbWEgVGFsZW50IFNvbHV0aW9ucyIsImV4cCI6MTcyNjkyMzA1MH0.dHgJSYwwOp27LJCmtq3KwoEZfx_2-BrwvHziTCpJrOM";
+    const token = student_token;
     return res.status(200).json({ token });
-  } else {
+  } 
+  else if (email == "a@a.com" && password === "b"){
+    const token = admin_token;
+    return res.status(200).json({token})
+  }
+  else {
     return res.status(401).json({ message: "Unauthorized" });
   }
 });
@@ -2584,12 +2589,34 @@ let mockInterviews = [
   { id: "5", name: "Backend Engineer", score: 100, date: "12/03/2025" },
 ];
 
+app.post('/auth/interview', upload.single('jd_file'), (req, res) => {
+    const resumeId = req.body.resume_id;
+    const jdText = req.body.jd_text;
+    const jdFile = req.file;
+
+    if (!resumeId) {
+        return res.status(400).json({ error: 'Missing resume_id' });
+    }
+
+    if (!jdText && !jdFile) {
+        return res.status(400).json({ error: 'Missing JD text or file' });
+    }
+
+    console.log('Received interview request:');
+    console.log('Resume ID:', resumeId);
+    if (jdText) console.log('JD Text:', jdText);
+    if (jdFile) console.log('JD File:', jdFile.originalname);
+
+    // Mock response
+    const mockInterviewId = Math.floor(Math.random() * 1000000);
+
+    return res.json({ id: mockInterviewId });
+});
+
 app.get("/auth/interview", (req, res) => {
   res.json(mockInterviews);
 });
-app.get("/auth/interview", (req, res) => {
-  res.json(mockInterviews);
-});
+
 
 const fakeResult = {
   name: "Frontend Developer Interview",
@@ -2623,7 +2650,7 @@ app.get("/auth/interview/result/:id", (req, res) => {
   res.json(fakeResult);
 });
 
-app.get("/auth/interview/new", (req, res) => {
+app.get("/auth/interview/new/:id", (req, res) => {
   const data = {
     questions: [
       "What is your name?",
@@ -2636,7 +2663,6 @@ app.get("/auth/interview/new", (req, res) => {
       "Where do you see yourself in 5 years?",
     ],
     duration: 500,
-    id: 12,
   };
   res.jsonp(data);
 });
