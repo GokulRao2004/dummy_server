@@ -1009,26 +1009,26 @@ app.post("/auth/template", (req, res) => {
 let adminProfile = {
   fullName: "John Doe",
   dob: "1990-01-01",
-  contactNumber: "1234567890",
+  contactNumber: null,
   email: "john.doe@example.com",
   employeeId: "HAJ12235",
-  department: "Placements",
+  departmentId: "None",
   designation: "Assistant Placement Officer",
   address: "123 Admin St, City, Country",
   profilePic: null, // Assume this is just filename or null
 };
 
 let collegeProfile = {
-  collegeName: "Example University",
-  collegeCode: "EXU123",
-  collegeEmail: "contact@exampleuniversity.edu",
-  collegeContact: "0987654321",
-  collegeAddress: "456 College Ave, City, Country",
+  name: "Example University",
+  code: "EXU123",
+  email: "contact@exampleuniversity.edu",
+  contact: "0987654321",
+  address: "456 College Ave, City, Country",
 };
 
 // GET Admin Profile
 app.get("/auth/admin/admin_profile", (req, res) => {
-  res.json({ data: adminProfile });
+  res.json({ ...adminProfile, college: collegeProfile });
 });
 
 // GET College Profile
@@ -1037,7 +1037,7 @@ app.get("/auth/admin/college_profile", (req, res) => {
 });
 
 // PUT Admin Profile
-app.put("/auth/admin/admin_profile", (req, res) => {
+app.post("/auth/admin/admin_profile", (req, res) => {
   const {
     fullName,
     dob,
@@ -1045,7 +1045,7 @@ app.put("/auth/admin/admin_profile", (req, res) => {
     email,
     employeeId,
     designation,
-    department,
+    departmentId,
     address,
     profilePic,
   } = req.body;
@@ -1062,7 +1062,7 @@ app.put("/auth/admin/admin_profile", (req, res) => {
     email,
     employeeId,
     designation,
-    department,
+    departmentId,
     address,
     profilePic,
   };
@@ -1073,7 +1073,7 @@ app.put("/auth/admin/admin_profile", (req, res) => {
 });
 
 // PUT College Profile
-app.put("/auth/admin/college_profile", (req, res) => {
+app.post("/auth/admin/college_profile", (req, res) => {
   const {
     collegeName,
     collegeCode,
@@ -1136,7 +1136,8 @@ const students = Array.from({ length: 120 }, (_, i) => {
   return {
     id: i + 1,
     name: `Student ${i + 1}`,
-    rollNo: `ROLL${1000 + i}`,
+year: 2,
+    usn: `ROLL${1000 + i}`,
     branch,
     cgpa: (Math.random() * 2 + 6).toFixed(2), // 6.00 - 8.00
     isPlaced: Math.random() > 0.5,
@@ -1202,15 +1203,22 @@ app.get("/auth/admin/student", (req, res) => {
   const totalPages = Math.ceil(filtered.length / pageSize);
   const start = (page - 1) * pageSize;
   const paginated = filtered.slice(start, start + pageSize);
+  const trimmedStudents = paginated.map((s) => ({
+    id: s.id,
+    name: s.name,
+    rollNo: s.rollNo,
+    branch: s.branch,
+    cgpa: s.cgpa,
+    isPlaced: s.isPlaced,
+  }));
 
   res.json({
-    students: paginated,
+    students: trimmedStudents,
     totalPages,
   });
 });
 
 // GET /auth/admin/student/:id
-
 
 const roles = [
   "Software Engineer",
@@ -1338,6 +1346,99 @@ app.get("/auth/admin/job", (req, res) => {
   });
 });
 
+app.get("/auth/admin/job/:jobId", (req, res) => {
+  const jobId = parseInt(req.params.jobId, 10);
+  const job = allJobs.find((j) => j.id === jobId);
+  
+  if (!job) {
+    return res.status(404).json({ error: "Job not found" });
+  }
+
+  // Get pagination and filter params from the query
+  const { page = 1, limit = 10, search = '', dateFilter = '' } = req.query;
+  const currentPage = parseInt(page, 10);
+  const perPage = parseInt(limit, 10);
+  
+  // Mock applicants data with random applied dates
+  const shuffledApplicants = students.map(student => ({
+    ...student,
+    appliedAt: new Date(
+      Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000  // Random date in the past 30 days
+    ).toISOString()
+  }));
+
+  // Apply search filter (by name or email)
+  const filteredApplicants = shuffledApplicants.filter(applicant => {
+    const searchTerm = search.toLowerCase();
+    return (
+      applicant.name.toLowerCase().includes(searchTerm) ||
+      applicant.email.toLowerCase().includes(searchTerm)
+    );
+  });
+
+  // Apply date filter (if available)
+  const filteredByDate = dateFilter
+    ? filteredApplicants.filter(applicant => {
+        const appliedDate = new Date(applicant.appliedAt);
+        const filterDate = new Date(dateFilter);
+        return (
+          appliedDate.getFullYear() === filterDate.getFullYear() &&
+          appliedDate.getMonth() === filterDate.getMonth()
+        );
+      })
+    : filteredApplicants;
+
+  // Pagination logic
+  const totalApplicants = filteredByDate.length;
+  const totalPages = Math.ceil(totalApplicants / perPage);
+  const paginatedApplicants = filteredByDate.slice(
+    (currentPage - 1) * perPage,
+    currentPage * perPage
+  );
+
+  // Only include the necessary fields
+  const applicantsResponse = paginatedApplicants.map(applicant => ({
+    id: applicant.id,
+    name: applicant.name,
+    branch: applicant.branch,
+    usn: applicant.usn,
+    email: applicant.email,
+    appliedAt: applicant.appliedAt,
+  }));
+
+  // Respond with job details, paginated applicants, and pagination metadata
+  res.json({
+    job,
+    applicants: applicantsResponse,
+    totalPages,  // Total number of pages based on the filtered data
+    currentPage,  // Current page number
+  });
+});
+
+
+const jobb = {
+    "jobTitle": "Software Engineer",
+    "companyName": "Tech Corp",
+    "jobLocation": "San Francisco, CA",
+    "jobType": "Full-time",
+    "applicationDeadline": "2023-12-31",
+    "description": "We are looking for a passionate software engineer...",
+    "requirements": "Proficiency in JavaScript, React, etc.",
+    "otherRequirements": "Experience with cloud technologies",
+    "salaryRange": "80,000 - 100,000 USD",
+    "contactEmail": "jobs@techcorp.com",
+    "eligibleBranches": ["Computer Science", "Electronics and Communication"],
+    "cgpaRequirement": "7.5",
+    "backlogRequirement": "No backlog",
+    "jdPdf": null,
+    "passoutYear": "2024"
+}
+
+app.get("/auth/admin/job/edit/:jobId", (req, res) => { 
+  res.status(200).json({...jobb})
+} );
+
+
 app.get("/auth/admin/job/starred", (req, res) => {
   const { userId, page = 1 } = req.query;
   if (!userId) {
@@ -1385,7 +1486,7 @@ app.post("/auth/admin/job/star", (req, res) => {
   res.json({ success: true });
 });
 
-app.get("/auth/admin/job/eligibility_options", (req, res) => {
+app.get("/auth/admin/job/create/eligibility_options", (req, res) => {
   res.json({
     branches: [
       "Computer Science",
@@ -1406,6 +1507,20 @@ app.post("/auth/admin/job/create", (req, res) => {
     msg: "Succesfull",
   });
 });
+
+const dept = [
+  {"id" : "1", "name" : "CSE"},
+  {"id" : "2", "name" : "ME"},
+  {"id" : "3", "name" : "ISE"},
+  {"id" : "4", "name" : "AIML"},
+  {"id" : "5", "name" : "AIDS"},
+
+]  
+
+app.get("/auth/admin/department", (req,res)=>{
+res.json(dept)
+
+})
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:3000`, port);
