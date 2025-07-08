@@ -85,7 +85,7 @@ app.post("/auth/verify_token", (req, res) => {
 });
 
 let userProfile = {
-  profilePic: null,
+  profilePic: null, // or a URL string if available
   fullName: "John Doe",
   dob: "1990-05-15",
   contactNumber: "9876543210",
@@ -93,11 +93,36 @@ let userProfile = {
   githubLink: "https://github.com/johndoe",
   linkedinLink: "https://linkedin.com/in/johndoe",
   address: "123 Mock Street, Mock City, MC 12345",
+  languages: "English, Hindi",
+  certifications: "AWS Certified Solutions Architect, Scrum Master",
+  education: {
+    tenth: {
+      school: "Mock High School",
+      year: "2006",
+      gpa: "9.4",
+    },
+    pu: {
+      college: "Mock Pre-University College",
+      year: "2008",
+      gpa: "88%",
+    },
+    engineering: {
+      college: "Mock Engineering College",
+      year: "2012",
+      gpa: "8.5",
+    },
+    postGrad: {
+      college: "Mock University",
+      year: "2015",
+      gpa: "9.0",
+    },
+  },
 };
+
 
 app.get("/auth/profile", (req, res) => {
   console.log("req: ", userProfile);
-  res.status(200).json({ data: userProfile });
+  res.status(200).json({  ...userProfile });
 });
 
 app.post("/auth/profile", (req, res) => {
@@ -248,6 +273,7 @@ let mockJobs = Array.from({ length: 100 }, (_, i) => {
   const remote = remoteType === "Remote";
 
   return {
+    logo:'https://i.ibb.co/hFJgrGNR/googlelogo.png',
     id: i + 1,
     company,
     role,
@@ -297,6 +323,74 @@ app.get("/auth/job", (req, res) => {
   res.json({
     jobs: paginated,
     totalPages,
+  });
+});
+
+
+app.get('/auth/job/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const userId = req.query.userId || 'default'; // If you want starred status per user
+
+  const job = mockJobs.find((j) => j.id === id);
+
+  if (!job) {
+    return res.status(404).json({ error: 'Job not found' });
+  }
+
+  // For demonstration, let's add a deadline field (e.g., 30 days after postedOn)
+  const postedDate = new Date(job.postedOn);
+  const deadlineDate = new Date(postedDate);
+  deadlineDate.setDate(deadlineDate.getDate() + 30);
+
+  // Check starred status for user
+  const starredJobs = userStarredJobs[userId] || [];
+  const isStarred = starredJobs.includes(job.id);
+
+  res.json({
+    job: {
+      id: job.id,
+      company: job.company,
+      logo: job.logo,
+      role: job.role,
+      location: job.location,
+      remoteType: job.remoteType,
+      remote: job.remote,
+      experience: job.experience,
+      salary: job.salary,
+      postedOn: job.postedOn,
+      deadline: deadlineDate.toISOString().split('T')[0],  // YYYY-MM-DD format
+      starred: isStarred,
+      link: job.link,
+      templateId: job.templateId,
+      description: `
+        We are seeking an experienced Software Engineer to join our dynamic team. 
+        In this role, you will work closely with cross-functional teams to design, 
+        develop, and deploy high-quality software solutions. You will be responsible 
+        for writing clean, maintainable code, participating in code reviews, and 
+        driving the technical direction of projects.
+
+        Responsibilities:
+        - Develop scalable and efficient code
+        - Collaborate with product managers, designers, and engineers
+        - Ensure code quality through testing and reviews
+        - Participate in sprint planning and agile ceremonies
+        - Continuously improve software engineering practices
+
+        Requirements:
+        - Bachelor’s degree in Computer Science or related field
+        - 3+ years of experience in software development
+        - Proficient in JavaScript, React, Node.js (or your stack)
+        - Familiarity with cloud platforms like AWS or Azure
+        - Excellent problem-solving and communication skills
+
+        Benefits:
+        - Competitive salary and stock options
+        - Flexible working hours and remote-friendly environment
+        - Health insurance and wellness programs
+        - Learning and development opportunities
+        - Supportive and inclusive company culture
+      `,
+    },
   });
 });
 
@@ -635,11 +729,41 @@ app.get("/auth/job/filters", (req, res) => {
 });
 
 let mockInterviews = [
-  { id: "1", name: "Frontend Developer", score: 20, date: "12/05/2025" },
-  { id: "2", name: "Backend Engineer", score: 40, date: "12/03/2025" },
-  { id: "3", name: "Backend Engineer", score: 60, date: "12/03/2025" },
-  { id: "4", name: "Backend Engineer", score: 80, date: "12/03/2025" },
-  { id: "5", name: "Backend Engineer", score: 100, date: "12/03/2025" },
+  {
+    id: "1",
+    name: "Frontend Developer",
+    score: 20,
+    date: "2025-05-12T10:00:00Z",
+    feedback: "Needs improvement in React component design and state management."
+  },
+  {
+    id: "2",
+    name: "Backend Engineer",
+    score: 40,
+    date: "2025-03-12T10:00:00Z",
+    feedback: "Basic understanding of REST APIs, but struggled with database schema design."
+  },
+  {
+    id: "3",
+    name: "Backend Engineer",
+    score: 60,
+    date: "2025-03-12T14:00:00Z",
+    feedback: "Good knowledge of server-side logic but needs to improve on security aspects."
+  },
+  {
+    id: "4",
+    name: "Backend Engineer",
+    score: 80,
+    date: "2025-03-12T16:00:00Z",
+    feedback: "Strong coding skills and problem-solving, just minor optimizations needed."
+  },
+  {
+    id: "5",
+    name: "Backend Engineer",
+    score: 100,
+    date: "2025-03-12T18:00:00Z",
+    feedback: "Excellent performance, nailed all questions with clean code."
+  },
 ];
 
 app.post("/auth/interview", upload.single("jd_file"), (req, res) => {
@@ -677,8 +801,8 @@ const fakeResult = {
   score: 87,
   breakdown: [
     { category: "JavaScript", score: 90 },
-    { category: "React", score: 85 },
-    { category: "CSS", score: 80 },
+    { category: "React", score: 65 },
+    { category: "CSS", score: 40 },
   ],
   questions: [
     {
@@ -1136,7 +1260,7 @@ const students = Array.from({ length: 120 }, (_, i) => {
   return {
     id: i + 1,
     name: `Student ${i + 1}`,
-year: 2,
+    year: 2,
     usn: `ROLL${1000 + i}`,
     branch,
     cgpa: (Math.random() * 2 + 6).toFixed(2), // 6.00 - 8.00
@@ -1233,6 +1357,7 @@ const allJobs = Array.from({ length: 100 }).map((_, i) => {
   const role = roles[i % roles.length];
   const location = locations[i % locations.length];
   return {
+    logo: 'https://i.ibb.co/hFJgrGNR/googlelogo.png',
     id: i + 1,
     role,
     company: `Company ${i + 1}`,
@@ -1349,26 +1474,26 @@ app.get("/auth/admin/job", (req, res) => {
 app.get("/auth/admin/job/:jobId", (req, res) => {
   const jobId = parseInt(req.params.jobId, 10);
   const job = allJobs.find((j) => j.id === jobId);
-  
+
   if (!job) {
     return res.status(404).json({ error: "Job not found" });
   }
 
   // Get pagination and filter params from the query
-  const { page = 1, limit = 10, search = '', dateFilter = '' } = req.query;
+  const { page = 1, limit = 10, search = "", dateFilter = "" } = req.query;
   const currentPage = parseInt(page, 10);
   const perPage = parseInt(limit, 10);
-  
+
   // Mock applicants data with random applied dates
-  const shuffledApplicants = students.map(student => ({
+  const shuffledApplicants = students.map((student) => ({
     ...student,
     appliedAt: new Date(
-      Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000  // Random date in the past 30 days
-    ).toISOString()
+      Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000 // Random date in the past 30 days
+    ).toISOString(),
   }));
 
   // Apply search filter (by name or email)
-  const filteredApplicants = shuffledApplicants.filter(applicant => {
+  const filteredApplicants = shuffledApplicants.filter((applicant) => {
     const searchTerm = search.toLowerCase();
     return (
       applicant.name.toLowerCase().includes(searchTerm) ||
@@ -1378,7 +1503,7 @@ app.get("/auth/admin/job/:jobId", (req, res) => {
 
   // Apply date filter (if available)
   const filteredByDate = dateFilter
-    ? filteredApplicants.filter(applicant => {
+    ? filteredApplicants.filter((applicant) => {
         const appliedDate = new Date(applicant.appliedAt);
         const filterDate = new Date(dateFilter);
         return (
@@ -1397,7 +1522,7 @@ app.get("/auth/admin/job/:jobId", (req, res) => {
   );
 
   // Only include the necessary fields
-  const applicantsResponse = paginatedApplicants.map(applicant => ({
+  const applicantsResponse = paginatedApplicants.map((applicant) => ({
     id: applicant.id,
     name: applicant.name,
     branch: applicant.branch,
@@ -1410,34 +1535,32 @@ app.get("/auth/admin/job/:jobId", (req, res) => {
   res.json({
     job,
     applicants: applicantsResponse,
-    totalPages,  // Total number of pages based on the filtered data
-    currentPage,  // Current page number
+    totalPages, // Total number of pages based on the filtered data
+    currentPage, // Current page number
   });
 });
 
-
 const jobb = {
-    "jobTitle": "Software Engineer",
-    "companyName": "Tech Corp",
-    "jobLocation": "San Francisco, CA",
-    "jobType": "Full-time",
-    "applicationDeadline": "2023-12-31",
-    "description": "We are looking for a passionate software engineer...",
-    "requirements": "Proficiency in JavaScript, React, etc.",
-    "otherRequirements": "Experience with cloud technologies",
-    "salaryRange": "80,000 - 100,000 USD",
-    "contactEmail": "jobs@techcorp.com",
-    "eligibleBranches": ["Computer Science", "Electronics and Communication"],
-    "cgpaRequirement": "7.5",
-    "backlogRequirement": "No backlog",
-    "jdPdf": null,
-    "passoutYear": "2024"
-}
+  jobTitle: "Software Engineer",
+  companyName: "Tech Corp",
+  jobLocation: "San Francisco, CA",
+  jobType: "Full-time",
+  applicationDeadline: "2023-12-31",
+  description: "We are looking for a passionate software engineer...",
+  requirements: "Proficiency in JavaScript, React, etc.",
+  otherRequirements: "Experience with cloud technologies",
+  salaryRange: "80,000 - 100,000 USD",
+  contactEmail: "jobs@techcorp.com",
+  eligibleBranches: ["Computer Science", "Electronics and Communication"],
+  cgpaRequirement: "7.5",
+  backlogRequirement: "No backlog",
+  jdPdf: null,
+  passoutYear: "2024",
+};
 
-app.get("/auth/admin/job/edit/:jobId", (req, res) => { 
-  res.status(200).json({...jobb})
-} );
-
+app.get("/auth/admin/job/edit/:jobId", (req, res) => {
+  res.status(200).json({ ...jobb });
+});
 
 app.get("/auth/admin/job/starred", (req, res) => {
   const { userId, page = 1 } = req.query;
@@ -1509,18 +1632,33 @@ app.post("/auth/admin/job/create", (req, res) => {
 });
 
 const dept = [
-  {"id" : "1", "name" : "CSE"},
-  {"id" : "2", "name" : "ME"},
-  {"id" : "3", "name" : "ISE"},
-  {"id" : "4", "name" : "AIML"},
-  {"id" : "5", "name" : "AIDS"},
+  { id: "1", name: "CSE" },
+  { id: "2", name: "ME" },
+  { id: "3", name: "ISE" },
+  { id: "4", name: "AIML" },
+  { id: "5", name: "AIDS" },
+];
 
-]  
+app.get("/auth/admin/department", (req, res) => {
+  res.json(dept);
+});
 
-app.get("/auth/admin/department", (req,res)=>{
-res.json(dept)
+app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
+  const { resume } = req.body;
+  const resumeJson = JSON.parse(resume);
+  const file = req.file;
 
-})
+
+
+  // You can parse the PDF here if needed with pdf-parse
+
+  const optimizedResume = {"personal-details":{"fullName":"Gokulaaaaa","phone":"12667899","email":"asdfsdf@a.com","linkedin":"linkedin.in","github":"github.com","portfolio":"a.com","location":"Bengaluru ","summary":"About Me and my goals"},"skills":{"programmingLanguages":["Python","Java"],"frameworks":["Pytorch"],"tools":["Vscode"],"softSkills":["Soft-skills"],"otherSkills":["Tech-SKils"]},"work-experience":{"workExperience":[{"title":"SSE1","company":"Akamai","startDate":"2024-01","endDate":"2025-02","responsibilities":"None","achievements":"Guided Missile launch"}]},"projects":{"projects":[{"title":"Project 1","technologies":"react, js, node","teamSize":"1","impact":"no impacsdfsdft","links":"https://asdasd.link.com"}]},"education":{"education":[{"institution":"RNS Institute of Technology","degree":"Bachelors","fieldOfStudy":"PCMB","startDate":"2025-11","endDate":"2025-12","grade":"9.5"}]},"certifications":{"certifications":[{"name":"Cert1 ","authority":"Coursera","issueDate":"2025-01","expirationDate":"2025-11","credentialId":"12asdsad312hk123j1","credentialUrl":"url.com"}]},"internships":{"internships":[{"company":"Akamai","position":"AI Intern","startDate":"2023-01","endDate":"2025-05","location":"Bengaluru "}]},"awards-&-achievements":{"awards":[{"title":"Award 1","issuer":"Issuer 1","date":"2025-01","description":"Desc"}]},"volunteer-experience":{"volunteerExperience":[{"organization":"Volunteer 1","role":"Student Technical Support – Faculty Development Program","startDate":"2025-01","endDate":"2025-02","description":"Desdfsdfsdfsd sd fsd fsd sdf sd sdf s sdd fsdsc"}]},"interests-&-hobbies":{"languages":["Kannada","English","Hindi"],"interests":["Painting","Running"]},"publications-&-research":{"publications":[{"title":"Pub 1","publisher":"Google","date":"2025-01","link":"ex.com","description":"Desc"}]}}
+;
+
+  setTimeout(() => {
+    res.json({ optimizedResume });
+  }, 1500);
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:3000`, port);
