@@ -1131,15 +1131,15 @@ app.post("/auth/template", (req, res) => {
 });
 
 let adminProfile = {
-  fullName: "John Doe",
+  full_name: "John Doe",
   dob: "1990-01-01",
-  contactNumber: null,
+  contact_number: null,
   email: "john.doe@example.com",
-  employeeId: "HAJ12235",
-  departmentId: "None",
+  employee_id: "HAJ12235",
+  department_id: "None",
   designation: "Assistant Placement Officer",
   address: "123 Admin St, City, Country",
-  profilePic: null, // Assume this is just filename or null
+  profile_pic: null, // Assume this is just filename or null
 };
 
 let collegeProfile = {
@@ -1156,39 +1156,39 @@ app.get("/auth/admin/admin_profile", (req, res) => {
 });
 
 // GET College Profile
-app.get("/auth/admin/college_profile", (req, res) => {
-  res.json({ data: collegeProfile });
+app.get("/auth/admin/college", (req, res) => {
+  res.json({ ...collegeProfile });
 });
 
 // PUT Admin Profile
 app.post("/auth/admin/admin_profile", (req, res) => {
   const {
-    fullName,
+    full_name,
     dob,
-    contactNumber,
+    contact_number,
     email,
-    employeeId,
+    employee_id,
     designation,
-    departmentId,
+    department_id,
     address,
-    profilePic,
+    profile_pic,
   } = req.body;
 
   // Basic validation example
-  if (!fullName || !contactNumber || !email || !address) {
+  if (!full_name || !contact_number || !email || !address) {
     return res.status(400).json({ message: "Missing required fields." });
   }
 
   adminProfile = {
-    fullName,
+    full_name,
     dob,
-    contactNumber,
+    contact_number,
     email,
-    employeeId,
+    employee_id,
     designation,
-    departmentId,
+    department_id,
     address,
-    profilePic,
+    profile_pic,
   };
 
   return res.json({
@@ -1197,28 +1197,15 @@ app.post("/auth/admin/admin_profile", (req, res) => {
 });
 
 // PUT College Profile
-app.post("/auth/admin/college_profile", (req, res) => {
-  const {
-    collegeName,
-    collegeCode,
-    collegeEmail,
-    collegeContact,
-    collegeAddress,
-  } = req.body;
+app.post("/auth/admin/college", (req, res) => {
+  
 
-  if (!collegeName || !collegeCode || !collegeEmail) {
-    return res
-      .status(400)
-      .json({ message: "Missing required college fields." });
-  }
+  return res.json({
+    message: "College profile updated successfully.",
+  });
+});
 
-  collegeProfile = {
-    collegeName,
-    collegeCode,
-    collegeEmail,
-    collegeContact,
-    collegeAddress,
-  };
+app.put("/auth/admin/college", (req, res) => {
 
   return res.json({
     message: "College profile updated successfully.",
@@ -1359,14 +1346,17 @@ const allJobs = Array.from({ length: 100 }).map((_, i) => {
   return {
     logo: 'https://i.ibb.co/hFJgrGNR/googlelogo.png',
     id: i + 1,
-    role,
-    company: `Company ${i + 1}`,
-    location,
+    job_title : role,
+    company_name: `Company ${i + 1}`,
+    job_location :location,
     remote: location === "Remote",
     experience: (i % 5) + 1,
-    salary: 60000 + i * 1000,
+    ctc: 60000 + i * 1000,
+    ctc_period : "annual",
+    stipend : 500 + i * 1000,
+    stipend_period : "monthly",
     applications: (i * 7) % 50,
-    deadline: new Date(
+    application_deadline: new Date(
       Date.now() + (i % 30) * 24 * 60 * 60 * 1000
     ).toISOString(),
     status: i % 3 === 0 ? "Open" : "Closed",
@@ -1467,7 +1457,7 @@ app.get("/auth/admin/job", (req, res) => {
 
   res.json({
     jobs: pagedJobs,
-    totalPages,
+    pages : totalPages,
   });
 });
 
