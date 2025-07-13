@@ -1317,7 +1317,7 @@ app.get("/auth/admin/student", (req, res) => {
   const trimmedStudents = paginated.map((s) => ({
     id: s.id,
     name: s.name,
-    rollNo: s.rollNo,
+    usn: s.usn,
     branch: s.branch,
     cgpa: s.cgpa,
     isPlaced: s.isPlaced,
