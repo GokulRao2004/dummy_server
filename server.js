@@ -1461,6 +1461,7 @@ app.get("/auth/admin/job", (req, res) => {
   });
 });
 
+// Route 1: Get job details only
 app.get("/auth/admin/job/:jobId", (req, res) => {
   const jobId = parseInt(req.params.jobId, 10);
   const job = allJobs.find((j) => j.id === jobId);
@@ -1469,7 +1470,43 @@ app.get("/auth/admin/job/:jobId", (req, res) => {
     return res.status(404).json({ error: "Job not found" });
   }
 
-  // Get pagination and filter params from the query
+  // Return in the new required format:
+  res.json({
+    application_deadline: null,                     // always null as per example
+    backlog_policy: "1 backlog allowed",            // fixed string
+    cgpa_requirement: 9.0,                           // fixed float
+    company_name: job.company_name,
+    contact_email: "gokul@gmail.com",                // fixed email
+    ctc: job.ctc,
+    ctc_period: job.ctc_period,
+    description: "Web app development experience",  // fixed description
+    eligible_departments: ["IS", "AIML", "CS"],      // fixed array
+    id: job.id,                              // a string id, made unique by prefixing
+    job_location: job.job_location,
+    job_title: job.job_title,
+    job_type: "Full-time",                            // fixed string
+    other_requirements: "MongoDb",                    // fixed string
+    passout_year: 2027,                               // fixed int
+    posted_on: new Date().toUTCString(),              // current date string
+    remote: job.remote,
+    requirements: "Python Flask",                      // fixed string
+    status: job.status,
+    stipend: 0.0,                                      // fixed zero stipend
+    stipend_period: "per-month",                        // fixed string
+    total_applicants: job.applications                 // renamed from applications
+  });
+});
+
+
+// Route 2: Get applicants for a specific job with pagination and filters
+app.get("/auth/admin/job/:jobId/applicants", (req, res) => {
+  const jobId = parseInt(req.params.jobId, 10);
+  const job = allJobs.find((j) => j.id === jobId);
+
+  if (!job) {
+    return res.status(404).json({ error: "Job not found" });
+  }
+
   const { page = 1, limit = 10, search = "", dateFilter = "" } = req.query;
   const currentPage = parseInt(page, 10);
   const perPage = parseInt(limit, 10);
@@ -1478,11 +1515,11 @@ app.get("/auth/admin/job/:jobId", (req, res) => {
   const shuffledApplicants = students.map((student) => ({
     ...student,
     appliedAt: new Date(
-      Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000 // Random date in the past 30 days
+      Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000
     ).toISOString(),
   }));
 
-  // Apply search filter (by name or email)
+  // Apply search filter
   const filteredApplicants = shuffledApplicants.filter((applicant) => {
     const searchTerm = search.toLowerCase();
     return (
@@ -1491,7 +1528,7 @@ app.get("/auth/admin/job/:jobId", (req, res) => {
     );
   });
 
-  // Apply date filter (if available)
+  // Apply date filter
   const filteredByDate = dateFilter
     ? filteredApplicants.filter((applicant) => {
         const appliedDate = new Date(applicant.appliedAt);
@@ -1503,7 +1540,7 @@ app.get("/auth/admin/job/:jobId", (req, res) => {
       })
     : filteredApplicants;
 
-  // Pagination logic
+  // Pagination
   const totalApplicants = filteredByDate.length;
   const totalPages = Math.ceil(totalApplicants / perPage);
   const paginatedApplicants = filteredByDate.slice(
@@ -1511,7 +1548,6 @@ app.get("/auth/admin/job/:jobId", (req, res) => {
     currentPage * perPage
   );
 
-  // Only include the necessary fields
   const applicantsResponse = paginatedApplicants.map((applicant) => ({
     id: applicant.id,
     name: applicant.name,
@@ -1521,14 +1557,13 @@ app.get("/auth/admin/job/:jobId", (req, res) => {
     appliedAt: applicant.appliedAt,
   }));
 
-  // Respond with job details, paginated applicants, and pagination metadata
   res.json({
-    job,
     applicants: applicantsResponse,
-    totalPages, // Total number of pages based on the filtered data
-    currentPage, // Current page number
+    totalPages,
+    currentPage,
   });
 });
+
 
 const jobb = {
   jobTitle: "Software Engineer",
