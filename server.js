@@ -31,8 +31,7 @@ const authenticateToken = (req, res, next) => {
     next(); // Proceed to the next middleware or route handler
   }
 };
-const student_token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1MTIwMDE5NywianRpIjoiMDk0MzllMmQtZDYwOS00NTk1LTg0YmEtM2IxOWE0MjE0Nzg1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjgiLCJuYmYiOjE3NTEyMDAxOTcsImNzcmYiOiJmOGU5YTA5OC04NjAwLTQzM2ItYWI4MC0xMjUzM2E3MWM4OWEiLCJleHAiOjE3NTEyMDEwOTcsInJvbGUiOiJzdHVkZW50In0.ORf3PLaBlWKfvKdOIKO5VmPWXfTwegcTjte_Qhmjmo0";
+const student_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1MjczNDkzOSwianRpIjoiNDMwYzlkYjItNTgwNi00MTFjLWFlYzYtODE2NTJmMmQyYTg3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjgiLCJuYmYiOjE3NTI3MzQ5MzksImNzcmYiOiJjNzg3OTM1Ny0zZGIwLTRiMGUtOTE4OS0xODRiMmE4NWE3NjEiLCJleHAiOjE3NTI3NzA5MzksInJvbGUiOiJzdHVkZW50IiwibmFtZSI6IkFtcnV0aGEgUmFvIn0.g-2DkOJT7rWkKOagnUtVv-QfNZDSkg_DddBMOuC3AFI"
 
 const admin_token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsInVzZXJuYW1lIjoiam9obl9kb2UiLCJyb2xlIjoiYWRtaW4ifQ.unsHQCc_McbecKoLBUx9hmBgwI-Fed8UuK6IZ-fcBII";
@@ -85,13 +84,15 @@ app.post("/auth/verify_token", (req, res) => {
 });
 
 let userProfile = {
-  profilePic: null, // or a URL string if available
-  fullName: "John Doe",
+  profile_pic: null, // or a URL string if available
+  full_name: "John Doe",
   dob: "1990-05-15",
-  contactNumber: "9876543210",
+  contact_number: "9876543210",
   email: "john.doe@example.com",
-  githubLink: "https://github.com/johndoe",
-  linkedinLink: "https://linkedin.com/in/johndoe",
+  college_email: "john.doe@college.edu",
+  usn: "1MC20CS001",
+  github_link: "https://github.com/johndoe",
+  linkedin_link: "https://linkedin.com/in/johndoe",
   address: "123 Mock Street, Mock City, MC 12345",
   languages: "English, Hindi",
   certifications: "AWS Certified Solutions Architect, Scrum Master",
@@ -111,23 +112,36 @@ let userProfile = {
       year: "2012",
       gpa: "8.5",
     },
-    postGrad: {
-      college: "Mock University",
-      year: "2015",
-      gpa: "9.0",
-    },
   },
 };
 
-
 app.get("/auth/profile", (req, res) => {
   console.log("req: ", userProfile);
-  res.status(200).json({  ...userProfile });
+  res.status(200).json({ ...userProfile });
+});
+
+app.get("/auth/profile/complete", (req, res) => {
+  const randomNumber = Math.floor(Math.random() * 11) + 3; // 0–10 + 10 => 10–20
+  console.log('randomNumber: ', randomNumber);
+  const isComplete = randomNumber > 10;
+
+  res.status(200).json({ isComplete });
 });
 
 app.post("/auth/profile", (req, res) => {
   console.log("req: ", req.body);
   res.status(200).json();
+});
+
+app.post('/auth/job/apply', (req, res) => {
+ 
+
+  // Simulate processing delay
+
+    
+      res.status(200).json({ message: 'Application submitted successfully' });
+    
+  
 });
 
 app.post("/auth/otp/send", (req, res) => {
@@ -180,27 +194,22 @@ app.post("/auth/otp/verify", (req, res) => {
 
 app.get("/auth/billing", (req, res) => {
   res.json({
-    plan: "Pro",
-    validity: "Valid until June 12, 2025",
-    billingEmail: "user@example.com",
-    billingAddress: "123 Main Street, NY",
-    lastPayment: "May 3, 2025",
-    paymentMethod: "Credit Card •••• 1234",
-    dueAmount: 29.99,
-    paymentHistory: [
-      {
-        date: "May 3, 2025",
-        amount: 29.99,
-        status: "Paid",
-        invoiceUrl: "#",
-      },
-      {
-        date: "April 3, 2025",
-        amount: 29.99,
-        status: "Paid",
-        invoiceUrl: "#",
-      },
-    ],
+    totalLicenses: 1000,
+    usedLicenses: 870,
+    licenseExpiry: "31-Dec-2025",
+    planType: "Annual",
+    billingEmail: "admin@college.edu",
+    billingAddress: "123 College Street, India",
+    lastPayment: "01-Jul-2025",
+    paymentMethod: "Visa •••• 1234",
+    dueAmount: 1250,
+    whatsapp: {
+      messagesSent: 3560,
+      costPerMessage: 0.35,
+      totalChargeThisMonth: 1246,
+      billingCycle: "Monthly",
+    },
+    paymentHistory: [],
   });
 });
 
@@ -273,7 +282,7 @@ let mockJobs = Array.from({ length: 100 }, (_, i) => {
   const remote = remoteType === "Remote";
 
   return {
-    logo:'https://i.ibb.co/hFJgrGNR/googlelogo.png',
+    logo: "https://i.ibb.co/hFJgrGNR/googlelogo.png",
     id: i + 1,
     company,
     role,
@@ -326,15 +335,14 @@ app.get("/auth/job", (req, res) => {
   });
 });
 
-
-app.get('/auth/job/:id', (req, res) => {
+app.get("/auth/job/:id", (req, res) => {
   const id = parseInt(req.params.id);
-  const userId = req.query.userId || 'default'; // If you want starred status per user
+  const userId = req.query.userId || "default"; // If you want starred status per user
 
   const job = mockJobs.find((j) => j.id === id);
 
   if (!job) {
-    return res.status(404).json({ error: 'Job not found' });
+    return res.status(404).json({ error: "Job not found" });
   }
 
   // For demonstration, let's add a deadline field (e.g., 30 days after postedOn)
@@ -358,7 +366,7 @@ app.get('/auth/job/:id', (req, res) => {
       experience: job.experience,
       salary: job.salary,
       postedOn: job.postedOn,
-      deadline: deadlineDate.toISOString().split('T')[0],  // YYYY-MM-DD format
+      deadline: deadlineDate.toISOString().split("T")[0], // YYYY-MM-DD format
       starred: isStarred,
       link: job.link,
       templateId: job.templateId,
@@ -563,6 +571,21 @@ const mockResumeData = {
     ],
   },
 };
+
+
+const mockResumeData2 = {
+  "personal-details": {
+    fullName: "Goku",
+    phone: "12345667899",
+    email: "a@a.com",
+   
+  },
+  skills: {
+    programmingLanguages: ["Python", "Java"],
+   
+  },
+  
+};
 const mockResumes = [
   {
     id: "1",
@@ -605,6 +628,11 @@ app.post("/auth/resume/rename", (req, res) => {
   res.status(200).json("Success");
 });
 
+app.post("/auth/resume", (req, res) => {
+  const request = req.body;
+  res.status(200).json({"id" : 1, "name": "Sallu", "json" : {}});
+});
+
 app.delete("/auth/resume", (req, res) => {
   const request = req.body;
   res.status(200).json("Success");
@@ -614,7 +642,7 @@ app.get("/auth/resume/:id", (req, res) => {
   const id = req.params;
   console.log("id: ", id);
 
-  res.json(mockResumeData);
+  res.json({...mockResumeData2});
 });
 
 const generateCoverLetter = () => {
@@ -728,61 +756,60 @@ app.get("/auth/job/filters", (req, res) => {
   res.json(fakeData);
 });
 
+app.get('/auth/admin/job/:id/languages', (req, res) => {
+  const allLanguages = ['JavaScript', 'Python', 'Ruby', 'Go', 'Rust', 'C++', 'Java', 'TypeScript'];
+  const shuffled = allLanguages.sort(() => 0.5 - Math.random());
+  const randomLanguages = shuffled.slice(0, 3);
+  res.json({ languages: randomLanguages });
+});
+
 let mockInterviews = [
   {
     id: "1",
     name: "Frontend Developer",
     score: 20,
     date: "2025-05-12T10:00:00Z",
-    feedback: "Needs improvement in React component design and state management."
+    feedback:
+      "Needs improvement in React component design and state management.",
   },
   {
     id: "2",
     name: "Backend Engineer",
     score: 40,
     date: "2025-03-12T10:00:00Z",
-    feedback: "Basic understanding of REST APIs, but struggled with database schema design."
+    feedback:
+      "Basic understanding of REST APIs, but struggled with database schema design.",
   },
   {
     id: "3",
     name: "Backend Engineer",
     score: 60,
     date: "2025-03-12T14:00:00Z",
-    feedback: "Good knowledge of server-side logic but needs to improve on security aspects."
+    feedback:
+      "Good knowledge of server-side logic but needs to improve on security aspects.",
   },
   {
     id: "4",
     name: "Backend Engineer",
     score: 80,
     date: "2025-03-12T16:00:00Z",
-    feedback: "Strong coding skills and problem-solving, just minor optimizations needed."
+    feedback:
+      "Strong coding skills and problem-solving, just minor optimizations needed.",
   },
   {
     id: "5",
     name: "Backend Engineer",
     score: 100,
     date: "2025-03-12T18:00:00Z",
-    feedback: "Excellent performance, nailed all questions with clean code."
+    feedback: "Excellent performance, nailed all questions with clean code.",
   },
 ];
 
-app.post("/auth/interview", upload.single("jd_file"), (req, res) => {
-  const resumeId = req.body.resume_id;
-  const jdText = req.body.jd_text;
-  const jdFile = req.file;
+app.post("/auth/interview/new" ,(req, res) => {
 
-  if (!resumeId) {
-    return res.status(400).json({ error: "Missing resume_id" });
-  }
 
-  if (!jdText && !jdFile) {
-    return res.status(400).json({ error: "Missing JD text or file" });
-  }
+  
 
-  console.log("Received interview request:");
-  console.log("Resume ID:", resumeId);
-  if (jdText) console.log("JD Text:", jdText);
-  if (jdFile) console.log("JD File:", jdFile.originalname);
 
   // Mock response
   const mockInterviewId = Math.floor(Math.random() * 1000000);
@@ -828,20 +855,100 @@ app.get("/auth/interview/result/:id", (req, res) => {
 
 app.get("/auth/interview/new/:id", (req, res) => {
   const data = {
-    questions: [
-      "What is your name?",
-      "What is your name?",
-      "What is your name?",
-      "What is your name?",
-      "What is your name?",
-      "Describe your strengths and weaknesses.",
-      "Why do you want to work here?",
-      "Where do you see yourself in 5 years?",
-    ],
-    duration: 500,
+    jd_id: parseInt(req.params.id, 10),
+    questions: {
+      mcq: [
+        {
+          question_id: 1,
+          difficulty: "easy",
+          skill_tag: "REST API",
+          question_text: "What is the primary function of a REST API?",
+          options: [
+            { option_id: 11, text: "Create a user interface" },
+            { option_id: 12, text: "Connect frontend and backend" },
+            { option_id: 13, text: "Style web pages" },
+            { option_id: 14, text: "Manage state" }
+          ]
+        }, {
+          question_id: 4,
+          difficulty: "easy",
+          skill_tag: "REST API",
+          question_text: "What is the primary function of a REST API?",
+          options: [
+            { option_id: 11, text: "Create a user interface" },
+            { option_id: 12, text: "Connect frontend and backend" },
+            { option_id: 13, text: "Style web pages" },
+            { option_id: 14, text: "Manage state" }
+          ]
+        }, {
+          question_id: 7,
+          difficulty: "easy",
+          skill_tag: "REST API",
+          question_text: "What is the primary function of a REST API?",
+          options: [
+            { option_id: 11, text: "Create a user interface" },
+            { option_id: 12, text: "Connect frontend and backend" },
+            { option_id: 13, text: "Style web pages" },
+            { option_id: 14, text: "Manage state" }
+          ]
+        },
+        {
+          question_id: 3,
+          difficulty: "easy",
+          skill_tag: "REST API",
+          question_text: "What is the primary function of a REST API?",
+          options: [
+            { option_id: 11, text: "Create a user interface" },
+            { option_id: 12, text: "Connect frontend and backend" },
+            { option_id: 13, text: "Style web pages" },
+            { option_id: 14, text: "Manage state" }
+          ]
+        }
+      ],
+      short_answer: [
+        {
+          question_id: 2,
+          difficulty: "medium",
+          skill_tag: "Flask",
+          question_text: "What is the purpose of the `debug=True` flag in Flask?"
+        },
+        {
+          question_id: 3,
+          difficulty: "medium",
+          skill_tag: "REST API",
+          question_text: "Explain the difference between PUT and PATCH methods in REST APIs."
+        }
+      ],
+      scenario: [
+        {
+          question_id: 4,
+          difficulty: "medium",
+          skill_tag: "PostgreSQL",
+          question_text: "Your web app is loading slowly. You suspect the database is the bottleneck. What steps would you take to investigate and fix the issue?"
+        }
+      ],
+      languages:  [
+          {
+            question_id: 5,
+            difficulty: "easy",
+            skill_tag: "Python Basics",
+            question_text: "What is the difference between a list and a tuple in Python?"
+          },
+          {
+            question_id: 6,
+            difficulty: "medium",
+            skill_tag: "Functions",
+            question_text: "What are *args and **kwargs used for in Python functions?"
+          }
+        ]
+      
+    },
+    duration: 500
   };
-  res.jsonp(data);
+
+  res.json(data);
 });
+
 
 app.post("/auth/interview/submit", (req, res) => {
   console.log("Answers submitted:", req.body);
@@ -1198,15 +1305,12 @@ app.post("/auth/admin/admin_profile", (req, res) => {
 
 // PUT College Profile
 app.post("/auth/admin/college", (req, res) => {
-  
-
   return res.json({
     message: "College profile updated successfully.",
   });
 });
 
 app.put("/auth/admin/college", (req, res) => {
-
   return res.json({
     message: "College profile updated successfully.",
   });
@@ -1344,17 +1448,17 @@ const allJobs = Array.from({ length: 100 }).map((_, i) => {
   const role = roles[i % roles.length];
   const location = locations[i % locations.length];
   return {
-    logo: 'https://i.ibb.co/hFJgrGNR/googlelogo.png',
+    logo: "https://i.ibb.co/hFJgrGNR/googlelogo.png",
     id: i + 1,
-    job_title : role,
+    job_title: role,
     company_name: `Company ${i + 1}`,
-    job_location :location,
+    job_location: location,
     remote: location === "Remote",
     experience: (i % 5) + 1,
     ctc: 60000 + i * 1000,
-    ctc_period : "annual",
-    stipend : 500 + i * 1000,
-    stipend_period : "monthly",
+    ctc_period: "annual",
+    stipend: 500 + i * 1000,
+    stipend_period: "monthly",
     applications: (i * 7) % 50,
     application_deadline: new Date(
       Date.now() + (i % 30) * 24 * 60 * 60 * 1000
@@ -1457,7 +1561,7 @@ app.get("/auth/admin/job", (req, res) => {
 
   res.json({
     jobs: pagedJobs,
-    pages : totalPages,
+    pages: totalPages,
   });
 });
 
@@ -1472,31 +1576,30 @@ app.get("/auth/admin/job/:jobId", (req, res) => {
 
   // Return in the new required format:
   res.json({
-    application_deadline: null,                     // always null as per example
-    backlog_policy: "1 backlog allowed",            // fixed string
-    cgpa_requirement: 9.0,                           // fixed float
+    application_deadline: null, // always null as per example
+    backlog_policy: "1 backlog allowed", // fixed string
+    cgpa_requirement: 9.0, // fixed float
     company_name: job.company_name,
-    contact_email: "gokul@gmail.com",                // fixed email
+    contact_email: "gokul@gmail.com", // fixed email
     ctc: job.ctc,
     ctc_period: job.ctc_period,
-    description: "Web app development experience",  // fixed description
-    eligible_departments: ["IS", "AIML", "CS"],      // fixed array
-    id: job.id,                              // a string id, made unique by prefixing
+    description: "Web app development experience", // fixed description
+    eligible_departments: ["IS", "AIML", "CS"], // fixed array
+    id: job.id, // a string id, made unique by prefixing
     job_location: job.job_location,
     job_title: job.job_title,
-    job_type: "Full-time",                            // fixed string
-    other_requirements: "MongoDb",                    // fixed string
-    passout_year: 2027,                               // fixed int
-    posted_on: new Date().toUTCString(),              // current date string
+    job_type: "Full-time", // fixed string
+    other_requirements: "MongoDb", // fixed string
+    passout_year: 2027, // fixed int
+    posted_on: new Date().toUTCString(), // current date string
     remote: job.remote,
-    requirements: "Python Flask",                      // fixed string
+    requirements: "Python Flask", // fixed string
     status: job.status,
-    stipend: 0.0,                                      // fixed zero stipend
-    stipend_period: "per-month",                        // fixed string
-    total_applicants: job.applications                 // renamed from applications
+    stipend: 0.0, // fixed zero stipend
+    stipend_period: "per-month", // fixed string
+    total_applicants: job.applications, // renamed from applications
   });
 });
-
 
 // Route 2: Get applicants for a specific job with pagination and filters
 app.get("/auth/admin/job/:jobId/applicants", (req, res) => {
@@ -1563,7 +1666,6 @@ app.get("/auth/admin/job/:jobId/applicants", (req, res) => {
     currentPage,
   });
 });
-
 
 const jobb = {
   jobTitle: "Software Engineer",
@@ -1673,13 +1775,121 @@ app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
   const resumeJson = JSON.parse(resume);
   const file = req.file;
 
-
-
   // You can parse the PDF here if needed with pdf-parse
 
-  const optimizedResume = {"personal-details":{"fullName":"Gokulaaaaa","phone":"12667899","email":"asdfsdf@a.com","linkedin":"linkedin.in","github":"github.com","portfolio":"a.com","location":"Bengaluru ","summary":"About Me and my goals"},"skills":{"programmingLanguages":["Python","Java"],"frameworks":["Pytorch"],"tools":["Vscode"],"softSkills":["Soft-skills"],"otherSkills":["Tech-SKils"]},"work-experience":{"workExperience":[{"title":"SSE1","company":"Akamai","startDate":"2024-01","endDate":"2025-02","responsibilities":"None","achievements":"Guided Missile launch"}]},"projects":{"projects":[{"title":"Project 1","technologies":"react, js, node","teamSize":"1","impact":"no impacsdfsdft","links":"https://asdasd.link.com"}]},"education":{"education":[{"institution":"RNS Institute of Technology","degree":"Bachelors","fieldOfStudy":"PCMB","startDate":"2025-11","endDate":"2025-12","grade":"9.5"}]},"certifications":{"certifications":[{"name":"Cert1 ","authority":"Coursera","issueDate":"2025-01","expirationDate":"2025-11","credentialId":"12asdsad312hk123j1","credentialUrl":"url.com"}]},"internships":{"internships":[{"company":"Akamai","position":"AI Intern","startDate":"2023-01","endDate":"2025-05","location":"Bengaluru "}]},"awards-&-achievements":{"awards":[{"title":"Award 1","issuer":"Issuer 1","date":"2025-01","description":"Desc"}]},"volunteer-experience":{"volunteerExperience":[{"organization":"Volunteer 1","role":"Student Technical Support – Faculty Development Program","startDate":"2025-01","endDate":"2025-02","description":"Desdfsdfsdfsd sd fsd fsd sdf sd sdf s sdd fsdsc"}]},"interests-&-hobbies":{"languages":["Kannada","English","Hindi"],"interests":["Painting","Running"]},"publications-&-research":{"publications":[{"title":"Pub 1","publisher":"Google","date":"2025-01","link":"ex.com","description":"Desc"}]}}
-;
-
+  const optimizedResume = {
+    "personal-details": {
+      fullName: "Gokulaaaaa",
+      phone: "12667899",
+      email: "asdfsdf@a.com",
+      linkedin: "linkedin.in",
+      github: "github.com",
+      portfolio: "a.com",
+      location: "Bengaluru ",
+      summary: "About Me and my goals",
+    },
+    skills: {
+      programmingLanguages: ["Python", "Java"],
+      frameworks: ["Pytorch"],
+      tools: ["Vscode"],
+      softSkills: ["Soft-skills"],
+      otherSkills: ["Tech-SKils"],
+    },
+    "work-experience": {
+      workExperience: [
+        {
+          title: "SSE1",
+          company: "Akamai",
+          startDate: "2024-01",
+          endDate: "2025-02",
+          responsibilities: "None",
+          achievements: "Guided Missile launch",
+        },
+      ],
+    },
+    projects: {
+      projects: [
+        {
+          title: "Project 1",
+          technologies: "react, js, node",
+          teamSize: "1",
+          impact: "no impacsdfsdft",
+          links: "https://asdasd.link.com",
+        },
+      ],
+    },
+    education: {
+      education: [
+        {
+          institution: "RNS Institute of Technology",
+          degree: "Bachelors",
+          fieldOfStudy: "PCMB",
+          startDate: "2025-11",
+          endDate: "2025-12",
+          grade: "9.5",
+        },
+      ],
+    },
+    certifications: {
+      certifications: [
+        {
+          name: "Cert1 ",
+          authority: "Coursera",
+          issueDate: "2025-01",
+          expirationDate: "2025-11",
+          credentialId: "12asdsad312hk123j1",
+          credentialUrl: "url.com",
+        },
+      ],
+    },
+    internships: {
+      internships: [
+        {
+          company: "Akamai",
+          position: "AI Intern",
+          startDate: "2023-01",
+          endDate: "2025-05",
+          location: "Bengaluru ",
+        },
+      ],
+    },
+    "awards-&-achievements": {
+      awards: [
+        {
+          title: "Award 1",
+          issuer: "Issuer 1",
+          date: "2025-01",
+          description: "Desc",
+        },
+      ],
+    },
+    "volunteer-experience": {
+      volunteerExperience: [
+        {
+          organization: "Volunteer 1",
+          role: "Student Technical Support – Faculty Development Program",
+          startDate: "2025-01",
+          endDate: "2025-02",
+          description: "Desdfsdfsdfsd sd fsd fsd sdf sd sdf s sdd fsdsc",
+        },
+      ],
+    },
+    "interests-&-hobbies": {
+      languages: ["Kannada", "English", "Hindi"],
+      interests: ["Painting", "Running"],
+    },
+    "publications-&-research": {
+      publications: [
+        {
+          title: "Pub 1",
+          publisher: "Google",
+          date: "2025-01",
+          link: "ex.com",
+          description: "Desc",
+        },
+      ],
+    },
+  };
   setTimeout(() => {
     res.json({ optimizedResume });
   }, 1500);
