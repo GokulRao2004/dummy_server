@@ -31,7 +31,8 @@ const authenticateToken = (req, res, next) => {
     next(); // Proceed to the next middleware or route handler
   }
 };
-const student_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1MjczNDkzOSwianRpIjoiNDMwYzlkYjItNTgwNi00MTFjLWFlYzYtODE2NTJmMmQyYTg3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjgiLCJuYmYiOjE3NTI3MzQ5MzksImNzcmYiOiJjNzg3OTM1Ny0zZGIwLTRiMGUtOTE4OS0xODRiMmE4NWE3NjEiLCJleHAiOjE3NTI3NzA5MzksInJvbGUiOiJzdHVkZW50IiwibmFtZSI6IkFtcnV0aGEgUmFvIn0.g-2DkOJT7rWkKOagnUtVv-QfNZDSkg_DddBMOuC3AFI"
+const student_token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1MjczNDkzOSwianRpIjoiNDMwYzlkYjItNTgwNi00MTFjLWFlYzYtODE2NTJmMmQyYTg3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjgiLCJuYmYiOjE3NTI3MzQ5MzksImNzcmYiOiJjNzg3OTM1Ny0zZGIwLTRiMGUtOTE4OS0xODRiMmE4NWE3NjEiLCJleHAiOjE3NTI3NzA5MzksInJvbGUiOiJzdHVkZW50IiwibmFtZSI6IkFtcnV0aGEgUmFvIn0.g-2DkOJT7rWkKOagnUtVv-QfNZDSkg_DddBMOuC3AFI";
 
 const admin_token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsInVzZXJuYW1lIjoiam9obl9kb2UiLCJyb2xlIjoiYWRtaW4ifQ.unsHQCc_McbecKoLBUx9hmBgwI-Fed8UuK6IZ-fcBII";
@@ -69,13 +70,6 @@ app.post("/auth/register", (req, res) => {
 });
 
 app.post("/auth/verify_token", (req, res) => {
-  const { token } = req.body;
-  console.log("token: ", token);
-
-  if (!token) {
-    return res.status(400).json({ message: "Token is required" });
-  }
-
   try {
     return res.status(200).json({ valid: true });
   } catch (err) {
@@ -115,14 +109,177 @@ let userProfile = {
   },
 };
 
+let up = {
+  profile_pic: null,
+  full_name: "John Doe",
+  dob: "1990-05-15",
+  usn: "1MC20CS001",
+  college_email: "john.doe@college.edu",
+  contact_number: "9876543210",
+  email: "john.doe@example.com",
+  address: "123 Mock Street, Mock City, MC 12345",
+  department_id: "1",
+  year: "2",
+  pass_out_year: "",
+  github_link: "https://github.com/johndoe",
+  linkedin_link: "https://linkedin.com/in/johndoe",
+  others: {
+    bank_details: {
+      bank_name: "SBI",
+      account_number: "1234434534",
+      ifsc: "SBIN121212",
+    },
+    aadhaar_number: "12323423565",
+    passport_number: "DE234VD",
+  },
+  offers: [
+    {
+      id: "1753104571803",
+      offer_type: "Internship",
+      company_name: "Akamai",
+      role: "Ai intern",
+      location: "Bengaluru",
+      status: "",
+      compensation: "50000",
+      compensation_period: "Monthly",
+      start_date: "2025-07-01",
+      end_date: "2025-07-29",
+      comments: "No comments",
+    },
+    {
+      id: "1753104604503",
+      offer_type: "Full-time",
+      company_name: "Thoughworks",
+      role: "SDE 1",
+      location: "Hyderabad",
+      status: "",
+      compensation: "1000000",
+      compensation_period: "Annual",
+      start_date: "2025-07-26",
+      end_date: "2028-09-21",
+      comments: "No comments",
+    },
+  ],
+  education: {
+    tenth: {
+      school: "Mock High School",
+      year: "2006",
+      gpa: "9.4",
+    },
+    pu: {
+      college: "Mock Pre-University College",
+      year: "2008",
+      gpa: "88%",
+    },
+    graduation: {
+      college: "RNSIT",
+      year: "2023",
+      gpa: "33",
+      active_backlogs: "",
+    },
+    post_graduation: {
+      college: "RNSIT",
+      year: "2036",
+      gpa: "99",
+      active_backlogs: "1",
+    },
+    engineering: {
+      college: "Mock Engineering College",
+      year: "2012",
+      gpa: "8.5",
+    },
+  },
+  experience: {
+    role_title: "Data Engineer",
+    professional_summary: "I want to be a engineer.",
+    skills: {
+      programming_languages: ["Python"],
+      frameworks: ["Express"],
+      tools: ["Webpack"],
+      soft_skills: ["Communication"],
+      other_skills: ["REST APIs"],
+    },
+    work_experience: [
+      {
+        title: "SDE",
+        company: "Amazon",
+        start_date: "2025-01",
+        end_date: "2025-12",
+        responsibilities: "No responsibilities",
+        achievements: "Became good at corporate",
+      },
+    ],
+    internships: [
+      {
+        position: "AI Intern",
+        company: "Akamai",
+        start_date: "2025-01",
+        end_date: "2025-12",
+        location: "Bengaluru ",
+      },
+    ],
+    projects: [
+      {
+        title: "Title",
+        technologies: "react",
+        team_size: "2",
+        impact: "Impact/outcome",
+        links: "p2.com",
+      },
+    ],
+  },
+  achievements: {
+    certifications: [
+      {
+        name: "AI 900",
+        authority: "Microsoft",
+        issue_date: "2025-07-31",
+        expiration_date: "2025-07-03",
+        credential_id: "123123",
+        credential_url: "zx",
+      },
+    ],
+    awards: [
+      {
+        title: "Branch Topper",
+        issuer: "RNSIT",
+        date: "2025-07-01",
+        description: "",
+      },
+    ],
+    volunteer_experience: [
+      {
+        organization: "ISIS",
+        role: "Terrorist",
+        start_date: "2025-01-01",
+        end_date: "2026-01-01",
+        description: "Bomb",
+      },
+    ],
+    interests_and_hobbies: {
+      languages: ["sdfsdfsdfsdfsdf"],
+      interests: ["Running"],
+    },
+    publications: [
+      {
+        title: "PPublication 1",
+        publisher: "Google",
+        date: "2025-07-01",
+        link: "no.com",
+        description: "This is a great publication",
+      },
+    ],
+  },
+};
+
 app.get("/auth/profile", (req, res) => {
-  console.log("req: ", userProfile);
-  res.status(200).json({ ...userProfile });
+  console.log("req: ", up);
+  res.status(200).json({ ...up });
 });
 
 app.get("/auth/profile/complete", (req, res) => {
   const randomNumber = Math.floor(Math.random() * 11) + 3; // 0–10 + 10 => 10–20
-  console.log('randomNumber: ', randomNumber);
+  console.log("randomNumber: ", randomNumber);
   const isComplete = randomNumber > 10;
 
   res.status(200).json({ isComplete });
@@ -133,15 +290,10 @@ app.post("/auth/profile", (req, res) => {
   res.status(200).json();
 });
 
-app.post('/auth/job/apply', (req, res) => {
- 
-
+app.post("/auth/job/apply", (req, res) => {
   // Simulate processing delay
 
-    
-      res.status(200).json({ message: 'Application submitted successfully' });
-    
-  
+  res.status(200).json({ message: "Application submitted successfully" });
 });
 
 app.post("/auth/otp/send", (req, res) => {
@@ -572,19 +724,15 @@ const mockResumeData = {
   },
 };
 
-
 const mockResumeData2 = {
   "personal-details": {
     fullName: "Goku",
     phone: "12345667899",
     email: "a@a.com",
-   
   },
   skills: {
     programmingLanguages: ["Python", "Java"],
-   
   },
-  
 };
 const mockResumes = [
   {
@@ -630,7 +778,7 @@ app.post("/auth/resume/rename", (req, res) => {
 
 app.post("/auth/resume", (req, res) => {
   const request = req.body;
-  res.status(200).json({"id" : 1, "name": "Sallu", "json" : {}});
+  res.status(200).json({ id: 1, name: "Sallu", json: {} });
 });
 
 app.delete("/auth/resume", (req, res) => {
@@ -642,7 +790,7 @@ app.get("/auth/resume/:id", (req, res) => {
   const id = req.params;
   console.log("id: ", id);
 
-  res.json({...mockResumeData2});
+  res.json({ ...mockResumeData });
 });
 
 const generateCoverLetter = () => {
@@ -756,8 +904,17 @@ app.get("/auth/job/filters", (req, res) => {
   res.json(fakeData);
 });
 
-app.get('/auth/admin/job/:id/languages', (req, res) => {
-  const allLanguages = ['JavaScript', 'Python', 'Ruby', 'Go', 'Rust', 'C++', 'Java', 'TypeScript'];
+app.get("/auth/admin/job/:id/languages", (req, res) => {
+  const allLanguages = [
+    "JavaScript",
+    "Python",
+    "Ruby",
+    "Go",
+    "Rust",
+    "C++",
+    "Java",
+    "TypeScript",
+  ];
   const shuffled = allLanguages.sort(() => 0.5 - Math.random());
   const randomLanguages = shuffled.slice(0, 3);
   res.json({ languages: randomLanguages });
@@ -805,12 +962,7 @@ let mockInterviews = [
   },
 ];
 
-app.post("/auth/interview/new" ,(req, res) => {
-
-
-  
-
-
+app.post("/auth/interview/new", (req, res) => {
   // Mock response
   const mockInterviewId = Math.floor(Math.random() * 1000000);
 
@@ -867,9 +1019,10 @@ app.get("/auth/interview/new/:id", (req, res) => {
             { option_id: 11, text: "Create a user interface" },
             { option_id: 12, text: "Connect frontend and backend" },
             { option_id: 13, text: "Style web pages" },
-            { option_id: 14, text: "Manage state" }
-          ]
-        }, {
+            { option_id: 14, text: "Manage state" },
+          ],
+        },
+        {
           question_id: 4,
           difficulty: "easy",
           skill_tag: "REST API",
@@ -878,9 +1031,10 @@ app.get("/auth/interview/new/:id", (req, res) => {
             { option_id: 11, text: "Create a user interface" },
             { option_id: 12, text: "Connect frontend and backend" },
             { option_id: 13, text: "Style web pages" },
-            { option_id: 14, text: "Manage state" }
-          ]
-        }, {
+            { option_id: 14, text: "Manage state" },
+          ],
+        },
+        {
           question_id: 7,
           difficulty: "easy",
           skill_tag: "REST API",
@@ -889,8 +1043,8 @@ app.get("/auth/interview/new/:id", (req, res) => {
             { option_id: 11, text: "Create a user interface" },
             { option_id: 12, text: "Connect frontend and backend" },
             { option_id: 13, text: "Style web pages" },
-            { option_id: 14, text: "Manage state" }
-          ]
+            { option_id: 14, text: "Manage state" },
+          ],
         },
         {
           question_id: 3,
@@ -901,54 +1055,57 @@ app.get("/auth/interview/new/:id", (req, res) => {
             { option_id: 11, text: "Create a user interface" },
             { option_id: 12, text: "Connect frontend and backend" },
             { option_id: 13, text: "Style web pages" },
-            { option_id: 14, text: "Manage state" }
-          ]
-        }
+            { option_id: 14, text: "Manage state" },
+          ],
+        },
       ],
       short_answer: [
         {
           question_id: 2,
           difficulty: "medium",
           skill_tag: "Flask",
-          question_text: "What is the purpose of the `debug=True` flag in Flask?"
+          question_text:
+            "What is the purpose of the `debug=True` flag in Flask?",
         },
         {
           question_id: 3,
           difficulty: "medium",
           skill_tag: "REST API",
-          question_text: "Explain the difference between PUT and PATCH methods in REST APIs."
-        }
+          question_text:
+            "Explain the difference between PUT and PATCH methods in REST APIs.",
+        },
       ],
       scenario: [
         {
           question_id: 4,
           difficulty: "medium",
           skill_tag: "PostgreSQL",
-          question_text: "Your web app is loading slowly. You suspect the database is the bottleneck. What steps would you take to investigate and fix the issue?"
-        }
+          question_text:
+            "Your web app is loading slowly. You suspect the database is the bottleneck. What steps would you take to investigate and fix the issue?",
+        },
       ],
-      languages:  [
-          {
-            question_id: 5,
-            difficulty: "easy",
-            skill_tag: "Python Basics",
-            question_text: "What is the difference between a list and a tuple in Python?"
-          },
-          {
-            question_id: 6,
-            difficulty: "medium",
-            skill_tag: "Functions",
-            question_text: "What are *args and **kwargs used for in Python functions?"
-          }
-        ]
-      
+      languages: [
+        {
+          question_id: 5,
+          difficulty: "easy",
+          skill_tag: "Python Basics",
+          question_text:
+            "What is the difference between a list and a tuple in Python?",
+        },
+        {
+          question_id: 6,
+          difficulty: "medium",
+          skill_tag: "Functions",
+          question_text:
+            "What are *args and **kwargs used for in Python functions?",
+        },
+      ],
     },
-    duration: 500
+    duration: 500,
   };
 
   res.json(data);
 });
-
 
 app.post("/auth/interview/submit", (req, res) => {
   console.log("Answers submitted:", req.body);
