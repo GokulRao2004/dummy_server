@@ -611,7 +611,7 @@ app.get("/auth/job/starred_job", (req, res) => {
 });
 
 const mockResumeData = {
-  "personal-details": {
+  "personal_details": {
     fullName: "Goku",
     phone: "12345667899",
     email: "a@a.com",
@@ -621,15 +621,14 @@ const mockResumeData = {
     location: "Bengaluru ",
     summary: "About Me and my goals",
   },
-  skills: {
-    programmingLanguages: ["Python", "Java"],
+  "skills": {
+    programming_languages: ["Python", "Java"],
     frameworks: ["Pytorch"],
     tools: ["Vscode"],
-    softSkills: ["Soft-skills"],
-    otherSkills: ["Tech-SKils"],
+    soft_skills: ["Soft-skills"],
+    other_skills: ["Tech-SKils"],
   },
-  "work-experience": {
-    workExperience: [
+  "work_experience":  [
       {
         title: "SSE1",
         company: "Akamai",
@@ -639,9 +638,8 @@ const mockResumeData = {
         achievements: "Guided Missile launch",
       },
     ],
-  },
-  projects: {
-    projects: [
+
+  "projects": [
       {
         title: "Project 1",
         technologies: "react, js, node",
@@ -650,9 +648,7 @@ const mockResumeData = {
         links: "https://www.link.com",
       },
     ],
-  },
-  education: {
-    education: [
+  "education":  [
       {
         institution: "RNS Institute of Technology",
         degree: "Bachelors",
@@ -662,9 +658,7 @@ const mockResumeData = {
         grade: "9.5",
       },
     ],
-  },
-  certifications: {
-    certifications: [
+  "certifications":  [
       {
         name: "Cert1 ",
         authority: "Coursera",
@@ -674,9 +668,7 @@ const mockResumeData = {
         credentialUrl: "url.com",
       },
     ],
-  },
-  internships: {
-    internships: [
+  "internships":  [
       {
         company: "Akamai",
         position: "AI Intern",
@@ -685,9 +677,8 @@ const mockResumeData = {
         location: "Bengaluru ",
       },
     ],
-  },
-  "awards-&-achievements": {
-    awards: [
+  
+    'awards': [
       {
         title: "Award 1",
         issuer: "Issuer 1",
@@ -695,9 +686,7 @@ const mockResumeData = {
         description: "Desc",
       },
     ],
-  },
-  "volunteer-experience": {
-    volunteerExperience: [
+  "volunteer_experience": [
       {
         organization: "Volunteer 1",
         role: "Student Technical Support – Faculty Development Program",
@@ -706,13 +695,12 @@ const mockResumeData = {
         description: "Desc",
       },
     ],
-  },
-  "interests-&-hobbies": {
+  "interests": {
     languages: ["Kannada", "English", "Hindi"],
     interests: ["Painting", "Running"],
   },
-  "publications-&-research": {
-    publications: [
+
+    "publications": [
       {
         title: "Pub 1",
         publisher: "Google",
@@ -721,17 +709,16 @@ const mockResumeData = {
         description: "Desc",
       },
     ],
-  },
 };
 
 const mockResumeData2 = {
-  "personal-details": {
+  "personal_details": {
     fullName: "Goku",
     phone: "12345667899",
     email: "a@a.com",
   },
   skills: {
-    programmingLanguages: ["Python", "Java"],
+    programming_languages: ["Python", "Java"],
   },
 };
 const mockResumes = [
@@ -1120,13 +1107,13 @@ app.post("/auth/template", (req, res) => {
   const resumeHTML = `
   <div class="resume-wrapper">
     <header class="header">
-      <h1 class="name">${resumeData["personal-details"].fullName}</h1>
+      <h1 class="name">${resumeData["personal_details"].fullName}</h1>
       <div class="contact-info">
-        <p>Email: ${resumeData["personal-details"].email} | Phone: ${
-    resumeData["personal-details"].phone
+        <p>Email: ${resumeData["personal_details"].email} | Phone: ${
+    resumeData["personal_details"].phone
   }</p>
-        <p>LinkedIn: ${resumeData["personal-details"].linkedin} | Website: ${
-    resumeData["personal-details"].portfolio
+        <p>LinkedIn: ${resumeData["personal_details"].linkedin} | Website: ${
+    resumeData["personal_details"].portfolio
   }</p>
       </div>
     </header>
@@ -1136,7 +1123,7 @@ app.post("/auth/template", (req, res) => {
         <!-- Work Experience -->
         <section class="section">
           <h2 class="heading2">Work Experience</h2>
-          ${resumeData["work-experience"].workExperience
+          ${resumeData["work_experience"].workExperience
             .map(
               (work) => `
             <div class="work-item">
@@ -1201,7 +1188,7 @@ app.post("/auth/template", (req, res) => {
           <h2 class="heading2">Skills</h2>
           <p><strong>Programming:</strong> ${resumeData[
             "skills"
-          ].programmingLanguages.join(", ")}</p>
+          ].programming_languages.join(", ")}</p>
           <p><strong>Frameworks:</strong> ${resumeData[
             "skills"
           ].frameworks.join(", ")}</p>
@@ -1210,10 +1197,10 @@ app.post("/auth/template", (req, res) => {
           )}</p>
           <p><strong>Soft Skills:</strong> ${resumeData[
             "skills"
-          ].softSkills.join(", ")}</p>
+          ].soft_skills.join(", ")}</p>
           <p><strong>Other Skills:</strong> ${resumeData[
             "skills"
-          ].otherSkills.join(", ")}</p>
+          ].other_skills.join(", ")}</p>
         </section>
       </div>
 
@@ -1331,11 +1318,11 @@ app.post("/auth/template", (req, res) => {
   }
 
   /* Work Experience */
-  .work-experience .work-item {
+  .work_experience .work-item {
     margin-bottom: 15px;
   }
 
-  .work-experience p {
+  .work_experience p {
     font-size: 1em;
     color: #000;
   }
@@ -1935,7 +1922,7 @@ app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
   // You can parse the PDF here if needed with pdf-parse
 
   const optimizedResume = {
-    "personal-details": {
+    "personal_details": {
       fullName: "Gokulaaaaa",
       phone: "12667899",
       email: "asdfsdf@a.com",
@@ -1946,14 +1933,13 @@ app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
       summary: "About Me and my goals",
     },
     skills: {
-      programmingLanguages: ["Python", "Java"],
+      programming_languages: ["Python", "Java"],
       frameworks: ["Pytorch"],
       tools: ["Vscode"],
-      softSkills: ["Soft-skills"],
-      otherSkills: ["Tech-SKils"],
+      soft_skills: ["Soft-skills"],
+      other_skills: ["Tech-SKils"],
     },
-    "work-experience": {
-      workExperience: [
+    "work_experience":  [
         {
           title: "SSE1",
           company: "Akamai",
@@ -1963,8 +1949,7 @@ app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
           achievements: "Guided Missile launch",
         },
       ],
-    },
-    projects: {
+
       projects: [
         {
           title: "Project 1",
@@ -1974,9 +1959,7 @@ app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
           links: "https://asdasd.link.com",
         },
       ],
-    },
-    education: {
-      education: [
+    education: [
         {
           institution: "RNS Institute of Technology",
           degree: "Bachelors",
@@ -1986,9 +1969,7 @@ app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
           grade: "9.5",
         },
       ],
-    },
-    certifications: {
-      certifications: [
+    certifications:  [
         {
           name: "Cert1 ",
           authority: "Coursera",
@@ -1998,9 +1979,7 @@ app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
           credentialUrl: "url.com",
         },
       ],
-    },
-    internships: {
-      internships: [
+    internships: [
         {
           company: "Akamai",
           position: "AI Intern",
@@ -2009,7 +1988,6 @@ app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
           location: "Bengaluru ",
         },
       ],
-    },
     "awards-&-achievements": {
       awards: [
         {
@@ -2051,6 +2029,14 @@ app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
     res.json({ optimizedResume });
   }, 1500);
 });
+
+app.get("/auth/template",(req,res)=> {
+  res.json([
+    {"id": 1,"img":"https://i.ibb.co/d08t1nVD/Screenshot-2025-07-26-170647.png","name":"classic"},
+    {"id": 2,"img":"https://i.ibb.co/m5cq9c44/Screenshot-2025-07-26-170631.png","name":"awesome"},
+    {"id": 3,"img":"https://i.ibb.co/C5ZDygYx/Screenshot-2025-07-26-170704.png","name":"modern"},
+  ])
+})
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:3000`, port);
