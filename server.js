@@ -111,18 +111,19 @@ let userProfile = {
 
 let up = {
   profile_pic: null,
-  full_name: "John Doe",
-  dob: "1990-05-15",
-  usn: "1MC20CS001",
-  college_email: "john.doe@college.edu",
-  contact_number: "9876543210",
-  email: "john.doe@example.com",
-  address: "123 Mock Street, Mock City, MC 12345",
-  department_id: "1",
-  year: "2",
-  pass_out_year: "",
-  github_link: "https://github.com/johndoe",
-  linkedin_link: "https://linkedin.com/in/johndoe",
+  basic: {
+    full_name: "John Doe",
+    dob: "1990-05-15",
+    usn: "1MC20CS001",
+    college_email: "john.doe@college.edu",
+    contact_number: "9876543210",
+    email: "john.doe@example.com",
+    address: "123 Mock Street, Mock City, MC 12345",
+    department_id: "1",
+    pass_out_year: "2026",
+    github_link: "https://github.com/johndoe",
+    linkedin_link: "https://linkedin.com/in/johndoe",
+  },
   others: {
     bank_details: {
       bank_name: "SBI",
@@ -188,6 +189,16 @@ let up = {
       year: "2012",
       gpa: "8.5",
     },
+  },
+  academicPerformance: {
+    sem1: { gpa: "", closed_backlogs: "", new_backlogs: "" },
+    sem2: { gpa: "", closed_backlogs: "", new_backlogs: "" },
+    sem3: { gpa: "", closed_backlogs: "", new_backlogs: "" },
+    sem4: { gpa: "", closed_backlogs: "", new_backlogs: "" },
+    sem5: { gpa: "", closed_backlogs: "", new_backlogs: "" },
+    sem6: { gpa: "", closed_backlogs: "", new_backlogs: "" },
+    sem7: { gpa: "", closed_backlogs: "", new_backlogs: "" },
+    sem8: { gpa: "", closed_backlogs: "", new_backlogs: "" },
   },
   experience: {
     role_title: "Data Engineer",
@@ -755,7 +766,7 @@ const mockResumes = [
 ];
 
 app.get("/auth/resume", (req, res) => {
-  res.json({ resumes: mockResumes });
+  res.json({ resumes: [] });
 });
 
 app.post("/auth/resume/rename", (req, res) => {
@@ -961,32 +972,83 @@ app.get("/auth/interview", (req, res) => {
 });
 
 const fakeResult = {
-  name: "Frontend Developer Interview",
-  date: "2025-06-08T10:30:00Z",
-  resumeName: "JaneDoeResume.pdf",
-  score: 87,
-  breakdown: [
-    { category: "JavaScript", score: 90 },
-    { category: "React", score: 65 },
-    { category: "CSS", score: 40 },
-  ],
-  questions: [
-    {
-      question: "What is a closure in JavaScript?",
-      answer: "It's a function that remembers its lexical scope.",
-      feedback: "Great explanation. Very concise.",
-      category: "JavaScript",
-      categoryScore: 95,
-    },
-    {
-      question: "What are hooks in React?",
-      answer: "Functions that let you use state and other React features.",
-      feedback: "Well answered. Could use a bit more detail.",
-      category: "React",
-      categoryScore: 85,
-    },
-  ],
+  max_score: 100,
+  obtained_score: 87,
+  max_mcq_score: 10,
+  obtained_mcq_score: 8,
+  overall_feedback: "Strong JS knowledge, but CSS needs improvement.",
+  evaluation: {
+    mcq: [
+      {
+        difficulty: "medium",
+        skill_tag: "JavaScript",
+        question_text: "What is a closure in JavaScript?",
+        options: [
+          "A block of code that executes immediately",
+          "A way to bind this to a function",
+          "A function that remembers its lexical scope",
+          "A type of JavaScript object"
+        ],
+        correct_answer: "A function that remembers its lexical scope",
+        user_answer: "A function that remembers its lexical scope",
+        score: 9
+      },
+      {
+        difficulty: "medium",
+        skill_tag: "React",
+        question_text: "What are hooks in React?",
+        options: [
+          "Functions that let you use state and other React features",
+          "A way to fetch data in React",
+          "A debugging tool",
+          "An HTML attribute"
+        ],
+        correct_answer: "Functions that let you use state and other React features",
+        user_answer: "Functions that let you use state and other React features",
+        score: 8
+      }
+    ],
+    short_answer: [
+      {
+        difficulty: "easy",
+        skill_tag: "CSS",
+        question_text: "Explain the difference between relative, absolute, fixed, and sticky positioning in CSS.",
+        user_answer: "Relative positions relative to itself, absolute to its parent, fixed to viewport, sticky between relative and fixed.",
+        relevancy_score: 5,
+        score: 6,
+        feedback: "Good start, but could add more examples for clarity.",
+        correct_answer: "Relative offsets element from its normal position, absolute positions relative to nearest positioned ancestor, fixed relative to viewport, sticky toggles between relative and fixed."
+      }
+    ],
+    scenario: [
+      {
+        difficulty: "medium",
+        skill_tag: "React + CSS",
+        question_text: "Given a design mockup, how would you structure your components and styles for reusability?",
+        user_answer: "Break into smaller functional components, use CSS modules, maintain theme variables.",
+        relevancy_score: 7,
+        score: 8,
+        feedback: "Solid answer. Could mention accessibility considerations.",
+        correct_answer: "Break into reusable functional components, use CSS modules or styled-components, maintain theme variables, and ensure accessibility."
+      }
+    ],
+    languages: {
+      JavaScript: [
+        {
+          difficulty: "medium",
+          skill_tag: "JavaScript",
+          question_text: "Explain event delegation in JavaScript.",
+          user_answer: "Attaching event handlers to a parent element to manage child events.",
+          relevancy_score: 8,
+          score: 9,
+          feedback: "Excellent and concise.",
+          correct_answer: "Event delegation is the practice of attaching a single event handler to a parent element to handle events on its child elements."
+        }
+      ]
+    }
+  }
 };
+
 
 app.get("/auth/interview/result/:id", (req, res) => {
   res.json(fakeResult);
