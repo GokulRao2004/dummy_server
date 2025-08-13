@@ -461,6 +461,43 @@ let mockJobs = Array.from({ length: 100 }, (_, i) => {
   };
 });
 
+let mockJobsApplied = Array.from({ length: 10 }, (_, i) => {
+  const roles = [
+    "Frontend Developer",
+    "Backend Engineer",
+    "Full Stack Developer",
+    "Data Scientist",
+  ];
+  const companies = ["Google", "Microsoft", "Amazon", "Netflix", "Meta"];
+  const locations = ["Bangalore", "Mumbai", "Remote", "Delhi", "Hyderabad"];
+  const remoteTypes = ["Remote", "Onsite", "Hybrid"];
+  const statuses = ["in_progess", "selected", "rejected"];
+
+  const role = roles[i % roles.length];
+  const status = statuses[i % statuses.length];
+  const company = companies[i % companies.length];
+  const location = locations[i % locations.length];
+  const remoteType = remoteTypes[i % remoteTypes.length];
+  const remote = remoteType === "Remote";
+
+  return {
+    logo: "https://i.ibb.co/hFJgrGNR/googlelogo.png",
+    id: i + 1,
+    company,
+    role,
+    status,
+    location,
+    remoteType,
+    remote,
+    experience: `${1 + (i % 5)}-${2 + (i % 5)} years`,
+    salary: `${6 + (i % 5)}-${10 + (i % 5)} LPA`,
+    postedOn: new Date(Date.now() - i * 86400000).toISOString().split("T")[0],
+    starred: false, // default starred status is false,
+    link: "https://www.google.com",
+    templateId: 18,
+  };
+});
+
 // Mock in-memory store for starred jobs per user
 let userStarredJobs = {}; // { userId: [jobId1, jobId2, ...] }
 
@@ -622,7 +659,7 @@ app.get("/auth/job/starred_job", (req, res) => {
 });
 
 const mockResumeData = {
-  "personal_details": {
+  personal_details: {
     fullName: "Goku",
     phone: "12345667899",
     email: "a@a.com",
@@ -632,98 +669,98 @@ const mockResumeData = {
     location: "Bengaluru ",
     summary: "About Me and my goals",
   },
-  "skills": {
+  skills: {
     programming_languages: ["Python", "Java"],
     frameworks: ["Pytorch"],
     tools: ["Vscode"],
     soft_skills: ["Soft-skills"],
     other_skills: ["Tech-SKils"],
   },
-  "work_experience":  [
-      {
-        title: "SSE1",
-        company: "Akamai",
-        startDate: "2024-01",
-        endDate: "2025-02",
-        responsibilities: "None",
-        achievements: "Guided Missile launch",
-      },
-    ],
+  work_experience: [
+    {
+      title: "SSE1",
+      company: "Akamai",
+      startDate: "2024-01",
+      endDate: "2025-02",
+      responsibilities: "None",
+      achievements: "Guided Missile launch",
+    },
+  ],
 
-  "projects": [
-      {
-        title: "Project 1",
-        technologies: "react, js, node",
-        teamSize: "1",
-        impact: "no impact",
-        links: "https://www.link.com",
-      },
-    ],
-  "education":  [
-      {
-        institution: "RNS Institute of Technology",
-        degree: "Bachelors",
-        fieldOfStudy: "PCMB",
-        startDate: "2025-11",
-        endDate: "2025-12",
-        grade: "9.5",
-      },
-    ],
-  "certifications":  [
-      {
-        name: "Cert1 ",
-        authority: "Coursera",
-        issueDate: "2025-01",
-        expirationDate: "2025-11",
-        credentialId: "12312hk123j1",
-        credentialUrl: "url.com",
-      },
-    ],
-  "internships":  [
-      {
-        company: "Akamai",
-        position: "AI Intern",
-        startDate: "2023-01",
-        endDate: "2025-05",
-        location: "Bengaluru ",
-      },
-    ],
-  
-    'awards': [
-      {
-        title: "Award 1",
-        issuer: "Issuer 1",
-        date: "2025-01",
-        description: "Desc",
-      },
-    ],
-  "volunteer_experience": [
-      {
-        organization: "Volunteer 1",
-        role: "Student Technical Support – Faculty Development Program",
-        startDate: "2025-01",
-        endDate: "2025-02",
-        description: "Desc",
-      },
-    ],
-  "interests": {
+  projects: [
+    {
+      title: "Project 1",
+      technologies: "react, js, node",
+      teamSize: "1",
+      impact: "no impact",
+      links: "https://www.link.com",
+    },
+  ],
+  education: [
+    {
+      institution: "RNS Institute of Technology",
+      degree: "Bachelors",
+      fieldOfStudy: "PCMB",
+      startDate: "2025-11",
+      endDate: "2025-12",
+      grade: "9.5",
+    },
+  ],
+  certifications: [
+    {
+      name: "Cert1 ",
+      authority: "Coursera",
+      issueDate: "2025-01",
+      expirationDate: "2025-11",
+      credentialId: "12312hk123j1",
+      credentialUrl: "url.com",
+    },
+  ],
+  internships: [
+    {
+      company: "Akamai",
+      position: "AI Intern",
+      startDate: "2023-01",
+      endDate: "2025-05",
+      location: "Bengaluru ",
+    },
+  ],
+
+  awards: [
+    {
+      title: "Award 1",
+      issuer: "Issuer 1",
+      date: "2025-01",
+      description: "Desc",
+    },
+  ],
+  volunteer_experience: [
+    {
+      organization: "Volunteer 1",
+      role: "Student Technical Support – Faculty Development Program",
+      startDate: "2025-01",
+      endDate: "2025-02",
+      description: "Desc",
+    },
+  ],
+  interests: {
     languages: ["Kannada", "English", "Hindi"],
     interests: ["Painting", "Running"],
   },
 
-    "publications": [
-      {
-        title: "Pub 1",
-        publisher: "Google",
-        date: "2025-01",
-        link: "ex.com",
-        description: "Desc",
-      },
-    ],
+  publications: [
+    {
+      title: "Pub 1",
+      publisher: "Google",
+      date: "2025-01",
+      link: "ex.com",
+      description: "Desc",
+    },
+  ],
 };
 
 const mockResumeData2 = {
-  "personal_details": {
+  personal_details: {
     fullName: "Goku",
     phone: "12345667899",
     email: "a@a.com",
@@ -987,11 +1024,11 @@ const fakeResult = {
           "A block of code that executes immediately",
           "A way to bind this to a function",
           "A function that remembers its lexical scope",
-          "A type of JavaScript object"
+          "A type of JavaScript object",
         ],
         correct_answer: "A function that remembers its lexical scope",
         user_answer: "A function that remembers its lexical scope",
-        score: 9
+        score: 9,
       },
       {
         difficulty: "medium",
@@ -1001,36 +1038,44 @@ const fakeResult = {
           "Functions that let you use state and other React features",
           "A way to fetch data in React",
           "A debugging tool",
-          "An HTML attribute"
+          "An HTML attribute",
         ],
-        correct_answer: "Functions that let you use state and other React features",
-        user_answer: "Functions that let you use state and other React features",
-        score: 8
-      }
+        correct_answer:
+          "Functions that let you use state and other React features",
+        user_answer:
+          "Functions that let you use state and other React features",
+        score: 8,
+      },
     ],
     short_answer: [
       {
         difficulty: "easy",
         skill_tag: "CSS",
-        question_text: "Explain the difference between relative, absolute, fixed, and sticky positioning in CSS.",
-        user_answer: "Relative positions relative to itself, absolute to its parent, fixed to viewport, sticky between relative and fixed.",
+        question_text:
+          "Explain the difference between relative, absolute, fixed, and sticky positioning in CSS.",
+        user_answer:
+          "Relative positions relative to itself, absolute to its parent, fixed to viewport, sticky between relative and fixed.",
         relevancy_score: 5,
         score: 6,
         feedback: "Good start, but could add more examples for clarity.",
-        correct_answer: "Relative offsets element from its normal position, absolute positions relative to nearest positioned ancestor, fixed relative to viewport, sticky toggles between relative and fixed."
-      }
+        correct_answer:
+          "Relative offsets element from its normal position, absolute positions relative to nearest positioned ancestor, fixed relative to viewport, sticky toggles between relative and fixed.",
+      },
     ],
     scenario: [
       {
         difficulty: "medium",
         skill_tag: "React + CSS",
-        question_text: "Given a design mockup, how would you structure your components and styles for reusability?",
-        user_answer: "Break into smaller functional components, use CSS modules, maintain theme variables.",
+        question_text:
+          "Given a design mockup, how would you structure your components and styles for reusability?",
+        user_answer:
+          "Break into smaller functional components, use CSS modules, maintain theme variables.",
         relevancy_score: 7,
         score: 8,
         feedback: "Solid answer. Could mention accessibility considerations.",
-        correct_answer: "Break into reusable functional components, use CSS modules or styled-components, maintain theme variables, and ensure accessibility."
-      }
+        correct_answer:
+          "Break into reusable functional components, use CSS modules or styled-components, maintain theme variables, and ensure accessibility.",
+      },
     ],
     languages: {
       JavaScript: [
@@ -1038,20 +1083,21 @@ const fakeResult = {
           difficulty: "medium",
           skill_tag: "JavaScript",
           question_text: "Explain event delegation in JavaScript.",
-          user_answer: "Attaching event handlers to a parent element to manage child events.",
+          user_answer:
+            "Attaching event handlers to a parent element to manage child events.",
           relevancy_score: 8,
           score: 9,
           feedback: "Excellent and concise.",
-          correct_answer: "Event delegation is the practice of attaching a single event handler to a parent element to handle events on its child elements."
-        }
-      ]
-    }
-  }
+          correct_answer:
+            "Event delegation is the practice of attaching a single event handler to a parent element to handle events on its child elements.",
+        },
+      ],
+    },
+  },
 };
 
-
 app.get("/auth/interview/result/:id", (req, res) => {
-  res.json(fakeResult);
+  res.json({ evaluation: null });
 });
 
 app.get("/auth/interview/new/:id", (req, res) => {
@@ -1640,19 +1686,136 @@ app.get("/auth/admin/student", (req, res) => {
 });
 
 // GET /auth/admin/student/:id
-
+const dept = [
+  { id: "1", name: "CSE" },
+  { id: "2", name: "ME" },
+  { id: "3", name: "ISE" },
+  { id: "4", name: "AIML" },
+  { id: "5", name: "AIDS" },
+];
 const roles = [
   "Software Engineer",
   "Data Scientist",
   "Product Manager",
-  "Designer",
+  "UI/UX Designer",
+  "DevOps Engineer",
 ];
-const locations = ["New York", "San Francisco", "Remote", "Austin"];
+const locations = [
+  "New York",
+  "San Francisco",
+  "Remote",
+  "London",
+  "Bangalore",
+];
+const jobTypes = ["Full-time", "Part-time", "Internship", "Contract"];
 
+const backlogPolicies = [
+  "No backlog",
+  "1 backlog allowed",
+  "2 backlogs allowed",
+  "More than 2 allowed",
+];
+const statuses = ["Open", "Closed", "Paused"];
 // Mock jobs data
 const allJobs = Array.from({ length: 100 }).map((_, i) => {
   const role = roles[i % roles.length];
   const location = locations[i % locations.length];
+  const jobType = jobTypes[i % jobTypes.length];
+  const isInternship = jobType === "Internship";
+
+  // Select 1-3 random departments for each job
+  const numDepts = (i % 3) + 1; // 1, 2, or 3 departments
+  const selectedDepts = [];
+  for (let j = 0; j < numDepts; j++) {
+    const deptIndex = (i + j) % dept.length;
+    if (!selectedDepts.includes(dept[deptIndex].name)) {
+      selectedDepts.push(dept[deptIndex].name);
+    }
+  }
+
+  return {
+    id: i + 1,
+    job_title: role,
+    company_name: `Company ${i + 1}`,
+    job_location: location,
+    job_type: jobType,
+    remote: location === "Remote",
+    experience: (i % 5) + 1,
+
+    // CTC fields (for non-internships)
+    ctc: isInternship ? null : 60000 + i * 1000,
+    ctc_period: isInternship ? null : "annual",
+
+    // Stipend fields (for internships)
+    stipend: isInternship ? 500 + i * 50 : null,
+    stipend_period: isInternship ? "monthly" : null,
+
+    // Application tracking
+    applications: (i * 7) % 50,
+    total_applicants: (i * 7) % 50,
+
+    // Job details
+    description: `This is a ${role} position at Company ${
+      i + 1
+    }. We are looking for talented individuals to join our team in ${location}. This role requires ${
+      (i % 5) + 1
+    } years of experience.`,
+    requirements: `- ${
+      (i % 5) + 1
+    }+ years of experience\n- Strong technical skills\n- Team player\n- Excellent communication skills`,
+    other_requirements: i % 2 === 0 ? "Must be willing to relocate" : null,
+
+    // Contact and eligibility
+    contact_email: `hr@company${i + 1}.com`,
+    eligible_departments: selectedDepts,
+    passout_year: (2025 + (i % 3)).toString(),
+
+    // Academic requirements
+    cgpa_requirement: (6.0 + (i % 4) * 0.5).toFixed(1),
+    backlog_policy: backlogPolicies[i % backlogPolicies.length],
+
+    // Scheduling
+    number_of_rounds: 3,
+    add_schedule_later: i % 4 === 0,
+    rounds: [
+      {
+        date: "2025-08-07",
+        start_time: "09:00",
+        end_time: "11:00",
+        location: `Room ${(i % 10) + 1}`,
+        description: "Technical Round - Programming and problem solving",
+      },
+      {
+        date: "2025-08-08",
+        start_time: "14:00",
+        end_time: "15:30",
+        location: `Room ${((i + 1) % 10) + 1}`,
+        description: "HR Round - Behavioral and cultural fit",
+      },
+      {
+        date: "2025-08-09",
+        start_time: "10:30",
+        end_time: "12:00",
+        location: `Room ${((i + 2) % 10) + 1}`,
+        description: "Final Round - Manager interview",
+      },
+    ],
+
+    // Dates and status
+    application_deadline: new Date(
+      Date.now() + (i % 30) * 24 * 60 * 60 * 1000
+    ).toISOString(),
+
+    // File handling (would be null for mock data)
+    jd_file: null,
+  };
+});
+const appliedJobs = Array.from({ length: 100 }).map((_, i) => {
+  const role = roles[i % roles.length];
+  const location = locations[i % locations.length];
+  const statuses = ["in_progress", "selected", "rejected"];
+  const status = statuses[i % statuses.length];
+
   return {
     logo: "https://i.ibb.co/hFJgrGNR/googlelogo.png",
     id: i + 1,
@@ -1665,11 +1828,27 @@ const allJobs = Array.from({ length: 100 }).map((_, i) => {
     ctc_period: "annual",
     stipend: 500 + i * 1000,
     stipend_period: "monthly",
+    rounds: [
+      {
+        date: "2025-08-07",
+        start_time: "20:56",
+        end_time: "17:59",
+        location: "12",
+        description: "333",
+      },
+      {
+        date: "2025-08-07",
+        start_time: "20:56",
+        end_time: "17:59",
+        location: "12",
+        description: "333",
+      },
+    ],
     applications: (i * 7) % 50,
     application_deadline: new Date(
       Date.now() + (i % 30) * 24 * 60 * 60 * 1000
     ).toISOString(),
-    status: i % 3 === 0 ? "Open" : "Closed",
+    applicant_status: status,
   };
 });
 
@@ -1771,6 +1950,42 @@ app.get("/auth/admin/job", (req, res) => {
   });
 });
 
+app.get("/auth/admin/applied_job", (req, res) => {
+  const {
+    page = 1,
+    search = "",
+    role = "",
+    location = "",
+    remote,
+    sortBy = "deadline",
+  } = req.query;
+
+  const roleFilters = role ? role.split(",") : [];
+  const locationFilters = location ? location.split(",") : [];
+
+  let filteredJobs = filterJobs(appliedJobs, {
+    search,
+    role: roleFilters,
+    location: locationFilters,
+    remote,
+    sortBy,
+  });
+
+  // Pagination
+  const pageSize = 10;
+  const currentPage = parseInt(page, 10);
+  const totalPages = Math.ceil(filteredJobs.length / pageSize);
+  const pagedJobs = filteredJobs.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  res.json({
+    jobs: pagedJobs,
+    pages: totalPages,
+  });
+});
+
 // Route 1: Get job details only
 app.get("/auth/admin/job/:jobId", (req, res) => {
   const jobId = parseInt(req.params.jobId, 10);
@@ -1781,30 +1996,7 @@ app.get("/auth/admin/job/:jobId", (req, res) => {
   }
 
   // Return in the new required format:
-  res.json({
-    application_deadline: null, // always null as per example
-    backlog_policy: "1 backlog allowed", // fixed string
-    cgpa_requirement: 9.0, // fixed float
-    company_name: job.company_name,
-    contact_email: "gokul@gmail.com", // fixed email
-    ctc: job.ctc,
-    ctc_period: job.ctc_period,
-    description: "Web app development experience", // fixed description
-    eligible_departments: ["IS", "AIML", "CS"], // fixed array
-    id: job.id, // a string id, made unique by prefixing
-    job_location: job.job_location,
-    job_title: job.job_title,
-    job_type: "Full-time", // fixed string
-    other_requirements: "MongoDb", // fixed string
-    passout_year: 2027, // fixed int
-    posted_on: new Date().toUTCString(), // current date string
-    remote: job.remote,
-    requirements: "Python Flask", // fixed string
-    status: job.status,
-    stipend: 0.0, // fixed zero stipend
-    stipend_period: "per-month", // fixed string
-    total_applicants: job.applications, // renamed from applications
-  });
+  res.json(job);
 });
 
 // Route 2: Get applicants for a specific job with pagination and filters
@@ -1958,19 +2150,18 @@ app.get("/auth/admin/job/create/eligibility_options", (req, res) => {
   });
 });
 
-app.post("/auth/admin/job/create", (req, res) => {
+app.post("/auth/admin/job", upload.none(), (req, res) => {
+  console.log("req.body: ", req.body.rounds); // Contains form fields
   res.status(200).json({
-    msg: "Succesfull",
+    msg: "Successful",
   });
 });
-
-const dept = [
-  { id: "1", name: "CSE" },
-  { id: "2", name: "ME" },
-  { id: "3", name: "ISE" },
-  { id: "4", name: "AIML" },
-  { id: "5", name: "AIDS" },
-];
+app.put("/auth/admin/job/:id", upload.none(), (req, res) => {
+  console.log("req.body: ", req.body.rounds); // Contains form fields
+  res.status(200).json({
+    msg: "Successful",
+  });
+});
 
 app.get("/auth/admin/department", (req, res) => {
   res.json(dept);
@@ -1984,7 +2175,7 @@ app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
   // You can parse the PDF here if needed with pdf-parse
 
   const optimizedResume = {
-    "personal_details": {
+    personal_details: {
       fullName: "Gokulaaaaa",
       phone: "12667899",
       email: "asdfsdf@a.com",
@@ -2001,55 +2192,55 @@ app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
       soft_skills: ["Soft-skills"],
       other_skills: ["Tech-SKils"],
     },
-    "work_experience":  [
-        {
-          title: "SSE1",
-          company: "Akamai",
-          startDate: "2024-01",
-          endDate: "2025-02",
-          responsibilities: "None",
-          achievements: "Guided Missile launch",
-        },
-      ],
+    work_experience: [
+      {
+        title: "SSE1",
+        company: "Akamai",
+        startDate: "2024-01",
+        endDate: "2025-02",
+        responsibilities: "None",
+        achievements: "Guided Missile launch",
+      },
+    ],
 
-      projects: [
-        {
-          title: "Project 1",
-          technologies: "react, js, node",
-          teamSize: "1",
-          impact: "no impacsdfsdft",
-          links: "https://asdasd.link.com",
-        },
-      ],
+    projects: [
+      {
+        title: "Project 1",
+        technologies: "react, js, node",
+        teamSize: "1",
+        impact: "no impacsdfsdft",
+        links: "https://asdasd.link.com",
+      },
+    ],
     education: [
-        {
-          institution: "RNS Institute of Technology",
-          degree: "Bachelors",
-          fieldOfStudy: "PCMB",
-          startDate: "2025-11",
-          endDate: "2025-12",
-          grade: "9.5",
-        },
-      ],
-    certifications:  [
-        {
-          name: "Cert1 ",
-          authority: "Coursera",
-          issueDate: "2025-01",
-          expirationDate: "2025-11",
-          credentialId: "12asdsad312hk123j1",
-          credentialUrl: "url.com",
-        },
-      ],
+      {
+        institution: "RNS Institute of Technology",
+        degree: "Bachelors",
+        fieldOfStudy: "PCMB",
+        startDate: "2025-11",
+        endDate: "2025-12",
+        grade: "9.5",
+      },
+    ],
+    certifications: [
+      {
+        name: "Cert1 ",
+        authority: "Coursera",
+        issueDate: "2025-01",
+        expirationDate: "2025-11",
+        credentialId: "12asdsad312hk123j1",
+        credentialUrl: "url.com",
+      },
+    ],
     internships: [
-        {
-          company: "Akamai",
-          position: "AI Intern",
-          startDate: "2023-01",
-          endDate: "2025-05",
-          location: "Bengaluru ",
-        },
-      ],
+      {
+        company: "Akamai",
+        position: "AI Intern",
+        startDate: "2023-01",
+        endDate: "2025-05",
+        location: "Bengaluru ",
+      },
+    ],
     "awards-&-achievements": {
       awards: [
         {
@@ -2092,13 +2283,25 @@ app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
   }, 1500);
 });
 
-app.get("/auth/template",(req,res)=> {
+app.get("/auth/template", (req, res) => {
   res.json([
-    {"id": 1,"img":"https://i.ibb.co/d08t1nVD/Screenshot-2025-07-26-170647.png","name":"classic"},
-    {"id": 2,"img":"https://i.ibb.co/m5cq9c44/Screenshot-2025-07-26-170631.png","name":"awesome"},
-    {"id": 3,"img":"https://i.ibb.co/C5ZDygYx/Screenshot-2025-07-26-170704.png","name":"modern"},
-  ])
-})
+    {
+      id: 1,
+      img: "https://i.ibb.co/d08t1nVD/Screenshot-2025-07-26-170647.png",
+      name: "classic",
+    },
+    {
+      id: 2,
+      img: "https://i.ibb.co/m5cq9c44/Screenshot-2025-07-26-170631.png",
+      name: "awesome",
+    },
+    {
+      id: 3,
+      img: "https://i.ibb.co/C5ZDygYx/Screenshot-2025-07-26-170704.png",
+      name: "modern",
+    },
+  ]);
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:3000`, port);
