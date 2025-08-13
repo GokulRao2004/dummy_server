@@ -2303,6 +2303,15 @@ app.get("/auth/template", (req, res) => {
   ]);
 });
 
+app.post('/auth/admin/student', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+  res.json({
+    message: `File ${req.file.originalname} uploaded successfully`,
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:3000`, port);
 });
