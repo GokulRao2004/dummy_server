@@ -189,17 +189,18 @@ let up = {
       year: "2012",
       gpa: "8.5",
     },
+    academic_performance: {
+      sem1: { gpa: "8", closed_backlogs: "", new_backlogs: "" },
+      sem2: { gpa: "8", closed_backlogs: "", new_backlogs: "" },
+      sem3: { gpa: "8", closed_backlogs: "", new_backlogs: "" },
+      sem4: { gpa: "8", closed_backlogs: "", new_backlogs: "" },
+      sem5: { gpa: "8", closed_backlogs: "", new_backlogs: "" },
+      sem6: { gpa: "8", closed_backlogs: "", new_backlogs: "" },
+      sem7: { gpa: "8", closed_backlogs: "", new_backlogs: "" },
+      sem8: { gpa: "", closed_backlogs: "", new_backlogs: "" },
+    },
   },
-  academicPerformance: {
-    sem1: { gpa: "", closed_backlogs: "", new_backlogs: "" },
-    sem2: { gpa: "", closed_backlogs: "", new_backlogs: "" },
-    sem3: { gpa: "", closed_backlogs: "", new_backlogs: "" },
-    sem4: { gpa: "", closed_backlogs: "", new_backlogs: "" },
-    sem5: { gpa: "", closed_backlogs: "", new_backlogs: "" },
-    sem6: { gpa: "", closed_backlogs: "", new_backlogs: "" },
-    sem7: { gpa: "", closed_backlogs: "", new_backlogs: "" },
-    sem8: { gpa: "", closed_backlogs: "", new_backlogs: "" },
-  },
+
   experience: {
     role_title: "Data Engineer",
     professional_summary: "I want to be a engineer.",
@@ -1685,14 +1686,125 @@ app.get("/auth/admin/student", (req, res) => {
   });
 });
 
-// GET /auth/admin/student/:id
-const dept = [
-  { id: "1", name: "CSE" },
-  { id: "2", name: "ME" },
-  { id: "3", name: "ISE" },
-  { id: "4", name: "AIML" },
-  { id: "5", name: "AIDS" },
+dept = [
+  {
+    id: 1,
+    name: "Computer Science & Engineering",
+    code: "CSE",
+    coordinator_name: "Prof. Anjali Sharma",
+    coordinator_email: "anjali.s@college.edu",
+  },
+  {
+    id: 2,
+    name: "Mechanical Engineering",
+    code: "ME",
+    coordinator_name: "Prof. Vikram Singh",
+    coordinator_email: "vikram.s@college.edu",
+  },
+  {
+    id: 3,
+    name: "Electronics & Communication",
+    code: "ECE",
+    coordinator_name: "Dr. R. Mehta",
+    coordinator_email: "mehta.r@college.edu",
+  },
 ];
+bands = [
+  {
+    id: 1,
+    name: "Dream Offer",
+    rule: { type: "GREATER_THAN", value1: 1500000, value2: null },
+  },
+  {
+    id: 2,
+    name: "Super Dream",
+    rule: { type: "BETWEEN", value1: 1000000, value2: 1500000 },
+  },
+  {
+    id: 3,
+    name: "Core Offer",
+    rule: { type: "BETWEEN", value1: 600000, value2: 1000000 },
+  },
+];
+
+// --- Helper to simulate network delay ---
+const simulateDelay = (req, res, next) => {
+  setTimeout(next, Math.floor(Math.random() * 800) + 200); // 200-1000ms delay
+};
+
+// --- Department Routes ---
+
+// GET /api/departments
+app.get("/auth/admin/department", (req, res) => {
+  console.log("GET /api/departments - Responding with:", dept);
+  res.status(200).json(dept);
+});
+
+// PUT /api/departments
+app.put("/auth/admin/department", (req, res) => {
+  const { departments } = req.body;
+
+  if (!Array.isArray(departments)) {
+    return res
+      .status(400)
+      .json({ message: "Invalid payload. 'departments' must be an array." });
+  }
+
+  // Basic validation for the received data
+  for (const dept of departments) {
+    if (!dept.id || !dept.name || !dept.code) {
+      return res.status(400).json({
+        message: `Invalid department object received. Missing required fields: ${JSON.stringify(
+          dept
+        )}`,
+      });
+    }
+  }
+
+  // Update the in-memory database
+  dept = departments;
+  console.log("PUT /api/departments - Database updated:", departments);
+
+  res.status(200).json({ message: "Departments updated successfully." });
+});
+
+// --- Band Routes ---
+
+// GET /api/bands
+app.get("/auth/admin/bands", (req, res) => {
+  console.log("GET /api/bands - Responding with:", bands);
+  res.status(200).json(bands);
+});
+
+// PUT /api/bands
+app.put("/auth/admin/bands", (req, res) => {
+  const { bands } = req.body;
+
+  if (!Array.isArray(bands)) {
+    return res
+      .status(400)
+      .json({ message: "Invalid payload. 'bands' must be an array." });
+  }
+
+  // Basic validation
+  for (const band of bands) {
+    if (!band.id || !band.name) {
+      return res.status(400).json({
+        message: `Invalid band object received. Missing required fields: ${JSON.stringify(
+          band
+        )}`,
+      });
+    }
+  }
+
+  // Update the in-memory database
+  console.log("PUT /api/bands - Database updated:", bands);
+
+  res.status(200).json({ message: "Bands updated successfully." });
+});
+
+// GET /auth/admin/student/:id
+
 const roles = [
   "Software Engineer",
   "Data Scientist",
@@ -2151,7 +2263,6 @@ app.get("/auth/admin/job/create/eligibility_options", (req, res) => {
 });
 
 app.post("/auth/admin/job", upload.none(), (req, res) => {
-  console.log("req.body: ", req.body.rounds); // Contains form fields
   res.status(200).json({
     msg: "Successful",
   });
@@ -2165,6 +2276,10 @@ app.put("/auth/admin/job/:id", upload.none(), (req, res) => {
 
 app.get("/auth/admin/department", (req, res) => {
   res.json(dept);
+});
+
+app.get("/auth/admin/bands", (req, res) => {
+  res.json(bands);
 });
 
 app.post("/auth/resume/optimize", upload.single("file"), (req, res) => {
@@ -2303,9 +2418,9 @@ app.get("/auth/template", (req, res) => {
   ]);
 });
 
-app.post('/auth/admin/student', upload.single('file'), (req, res) => {
+app.post("/auth/admin/student", upload.single("file"), (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded' });
+    return res.status(400).json({ error: "No file uploaded" });
   }
   res.json({
     message: `File ${req.file.originalname} uploaded successfully`,
