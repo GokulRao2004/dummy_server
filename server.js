@@ -213,29 +213,52 @@ let up = {
     },
     work_experience: [
       {
-        title: "SDE",
-        company: "Amazon",
-        start_date: "2025-01",
-        end_date: "2025-12",
-        responsibilities: "No responsibilities",
-        achievements: "Became good at corporate",
+        job_title: "Software Engineer",
+        company_name: "Google",
+        start_date: "2022-06",
+        end_date: "2024-01",
+        location: "Mountain View, CA",
+        description:
+          "Worked on improving the performance of Google Search indexing systems, implemented microservices, and mentored junior developers.",
+      },
+      {
+        job_title: "Backend Developer",
+        company_name: "Stripe",
+        start_date: "2020-03",
+        end_date: "2022-05",
+        location: "Remote",
+        description:
+          "Developed APIs for payment processing, optimized database queries for scalability, and contributed to CI/CD pipeline automation.",
       },
     ],
+
     internships: [
       {
-        position: "AI Intern",
-        company: "Akamai",
-        start_date: "2025-01",
-        end_date: "2025-12",
-        location: "Bengaluru ",
+        job_title: "AI Intern",
+        company_name: "OpenAI",
+        start_date: "2023-06",
+        end_date: "2023-12",
+        location: "San Francisco, CA",
+        description:
+          "Researched NLP models for conversational AI, experimented with reinforcement learning, and documented model evaluation metrics.",
+      },
+      {
+        job_title: "Frontend Intern",
+        company_name: "Spotify",
+        start_date: "2022-01",
+        end_date: "2022-06",
+        location: "Stockholm, Sweden",
+        description:
+          "Built UI components with React, improved accessibility features, and collaborated with UX designers on user engagement tools.",
       },
     ],
+
     projects: [
       {
         title: "Title",
         technologies: "react",
         team_size: "2",
-        impact: "Impact/outcome",
+        description: "Description",
         links: "p2.com",
       },
     ],
@@ -677,23 +700,13 @@ const mockResumeData = {
     soft_skills: ["Soft-skills"],
     other_skills: ["Tech-SKils"],
   },
-  work_experience: [
-    {
-      title: "SSE1",
-      company: "Akamai",
-      startDate: "2024-01",
-      endDate: "2025-02",
-      responsibilities: "None",
-      achievements: "Guided Missile launch",
-    },
-  ],
 
   projects: [
     {
       title: "Project 1",
       technologies: "react, js, node",
       teamSize: "1",
-      impact: "no impact",
+      description: "no impact",
       links: "https://www.link.com",
     },
   ],
@@ -717,15 +730,6 @@ const mockResumeData = {
       credentialUrl: "url.com",
     },
   ],
-  internships: [
-    {
-      company: "Akamai",
-      position: "AI Intern",
-      startDate: "2023-01",
-      endDate: "2025-05",
-      location: "Bengaluru ",
-    },
-  ],
 
   awards: [
     {
@@ -735,6 +739,49 @@ const mockResumeData = {
       description: "Desc",
     },
   ],
+
+  work_experience: [
+    {
+      job_title: "Software Engineer",
+      company_name: "Google",
+      start_date: "2022-06",
+      end_date: "2024-01",
+      location: "Mountain View, CA",
+      description:
+        "Worked on improving the performance of Google Search indexing systems, implemented microservices, and mentored junior developers.",
+    },
+    {
+      job_title: "Backend Developer",
+      company_name: "Stripe",
+      start_date: "2020-03",
+      end_date: "2022-05",
+      location: "Remote",
+      description:
+        "Developed APIs for payment processing, optimized database queries for scalability, and contributed to CI/CD pipeline automation.",
+    },
+  ],
+
+  internships: [
+    {
+      job_title: "AI Intern",
+      company_name: "OpenAI",
+      start_date: "2023-06",
+      end_date: "2023-12",
+      location: "San Francisco, CA",
+      description:
+        "Researched NLP models for conversational AI, experimented with reinforcement learning, and documented model evaluation metrics.",
+    },
+    {
+      job_title: "Frontend Intern",
+      company_name: "Spotify",
+      start_date: "2022-01",
+      end_date: "2022-06",
+      location: "Stockholm, Sweden",
+      description:
+        "Built UI components with React, improved accessibility features, and collaborated with UX designers on user engagement tools.",
+    },
+  ],
+
   volunteer_experience: [
     {
       organization: "Volunteer 1",
