@@ -184,11 +184,7 @@ let up = {
       gpa: "99",
       active_backlogs: "1",
     },
-    engineering: {
-      college: "Mock Engineering College",
-      year: "2012",
-      gpa: "8.5",
-    },
+
     academic_performance: {
       sem1: { gpa: "8", closed_backlogs: "", new_backlogs: "" },
       sem2: { gpa: "8", closed_backlogs: "", new_backlogs: "" },
@@ -279,7 +275,7 @@ let up = {
         title: "Branch Topper",
         issuer: "RNSIT",
         date: "2025-07-01",
-        description: "",
+        description: "Desc",
       },
     ],
     volunteer_experience: [
@@ -682,131 +678,132 @@ app.get("/auth/job/starred_job", (req, res) => {
   });
 });
 
-const mockResumeData = {
-  personal_details: {
-    fullName: "Goku",
-    phone: "12345667899",
-    email: "a@a.com",
-    linkedin: "linkedin.in",
-    github: "github.com",
-    portfolio: "a.com",
-    location: "Bengaluru ",
-    summary: "About Me and my goals",
-  },
-  skills: {
-    programming_languages: ["Python", "Java"],
-    frameworks: ["Pytorch"],
-    tools: ["Vscode"],
-    soft_skills: ["Soft-skills"],
-    other_skills: ["Tech-SKils"],
-  },
+// const mockResumeData = {
+//   personal_details: {
+//     fullName: "Goku",
+//     phone: "12345667899",
+//     email: "a@a.com",
+//     linkedin: "linkedin.in",
+//     github: "github.com",
+//     portfolio: "a.com",
+//     location: "Bengaluru ",
+//     summary: "About Me and my goals",
+//   },
+//   skills: {
+//     programming_languages: ["Python", "Java"],
+//     frameworks: ["Pytorch"],
+//     tools: ["Vscode"],
+//     soft_skills: ["Soft-skills"],
+//     other_skills: ["Tech-SKils"],
+//   },
 
-  projects: [
-    {
-      title: "Project 1",
-      technologies: "react, js, node",
-      teamSize: "1",
-      description: "no impact",
-      links: "https://www.link.com",
-    },
-  ],
-  education: [
-    {
-      institution: "RNS Institute of Technology",
-      degree: "Bachelors",
-      fieldOfStudy: "PCMB",
-      startDate: "2025-11",
-      endDate: "2025-12",
-      grade: "9.5",
-    },
-  ],
-  certifications: [
-    {
-      name: "Cert1 ",
-      authority: "Coursera",
-      issueDate: "2025-01",
-      expirationDate: "2025-11",
-      credentialId: "12312hk123j1",
-      credentialUrl: "url.com",
-    },
-  ],
+//   projects: [
+//     {
+//       title: "Project 1",
+//       technologies: "react, js, node",
+//       teamSize: "1",
+//       description: "no impact",
+//       links: "https://www.link.com",
+//     },
+//   ],
+//   education: [
+//     {
+//       institution: "RNS Institute of Technology",
+//       degree: "Bachelors",
+//       fieldOfStudy: "PCMB",
+//       startDate: "2025-11",
+//       endDate: "2025-12",
+//       grade: "9.5",
+//     },
+//   ],
+//   certifications: [
+//     {
+//       name: "Cert1 ",
+//       authority: "Coursera",
+//       issueDate: "2025-01",
+//       expirationDate: "2025-11",
+//       credentialId: "12312hk123j1",
+//       credentialUrl: "url.com",
+//     },
+//   ],
 
-  awards: [
-    {
-      title: "Award 1",
-      issuer: "Issuer 1",
-      date: "2025-01",
-      description: "Desc",
-    },
-  ],
+//   awards: [
+//     {
+//       title: "Award 1",
+//       issuer: "Issuer 1",
+//       date: "2025-01",
+//       description: "Desc",
+//     },
+//   ],
 
-  work_experience: [
-    {
-      job_title: "Software Engineer",
-      company_name: "Google",
-      start_date: "2022-06",
-      end_date: "2024-01",
-      location: "Mountain View, CA",
-      description:
-        "Worked on improving the performance of Google Search indexing systems, implemented microservices, and mentored junior developers.",
-    },
-    {
-      job_title: "Backend Developer",
-      company_name: "Stripe",
-      start_date: "2020-03",
-      end_date: "2022-05",
-      location: "Remote",
-      description:
-        "Developed APIs for payment processing, optimized database queries for scalability, and contributed to CI/CD pipeline automation.",
-    },
-  ],
+//   work_experience: [
+//     {
+//       job_title: "Software Engineer",
+//       company_name: "Google",
+//       start_date: "2022-06",
+//       end_date: "2024-01",
+//       location: "Mountain View, CA",
+//       description:
+//         "Worked on improving the performance of Google Search indexing systems, implemented microservices, and mentored junior developers.",
+//     },
+//     {
+//       job_title: "Backend Developer",
+//       company_name: "Stripe",
+//       start_date: "2020-03",
+//       end_date: "2022-05",
+//       location: "Remote",
+//       description:
+//         "Developed APIs for payment processing, optimized database queries for scalability, and contributed to CI/CD pipeline automation.",
+//     },
+//   ],
 
-  internships: [
-    {
-      job_title: "AI Intern",
-      company_name: "OpenAI",
-      start_date: "2023-06",
-      end_date: "2023-12",
-      location: "San Francisco, CA",
-      description:
-        "Researched NLP models for conversational AI, experimented with reinforcement learning, and documented model evaluation metrics.",
-    },
-    {
-      job_title: "Frontend Intern",
-      company_name: "Spotify",
-      start_date: "2022-01",
-      end_date: "2022-06",
-      location: "Stockholm, Sweden",
-      description:
-        "Built UI components with React, improved accessibility features, and collaborated with UX designers on user engagement tools.",
-    },
-  ],
+//   internships: [
+//     {
+//       job_title: "AI Intern",
+//       company_name: "OpenAI",
+//       start_date: "2023-06",
+//       end_date: "2023-12",
+//       location: "San Francisco, CA",
+//       description:
+//         "Researched NLP models for conversational AI, experimented with reinforcement learning, and documented model evaluation metrics.",
+//     },
+//     {
+//       job_title: "Frontend Intern",
+//       company_name: "Spotify",
+//       start_date: "2022-01",
+//       end_date: "2022-06",
+//       location: "Stockholm, Sweden",
+//       description:
+//         "Built UI components with React, improved accessibility features, and collaborated with UX designers on user engagement tools.",
+//     },
+//   ],
 
-  volunteer_experience: [
-    {
-      organization: "Volunteer 1",
-      role: "Student Technical Support – Faculty Development Program",
-      startDate: "2025-01",
-      endDate: "2025-02",
-      description: "Desc",
-    },
-  ],
-  interests: {
-    languages: ["Kannada", "English", "Hindi"],
-    interests: ["Painting", "Running"],
-  },
+//   volunteer_experience: [
+//     {
+//       organization: "Volunteer 1",
+//       role: "Student Technical Support – Faculty Development Program",
+//       startDate: "2025-01",
+//       endDate: "2025-02",
+//       description: "Desc",
+//     },
+//   ],
+//   interests: {
+//     languages: ["Kannada", "English", "Hindi"],
+//     interests: ["Painting", "Running"],
+//   },
 
-  publications: [
-    {
-      title: "Pub 1",
-      publisher: "Google",
-      date: "2025-01",
-      link: "ex.com",
-      description: "Desc",
-    },
-  ],
-};
+//   publications: [
+//     {
+//       title: "Pub 1",
+//       publisher: "Google",
+//       date: "2025-01",
+//       link: "ex.com",
+//       description: "Desc",
+//     },
+//   ],
+// };
 
+const mockResumeData = up;
 const mockResumeData2 = {
   personal_details: {
     fullName: "Goku",
@@ -821,13 +818,13 @@ const mockResumes = [
   {
     id: "1",
     name: "John Doe",
-    json: mockResumeData,
+    json: up,
     starred: false,
   },
   {
     id: "2",
     name: "Jane Smith",
-    json: mockResumeData,
+    json: up,
     starred: true,
   },
   {
@@ -851,7 +848,7 @@ const mockResumes = [
 ];
 
 app.get("/auth/resume", (req, res) => {
-  res.json({ resumes: [] });
+  res.json({ resumes: mockResumes });
 });
 
 app.post("/auth/resume/rename", (req, res) => {
@@ -1145,7 +1142,7 @@ const fakeResult = {
 };
 
 app.get("/auth/interview/result/:id", (req, res) => {
-  res.json({ evaluation: null });
+  res.json({ evaluation: fakeResult.evaluation });
 });
 
 app.get("/auth/interview/new/:id", (req, res) => {
@@ -2225,7 +2222,7 @@ app.get("/auth/admin/job/:jobId/applicants", (req, res) => {
 });
 
 const jobb = {
-  jobTitle: "Software Engineer",
+  job_title: "Software Engineer",
   companyName: "Tech Corp",
   jobLocation: "San Francisco, CA",
   jobType: "Full-time",
@@ -2472,6 +2469,797 @@ app.post("/auth/admin/student", upload.single("file"), (req, res) => {
   res.json({
     message: `File ${req.file.originalname} uploaded successfully`,
   });
+});
+const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+let NEXT_ID = 1;
+const makeApplicant = (id, batch_id) => ({
+  id,
+  name: `Student-${id}`,
+  email: `student${id}@college.edu`,
+  batch_id: batch_id,
+  status: "PENDING",
+});
+const futureISO = () => {
+  const now = Date.now();
+  return new Date(
+    now + Math.random() * 15 * 24 * 60 * 60 * 1_000
+  ).toISOString();
+};
+
+const makeInterview = () => {
+  const id = NEXT_ID++;
+  const job = rand(mockJobs);
+  const batchCount = Math.floor(Math.random() * 3) + 1;
+  const batches = Array.from({ length: batchCount }, (_, i) => ({
+    id: i + 1,
+    name: `Batch-${i + 1}`,
+    venue: `Hall-${i + 1}`,
+    start: futureISO(),
+    end: futureISO(),
+  }));
+
+  const applicants = Array.from({ length: 15 }, (_, i) =>
+    makeApplicant(i + 1, rand(batches).id)
+  );
+
+  return {
+    id,
+    job_id: job.id,
+    job_title: job.job_title,
+    company_name: job.company_name,
+    mode: rand(["ONLINE", "ON_CAMPUS"]),
+    online_link: "https://meet.example.com/xyz",
+    start_time: futureISO(),
+    pass_out_year: 2026,
+    departments: dept,
+    cutoff: { type: "PERCENT", value: 60 },
+    special_instructions: "Be on time",
+    contact_person: {
+      name: "Alice Smith",
+      phone: "+91-9876543210",
+      email: "alice@corp.com",
+    },
+    difficulties: ["EASY", "MED"],
+    question_categories: ["TECHNICAL", "APTITUDE"],
+    question_formats: ["MCQ", "CODING"],
+    total_questions: 30,
+    mcq_count: 20,
+    batches,
+    applicants,
+  };
+};
+
+/* in-memory DB */
+
+/* ───────── look-up routes ───────── */
+
+/* ───────── interview list ───────── */
+const interviews = [
+  {
+    id: "INT-101",
+    job_id: 1,
+    company_name: "Akamai",
+    job_title: "SDE",
+    department_ids: null,
+    pass_out_year: null,
+    mode: "ON_CAMPUS",
+    online_link: null,
+    batches: [
+      {
+        venue: "Auditorium-A",
+        start: "2025-09-12T09:00:00.000Z",
+        end: "2025-09-12T10:30:00.000Z",
+      },
+      {
+        venue: "Auditorium-B",
+        start: "2025-09-12T11:00:00.000Z",
+        end: "2025-09-12T12:30:00.000Z",
+      },
+    ],
+    difficulties: ["MED", "HARD"],
+    question_categories: ["TECHNICAL", "APTITUDE"],
+    question_formats: ["MCQ", "CODING"],
+    total_questions: 50,
+    mcq_count: 40,
+    cutoff: {
+      type: "PERCENT",
+      value: 75,
+    },
+    special_instructions:
+      "Candidates must bring a printed copy of their resume and a valid government-issued photo ID. Laptops are required for the coding round.",
+    contact_person: {
+      name: "Rohit Verma",
+      phone: "9876543210",
+      email: "rohit@google.com",
+    },
+  }
+];
+
+// ─── single route ───
+app.get("/auth/admin/interviews", (_, res) => res.json(interviews));
+/* ───────── schedule (create) ───────── */
+app.post("/auth/admin/interview/schedule", (req, res) => {
+  console.log("\n📥 Received Interview Schedule:\n");
+  console.dir(req.body, { depth: null });
+
+  const newInterview = { ...makeInterview(), ...req.body, id: NEXT_ID++ };
+  interviews.push(newInterview);
+
+  res
+    .status(200)
+    .json({ id: newInterview.id, message: "Interview scheduled (mock)" });
+});
+
+/* ───────── read one ───────── */
+app.get("/auth/admin/interview/:id", (req, res) => {
+  const interview = interviews.find((i) => i.id == req.params.id);
+  if (!interview)
+    return res.status(404).json({ message: "Interview not found" });
+  res.json(interview);
+});
+
+/* ───────── update (edit form) ───────── */
+app.put("/auth/admin/interview/schedule/:id", (req, res) => {
+  const idx = interviews.findIndex((i) => i.id == req.params.id);
+  if (idx === -1)
+    return res.status(404).json({ message: "Interview not found" });
+
+  interviews[idx] = { ...interviews[idx], ...req.body };
+  console.log(`\n✏️  Interview ${req.params.id} updated:\n`);
+  console.dir(req.body, { depth: null });
+
+  res.status(204).end();
+});
+
+/* ───────── applicants list ───────── */
+// A larger pool of mock applicants to draw from for randomization
+// A more realistic and diverse pool of applicants for thorough testing
+const allPossibleApplicants = [
+  {
+    id: 101,
+    name: "Aarav Sharma",
+    email: "aarav.sharma@example.com",
+    usn: "1CR21CS001",
+    batch_id: "B1",
+    status: "PENDING",
+  },
+  {
+    id: 102,
+    name: "Saanvi Gupta",
+    email: "saanvi.gupta@example.com",
+    usn: "1CR21CS002",
+    batch_id: "B2",
+    status: "PENDING",
+  },
+  {
+    id: 103,
+    name: "Vivaan Singh",
+    email: "vivaan.singh@example.com",
+    usn: "1CR21EC003",
+    batch_id: "B1",
+    status: "ALLOWED",
+  },
+  {
+    id: 104,
+    name: "Myra Reddy",
+    email: "myra.reddy@example.com",
+    usn: "1CR21EE004",
+    batch_id: "B3",
+    status: "PENDING",
+  },
+  {
+    id: 105,
+    name: "Advik Patel",
+    email: "advik.patel@example.com",
+    usn: "1CR21CS005",
+    batch_id: "B2",
+    status: "BLOCKED",
+  },
+  {
+    id: 106,
+    name: "Ananya Iyer",
+    email: "ananya.iyer@example.com",
+    usn: "1CR21IS006",
+    batch_id: "B1",
+    status: "PENDING",
+  },
+  {
+    id: 107,
+    name: "Kabir Kumar",
+    email: "kabir.kumar@example.com",
+    usn: "1CR21ME007",
+    batch_id: "B3",
+    status: "ALLOWED",
+  },
+  {
+    id: 108,
+    name: "Diya Mehta",
+    email: "diya.mehta@example.com",
+    usn: "1CR21CS008",
+    batch_id: "B2",
+    status: "PENDING",
+  },
+  {
+    id: 109,
+    name: "Reyansh Joshi",
+    email: "reyansh.joshi@example.com",
+    usn: "1CR21CV009",
+    batch_id: "B1",
+    status: "BLOCKED",
+  },
+  {
+    id: 110,
+    name: "Kiara Nair",
+    email: "kiara.nair@example.com",
+    usn: "1CR21CS010",
+    batch_id: "B3",
+    status: "PENDING",
+  },
+  {
+    id: 111,
+    name: "Zoya Khan",
+    email: "zoya.khan@example.com",
+    usn: "1CR21EC011",
+    batch_id: "B1",
+    status: "PENDING",
+  },
+  {
+    id: 112,
+    name: "Ishaan Agarwal",
+    email: "ishaan.agarwal@example.com",
+    usn: "1CR21CS012",
+    batch_id: "B2",
+    status: "ALLOWED",
+  },
+  {
+    id: 113,
+    name: "Priya Singh",
+    email: "priya.singh@example.com",
+    usn: "1CR21ME013",
+    batch_id: "B3",
+    status: "PENDING",
+  },
+  {
+    id: 114,
+    name: "Arjun Verma",
+    email: "arjun.verma@example.com",
+    usn: "1CR21CS014",
+    batch_id: "B1",
+    status: "ALLOWED",
+  },
+  {
+    id: 115,
+    name: "Riya Sharma",
+    email: "riya.sharma@example.com",
+    usn: "1CR21IS015",
+    batch_id: "B2",
+    status: "PENDING",
+  },
+];
+
+// No longer need the shuffle function for this deterministic logic
+// function shuffleArray(array) { ... }
+
+// Use 'let' to allow modification for status updates
+let allApplicants = [
+  {
+    id: 1,
+    name: "Aarav Sharma",
+    usn: "1CR21CS001",
+    email: "aarav@example.com",
+    batch_id: "B1",
+    status: "PENDING",
+  },
+  {
+    id: 2,
+    name: "Saanvi Gupta",
+    usn: "1CR21CS002",
+    email: "saanvi@example.com",
+    batch_id: "B2",
+    status: "ALLOWED",
+  },
+  {
+    id: 3,
+    name: "Vivaan Singh",
+    usn: "1CR21EC003",
+    email: "vivaan@example.com",
+    batch_id: "B1",
+    status: "BLOCKED",
+  },
+  {
+    id: 4,
+    name: "Myra Reddy",
+    usn: "1CR21EE004",
+    email: "myra@example.com",
+    batch_id: "B3",
+    status: "PENDING",
+  },
+  {
+    id: 5,
+    name: "Advik Patel",
+    usn: "1CR21CS005",
+    email: "advik@example.com",
+    batch_id: "B2",
+    status: "PENDING",
+  },
+  {
+    id: 6,
+    name: "Ananya Iyer",
+    usn: "1CR21IS006",
+    email: "ananya@example.com",
+    batch_id: "B1",
+    status: "ALLOWED",
+  },
+  {
+    id: 7,
+    name: "Kabir Kumar",
+    usn: "1CR21ME007",
+    email: "kabir@example.com",
+    batch_id: "B3",
+    status: "BLOCKED",
+  },
+  {
+    id: 8,
+    name: "Diya Mehta",
+    usn: "1CR21CS008",
+    email: "diya@example.com",
+    batch_id: "B2",
+    status: "PENDING",
+  },
+  {
+    id: 9,
+    name: "Reyansh Joshi",
+    usn: "1CR21CV009",
+    email: "reyansh@example.com",
+    batch_id: "B1",
+    status: "PENDING",
+  },
+  {
+    id: 10,
+    name: "Kiara Nair",
+    usn: "1CR21CS010",
+    email: "kiara@example.com",
+    batch_id: "B3",
+    status: "PENDING",
+  },
+  {
+    id: 11,
+    name: "Zoya Khan",
+    usn: "1CR21EC011",
+    email: "zoya@example.com",
+    batch_id: "B1",
+    status: "ALLOWED",
+  },
+  {
+    id: 12,
+    name: "Ishaan Agarwal",
+    usn: "1CR21CS012",
+    email: "ishaan@example.com",
+    batch_id: "B2",
+    status: "PENDING",
+  },
+  // Add more to test pagination
+  ...Array.from({ length: 15 }, (_, i) => ({
+    id: 13 + i,
+    name: `Student Name ${i + 1}`,
+    usn: `1CR21ZZ${String(i + 1).padStart(3, "0")}`,
+    email: `student${i + 1}@example.com`,
+    batch_id: ["B1", "B2", "B3"][i % 3],
+    status: "PENDING",
+  })),
+];
+
+// --- API ENDPOINTS ---
+
+// GET Interview Details
+// app.get("/auth/admin/interview/:id", (req, res) => {
+//   const interview = interviews.find(i => i.id === req.params.id);
+//   if (!interview) return res.status(404).json({ message: "Interview not found" });
+//   res.json(interview);
+// });
+
+// GET Applicants with full filtering and pagination
+app.get("/auth/admin/interview/:id/applicants", (req, res) => {
+  const { page = 1, limit = 10, batch_id, status, search } = req.query;
+
+  let filtered = [...allApplicants];
+
+  if (batch_id) filtered = filtered.filter((a) => a.batch_id === batch_id);
+  if (status && status !== "ALL")
+    filtered = filtered.filter((a) => a.status === status);
+  if (search)
+    filtered = filtered.filter((a) =>
+      a.usn.toLowerCase().includes(search.toLowerCase())
+    );
+
+  const totalApplicants = filtered.length;
+  const totalPages = Math.ceil(totalApplicants / parseInt(limit));
+  const paginated = filtered.slice((page - 1) * limit, page * limit);
+
+  setTimeout(() => {
+    // Simulate network delay
+    res.json({
+      totalApplicants,
+      totalPages,
+      currentPage: parseInt(page),
+      applicants: paginated,
+    });
+  }, 300);
+});
+
+// POST Update status for multiple applicants by their IDs
+app.post("/auth/admin/interview/:id/applicants/status", (req, res) => {
+  const { applicant_ids = [], status } = req.body;
+
+  allApplicants = allApplicants.map((app) =>
+    applicant_ids.includes(app.id) ? { ...app, status } : app
+  );
+
+  console.log(`Updated ${applicant_ids.length} applicants to ${status}`);
+  res.json({
+    message: `Successfully updated ${applicant_ids.length} applicants.`,
+  });
+});
+
+// POST Update status for multiple applicants by their USNs
+app.post("/auth/admin/interview/:id/applicants/status-by-usn", (req, res) => {
+  const { usns = [], status } = req.body;
+  const lowerCaseUsns = new Set(usns.map((u) => u.toLowerCase()));
+
+  let updatedCount = 0;
+  allApplicants = allApplicants.map((app) => {
+    if (lowerCaseUsns.has(app.usn.toLowerCase())) {
+      updatedCount++;
+      return { ...app, status };
+    }
+    return app;
+  });
+
+  console.log(`Updated ${updatedCount} applicants by USN to ${status}`);
+  res.json({ message: `Successfully updated ${updatedCount} applicants.` });
+});
+
+
+const ALL_INTERVIEWS_DB = {
+  upcoming: Array.from({ length: 8 }, (_, i) => ({
+    id: `intv-up-${i}`,
+    job_title: `Upcoming Job ${i + 1}`,
+    company_name: `Tech Innovators`,
+    date: `2025-09-${15 + i}T10:00:00Z`,
+    status: 'upcoming',
+  })),
+
+  attended: [
+    {
+      id: "intv-at-0",
+      job_title: "Attended Role 1",
+      company_name: "Solutions Co.",
+      date: "2025-08-10T11:00:00Z",
+      status: "attended",
+      selection_status: "selected",
+    },
+    {
+      id: "intv-at-1",
+      job_title: "Attended Role 2",
+      company_name: "Solutions Co.",
+      date: "2025-08-11T11:00:00Z",
+      status: "attended",
+      selection_status: "rejected",
+    },
+    {
+      id: "intv-at-2",
+      job_title: "Attended Role 3",
+      company_name: "Solutions Co.",
+      date: "2025-08-12T11:00:00Z",
+      status: "attended",
+      selection_status: "pending",
+    },
+    {
+      id: "intv-at-3",
+      job_title: "Attended Role 4",
+      company_name: "Solutions Co.",
+      date: "2025-08-13T11:00:00Z",
+      status: "attended",
+      selection_status: "selected",
+    },
+  ],
+
+  missed: Array.from({ length: 2 }, (_, i) => ({
+    id: `intv-ms-${i}`,
+    job_title: `Missed Opportunity ${i + 1}`,
+    company_name: `Global Corp`,
+    date: `2025-08-${1 + i}T16:00:00Z`,
+    status: "missed",
+  })),
+};
+
+
+// The API endpoint your React component will call
+app.get('/auth/scheduled_interview', (req, res) => {
+  const { status } = req.query; // e.g., ?status=upcoming
+
+  console.log(`Received request for interviews with status: ${status}`);
+
+  // Simulate network delay
+  setTimeout(() => {
+    if (status && ALL_INTERVIEWS_DB[status]) {
+      res.status(200).json(ALL_INTERVIEWS_DB[status]);
+    } else {
+      res.status(404).json({ message: `No interviews found for status: ${status}` });
+    }
+  },100); // 500ms delay
+});
+
+
+app.get('/auth/scheduled_interview/:id/interview_status', (req, res) => {
+  const { id } = req.params;
+  console.log(`[Status Check] Received request for ID: ${id}`);
+
+  // Scenario 1: Interview is not yet available (e.g., starts in the future)
+  if (id.startsWith('intv-up-0')) {
+    return res.status(200).json({
+      available: false,
+      remaining_time: 120 // 2 minutes
+    });
+  }
+
+  // Scenario 2: A server error occurs
+  if (id.startsWith('API-ERROR')) {
+    return res.status(500).json({ message: "A database error occurred." });
+  }
+
+  // Default Scenario: Interview is available
+  return res.status(200).json({
+    available: true
+  });
+});
+
+
+/*
+* =================================================================
+*  API ENDPOINT: /api/interview/:id/student-status
+*  Checks if the specific student is allowed to take the test.
+* =================================================================
+*/
+app.get('/auth/scheduled_interview/:id/student_status', (req, res) => {
+    const { id } = req.params;
+    console.log(`[Student Status Check] Received request for ID: ${id}`);
+
+    // Scenario 1: Student is explicitly blocked
+    if (id.startsWith('intv-up-1')) {
+        return res.status(200).json({ allowed: false });
+    }
+
+    // Scenario 2: Student's participation requires manual approval
+    if (id.startsWith('intv-up-2')) {
+        return res.status(200).json({ allowed: null });
+    }
+
+    // Default Scenario: Student is allowed
+    return res.status(200).json({ allowed: true });
+});
+
+
+/*
+* =================================================================
+*  API ENDPOINT: /api/interview/:id/questions
+*  Fetches the questions, duration, and section order for the test.
+* =================================================================
+*/
+app.get('/auth/scheduled_interview/:id/questions', (req, res) => {
+    const { id } = req.params;
+    console.log(`[Get Questions] Received request for ID: ${id}`);
+    
+    // Scenario 1: Interview is configured but has no questions/sections
+    if (id.startsWith('NO-QUESTIONS')) {
+        return res.status(200).json({
+            duration: 3600,
+            sectionOrder: [],
+            questions: {}
+        });
+    }
+
+    // Default "Happy Path" Scenario: A fully configured interview
+    return res.status(200).json({
+        duration: 3600,
+        sectionOrder: ["APTITUDE", "VOCABULARY", "GENERAL"],
+        questions: {
+            "APTITUDE": {
+                mcq: [
+                    { question_id: "apt-mcq-1", question_text: "If a train travels 120km in 2 hours, what is its speed?", options: [{ option_id: 1, text: "60 km/h" }, { option_id: 2, text: "80 km/h" }] },
+                    { question_id: "apt-mcq-2", question_text: "If a train travels 120km in 2 hours, what is its speed?", options: [{ option_id: 1, text: "60 km/h" }, { option_id: 2, text: "80 km/h" }] },
+                    { question_id: "apt-mcq-3", question_text: "If a train travels 120km in 2 hours, what is its speed?", options: [{ option_id: 1, text: "60 km/h" }, { option_id: 2, text: "80 km/h" }] },
+                ],
+                short_answer: [
+                    { question_id: "apt-sa-1", question_text: "Explain the difference between permutation and combination." },
+                    { question_id: "apt-sa-2", question_text: "Explain the difference between permutation and combination." },
+                    { question_id: "apt-sa-3", question_text: "Explain the difference between permutation and combination." }
+                ]
+            },
+            "VOCABULARY": {
+                mcq: [
+                    { question_id: "voc-mcq-1", question_text: "Which word is a synonym for 'ephemeral'?", options: [{ option_id: 1, text: "Everlasting" }, { option_id: 2, text: "Fleeting" }] }
+                ],
+                short_answer: [
+                    { question_id: "apt-sa-1", question_text: "Explain the difference between permutation and combination." },
+                    { question_id: "apt-sa-2", question_text: "Explain the difference between permutation and combination." },
+                    { question_id: "apt-sa-3", question_text: "Explain the difference between permutation and combination." }
+                ]
+            },
+            "GENERAL": {
+                
+                short_answer: [
+                    { question_id: "apt-sa-1", question_text: "Explain the difference between permutation and combination." },
+                    { question_id: "apt-sa-2", question_text: "Explain the difference between permutation and combination." },
+                    { question_id: "apt-sa-3", question_text: "Explain the difference between permutation and combination." }
+                ]
+            }
+        }
+    });
+});
+
+
+/*
+* =================================================================
+*  API ENDPOINT: /api/interview/:id/submit-results
+*  Receives the student's answers.
+* =================================================================
+*/
+app.post('/auth/scheduled_interview/:id/submit_results', (req, res) => {
+    const { id } = req.params;
+    const { answers } = req.body;
+
+    console.log(`[Submit Results] Received submission for ID: ${id}`);
+    console.log('Received Answers:', JSON.stringify(answers, null, 2));
+
+    // You can add logic here to simulate a submission failure if needed
+    if (!answers) {
+        return res.status(400).json({ message: "Bad Request: No answers provided." });
+    }
+    
+    return res.status(200).json({ message: "Interview submitted successfully!", resultId: `res-${id}` });
+});
+
+
+
+const interviewResultData = {
+  max_score: 100,
+  obtained_score: 87,
+  max_mcq_score: 20,
+  obtained_mcq_score: 17,
+  overall_feedback: "The candidate demonstrates a very strong understanding of advanced JavaScript concepts and React principles. The approach to component structure and state management is solid. The area for improvement would be in providing more detailed, textbook-style definitions for CSS concepts, although the practical application seems fine.",
+  questions: {
+    "JavaScript (Advanced)": {
+      mcq: [{
+        question_id: "js-mcq-1",
+        difficulty: "medium",
+        skill_tag: "JavaScript",
+        question_text: "What is a closure in JavaScript?",
+        options: [
+          { option_id: 1, text: "A block of code that executes immediately" },
+          { option_id: 2, text: "A way to bind `this` to a function" },
+          { option_id: 3, text: "A function that remembers its lexical scope" },
+          { option_id: 4, text: "A type of JavaScript object" },
+        ],
+        correct_answer: "A function that remembers its lexical scope",
+        user_answer: "A function that remembers its lexical scope",
+        score: 10,
+      }],
+      short_answer: [{
+        question_id: "jsadv-sa-1",
+        difficulty: "hard",
+        skill_tag: "JavaScript",
+        question_text: "Explain event delegation in JavaScript.",
+        user_answer: "It's a pattern where you attach a single event handler to a parent element to manage events on its descendants. This is more efficient than adding an event listener to every single child element.",
+        relevancy_score: 9,
+        score: 9,
+        feedback: "Excellent and concise explanation. Captures the core benefit of the pattern.",
+        correct_answer: "Event delegation is the practice of attaching a single event handler to a parent element to handle events that 'bubble up' from its child elements. This avoids attaching handlers to multiple individual nodes and can handle dynamically added children.",
+      }, ],
+    },
+    "React": {
+      mcq: [{
+        question_id: "react-mcq-1",
+        difficulty: "easy",
+        skill_tag: "React",
+        question_text: "What are hooks in React?",
+        options: [
+          { option_id: 1, text: "Functions that let you use state and other React features in functional components" },
+          { option_id: 2, text: "A way to fetch data in React" },
+          { option_id: 3, text: "An HTML attribute for components" },
+          { option_id: 4, text: "A replacement for props" },
+        ],
+        correct_answer: "Functions that let you use state and other React features in functional components",
+        user_answer: "A function that lets you use state and other React features in functional components", // A slightly incorrect user answer for demonstration
+        score: 7, // Score reflects the slight inaccuracy
+      }, ],
+      short_answer: [],
+    },
+    "CSS": {
+      short_answer: [{
+        question_id: "css-sa-1",
+        difficulty: "easy",
+        skill_tag: "CSS",
+        question_text: "Explain the difference between `rem` and `em` units in CSS.",
+        user_answer: "Both are relative units. 'em' is relative to the font-size of its direct parent, whereas 'rem' is relative to the root (<html>) font-size.",
+        relevancy_score: 8,
+        score: 8,
+        feedback: "Correct. This is a clear and accurate distinction.",
+        correct_answer: "The `em` unit is relative to the font-size of its parent element, which can lead to compounding size changes. The `rem` (root em) unit is relative only to the font-size of the root `html` element, providing a more predictable and stable base for scaling.",
+      }, ],
+      mcq: [],
+    },
+    "React + CSS": {
+      short_answer: [{
+        question_id: "reactcss-sa-1",
+        difficulty: "medium",
+        skill_tag: "React, CSS",
+        question_text: "Given a design mockup, how would you structure your components and styles for reusability?",
+        user_answer: "I would break the UI down into small, atomic components (like Button, Input). Then, I'd compose them into larger organism components. For styling, I prefer CSS Modules to keep styles scoped locally and use a global theme file for variables like colors and spacing.",
+        relevancy_score: 9,
+        score: 9,
+        feedback: "Solid, modern approach. Mentioning atomic design principles and scoped styling demonstrates a strong understanding of maintainable front-end architecture.",
+        correct_answer: "A good approach involves breaking the design into reusable functional components (atomic design). Styles can be managed using scoped solutions like CSS Modules or CSS-in-JS libraries (e.g., Styled Components). A centralized theme file for design tokens (colors, fonts, spacing) should be used to ensure consistency.",
+      }, ],
+      mcq: [],
+    },
+  },
+};
+
+
+// Data for the /selection/:id endpoint
+const allSelectedStudents = [
+    { "name": "Priya Sharma", "usn": "1RN22CS120" },
+    { "name": "Rohan Gupta", "usn": "1RN22AI045" },
+    { "name": "Anjali Mehta", "usn": "1RN22IS011" },
+    { "name": "Vikram Singh", "usn": "1RN22CS210" },
+    { "name": "Sneha Reddy", "usn": "1RN22AI101" }
+];
+
+const selectionDataForSelectedStudent = {
+  selected: true,
+  selected_students: allSelectedStudents
+};
+
+const selectionDataForNotSelectedStudent = {
+  selected: false,
+  selected_students: allSelectedStudents
+};
+
+// --- API ENDPOINTS ---
+
+// Endpoint for interview results
+app.get('/auth/scheduled_interview/result/:id', (req, res) => {
+  const { id } = req.params;
+  console.log(`[${new Date().toLocaleTimeString()}] GET /api/interview/result/${id} - Returning mock result data.`);
+
+  // Simulate a network delay
+  setTimeout(() => {
+    res.status(200).json(interviewResultData);
+  }, 500); // 0.5 second delay
+});
+
+// Endpoint for selection status
+app.get('/auth/scheduled_interview/selection/:id', (req, res) => {
+  const { id } = req.params;
+  console.log(`[${new Date().toLocaleTimeString()}] GET /api/interview/selection/${id} - Returning mock selection data.`);
+  
+  // Simple logic to test both "selected" and "not selected" cases
+  // If the ID contains the word "fail" or an even number, return not selected.
+  let responseData;
+  if (id.includes('fail') || parseInt(id.slice(-1)) % 2 === 0) {
+    console.log(` -> Responding with 'Not Selected' status for ID: ${id}`);
+    responseData = selectionDataForNotSelectedStudent;
+  } else {
+    console.log(` -> Responding with 'Selected' status for ID: ${id}`);
+    responseData = selectionDataForSelectedStudent;
+  }
+
+  // Simulate a network delay
+  setTimeout(() => {
+    res.status(200).json(responseData);
+  }, 800); // 0.8 second delay
 });
 
 app.listen(port, () => {
