@@ -39,13 +39,6 @@ const admin_token =
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNCIsInVzZXJfbmFtZSI6IlNocmVlIFJhbWEgVGFsZW50IFNvbHV0aW9ucyIsImV4cCI6MTcyNjkyMzA1MH0.dHgJSYwwOp27LJCmtq3KwoEZfx_2-BrwvHziTCpJrOM";
 
-app.post("/auth/register", (req, res) => {
-  console.log("Received data:", req.body);
-
-  return res
-    .status(200)
-    .json({ message: "User signed up successfully.", token: student_token });
-});
 
 app.post("/auth/login", (req, res) => {
   console.log("Received data:", req.body);
@@ -63,19 +56,61 @@ app.post("/auth/login", (req, res) => {
   }
 });
 
+// 1. Send OTP (for both email and phone)
+app.post("/auth/otp/email/send", (req, res) => {
+    console.log("Request to send email OTP:", req.body);
+    res.status(200).json({ message: "OTP sent successfully." });
+});
+
+app.post("/auth/otp/phone/send", (req, res) => {
+    console.log("Request to send phone OTP:", req.body);
+    res.status(200).json({ message: "OTP sent successfully." });
+});
+
+
+// 2. Verify OTP (for both email and phone)
+// This handler covers all OTP verification endpoints.
+const handleOtpVerification = (req, res) => {
+    const { otp } = req.body;
+    console.log("Received OTP verification request:", req.body);
+
+    if (otp === "123456") {
+        return res.status(200).json({ message: "OTP verified successfully" });
+    } else {
+        return res.status(400).json({ message: "Invalid OTP" });
+    }
+};
+
+app.post("/auth/otp/verify", handleOtpVerification);
+app.post("/auth/otp/email/verify", handleOtpVerification);
+app.post("/auth/otp/phone/verify", handleOtpVerification);
+
+
+// 3. Fetch hardcoded phone number
+app.get("/auth/user_phone", (req, res) => {
+    console.log("Request to fetch phone by email:", req.query);
+    res.status(200).json({ phone: "9876543210" });
+});
+
+// 4. Fetch hardcoded user details
+app.get("/auth/user+_details", (req, res) => {
+    console.log("Request to fetch details by email:", req.query);
+    res.status(200).json(hardcodedDetails);
+});
+
+// 5. Fetch hardcoded departments
+
+
+
+// 6. Final Registration
 app.post("/auth/register", (req, res) => {
-  console.log("Received registration data:", req.body);
-
-  return res.status(201).json({ message: "User registered successfully." });
+    console.log("Received final registration data:", req.body);
+    return res
+        .status(200)
+        .json({ message: "User signed up successfully.", token: student_token });
 });
 
-app.post("/auth/verify_token", (req, res) => {
-  try {
-    return res.status(200).json({ valid: true });
-  } catch (err) {
-    return res.status(401).json({ valid: false, message: "invalid token" });
-  }
-});
+
 
 let userProfile = {
   profile_pic: null, // or a URL string if available
@@ -1771,80 +1806,172 @@ bands = [
   },
 ];
 
-// --- Helper to simulate network delay ---
-const simulateDelay = (req, res, next) => {
-  setTimeout(next, Math.floor(Math.random() * 800) + 200); // 200-1000ms delay
+
+// Data store (using 'let' to allow modification)
+let departments = [
+    {
+        id: 1,
+        name: "Computer Science & Engineering",
+        code: "CSE",
+        coordinator_name: "Prof. Anjali Sharma",
+        coordinator_email: "anjali.s@college.edu",
+    },
+    {
+        id: 2,
+        name: "Mechanical Engineering",
+        code: "ME",
+        coordinator_name: "Prof. Vikram Singh",
+        coordinator_email: "vikram.s@college.edu",
+    },
+    {
+        id: 3,
+        name: "Electronics & Communication",
+        code: "ECE",
+        coordinator_name: "Dr. R. Mehta",
+        coordinator_email: "mehta.r@college.edu",
+    },
+];
+
+let jobBands = [
+    {
+        id: 1,
+        name: "Dream Offer",
+        rule: { type: "GREATER_THAN", value1: 1500000, value2: null },
+    },
+    {
+        id: 2,
+        name: "Super Dream",
+        rule: { type: "BETWEEN", value1: 1000000, value2: 1500000 },
+    },
+    {
+        id: 3,
+        name: "Core Offer",
+        rule: { type: "BETWEEN", value1: 600000, value2: 1000000 },
+    },
+];
+
+// Helper to generate a new ID for created items
+const getNextId = (arr) => {
+    if (arr.length === 0) return 1;
+    return Math.max(...arr.map(item => item.id)) + 1;
 };
+
 
 // --- Department Routes ---
 
-// GET /api/departments
+// GET /api/departments - Get all departments
 app.get("/auth/admin/department", (req, res) => {
-  console.log("GET /api/departments - Responding with:", dept);
-  res.status(200).json(dept);
+    console.log("GET /auth/admin/department - Responding with all departments.");
+    res.status(200).json(departments);
 });
 
-// PUT /api/departments
-app.put("/auth/admin/department", (req, res) => {
-  const { departments } = req.body;
+// POST /api/departments - Add a new department
+app.post("/auth/admin/department", (req, res) => {
+    const { name, code, coordinator_name, coordinator_email } = req.body;
 
-  if (!Array.isArray(departments)) {
-    return res
-      .status(400)
-      .json({ message: "Invalid payload. 'departments' must be an array." });
-  }
-
-  // Basic validation for the received data
-  for (const dept of departments) {
-    if (!dept.id || !dept.name || !dept.code) {
-      return res.status(400).json({
-        message: `Invalid department object received. Missing required fields: ${JSON.stringify(
-          dept
-        )}`,
-      });
+    if (!name || !code) {
+        return res.status(400).json({ message: "Department name and code are required." });
     }
-  }
 
-  // Update the in-memory database
-  dept = departments;
-  console.log("PUT /api/departments - Database updated:", departments);
+    const newDepartment = {
+        id: getNextId(departments),
+        name: name.trim(),
+        code: code.trim(),
+        coordinator_name: coordinator_name?.trim() || "",
+        coordinator_email: coordinator_email?.trim() || "",
+    };
 
-  res.status(200).json({ message: "Departments updated successfully." });
+    departments.push(newDepartment);
+    console.log("POST /auth/admin/department - Added:", newDepartment);
+    res.status(201).json(newDepartment); // Return the newly created department, as expected by the frontend
 });
+
+// POST /api/departments/:id - Update an existing department
+app.post("/auth/admin/department/:id", (req, res) => {
+    const departmentId = parseInt(req.params.id, 10);
+    const departmentIndex = departments.findIndex(d => d.id === departmentId);
+
+    if (departmentIndex === -1) {
+        return res.status(404).json({ message: "Department not found." });
+    }
+
+    const updatedDepartment = { ...departments[departmentIndex], ...req.body };
+    departments[departmentIndex] = updatedDepartment;
+
+    console.log(`POST /auth/admin/department/${departmentId} - Updated to:`, updatedDepartment);
+    res.status(200).json(updatedDepartment); // Return the updated data
+});
+
+// DELETE /api/departments/:id - Delete a department
+app.delete("/auth/admin/department/:id", (req, res) => {
+    const departmentId = parseInt(req.params.id, 10);
+    const initialLength = departments.length;
+    departments = departments.filter(d => d.id !== departmentId);
+
+    if (departments.length === initialLength) {
+        return res.status(404).json({ message: "Department not found." });
+    }
+
+    console.log(`DELETE /auth/admin/department/${departmentId} - Department deleted.`);
+    res.status(200).json({ message: "Department deleted successfully." });
+});
+
 
 // --- Band Routes ---
 
-// GET /api/bands
+// GET /api/bands - Get all bands
 app.get("/auth/admin/bands", (req, res) => {
-  console.log("GET /api/bands - Responding with:", bands);
-  res.status(200).json(bands);
+    console.log("GET /auth/admin/bands - Responding with all bands.");
+    res.status(200).json(jobBands);
 });
 
-// PUT /api/bands
-app.put("/auth/admin/bands", (req, res) => {
-  const { bands } = req.body;
+// POST /api/bands - Add a new band
+app.post("/auth/admin/bands", (req, res) => {
+    const { name, rule } = req.body;
 
-  if (!Array.isArray(bands)) {
-    return res
-      .status(400)
-      .json({ message: "Invalid payload. 'bands' must be an array." });
-  }
-
-  // Basic validation
-  for (const band of bands) {
-    if (!band.id || !band.name) {
-      return res.status(400).json({
-        message: `Invalid band object received. Missing required fields: ${JSON.stringify(
-          band
-        )}`,
-      });
+    if (!name || !rule || !rule.type || rule.value1 === undefined || rule.value1 === '') {
+        return res.status(400).json({ message: "Band name and a valid rule are required." });
     }
-  }
 
-  // Update the in-memory database
-  console.log("PUT /api/bands - Database updated:", bands);
+    const newBand = {
+        id: getNextId(jobBands),
+        name: name.trim(),
+        rule,
+    };
 
-  res.status(200).json({ message: "Bands updated successfully." });
+    jobBands.push(newBand);
+    console.log("POST /auth/admin/bands - Added:", newBand);
+    res.status(201).json(newBand); // Return the newly created band
+});
+
+// POST /api/bands/:id - Update an existing band
+app.post("/auth/admin/bands/:id", (req, res) => {
+    const bandId = parseInt(req.params.id, 10);
+    const bandIndex = jobBands.findIndex(b => b.id === bandId);
+
+    if (bandIndex === -1) {
+        return res.status(404).json({ message: "Band not found." });
+    }
+    
+    const updatedBand = { ...jobBands[bandIndex], ...req.body };
+    jobBands[bandIndex] = updatedBand;
+
+    console.log(`POST /auth/admin/bands/${bandId} - Updated to:`, updatedBand);
+    res.status(200).json(updatedBand); // Return the updated data
+});
+
+// DELETE /api/bands/:id - Delete a band
+app.delete("/auth/admin/bands/:id", (req, res) => {
+    const bandId = parseInt(req.params.id, 10);
+    const initialLength = jobBands.length;
+    jobBands = jobBands.filter(b => b.id !== bandId);
+
+    if (jobBands.length === initialLength) {
+        return res.status(404).json({ message: "Band not found." });
+    }
+
+    console.log(`DELETE /auth/admin/bands/${bandId} - Band deleted.`);
+    res.status(200).json({ message: "Band deleted successfully." });
 });
 
 // GET /auth/admin/student/:id
