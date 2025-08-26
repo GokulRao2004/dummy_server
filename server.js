@@ -39,7 +39,6 @@ const admin_token =
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNCIsInVzZXJfbmFtZSI6IlNocmVlIFJhbWEgVGFsZW50IFNvbHV0aW9ucyIsImV4cCI6MTcyNjkyMzA1MH0.dHgJSYwwOp27LJCmtq3KwoEZfx_2-BrwvHziTCpJrOM";
 
-
 app.post("/auth/login", (req, res) => {
   console.log("Received data:", req.body);
 
@@ -58,59 +57,61 @@ app.post("/auth/login", (req, res) => {
 
 // 1. Send OTP (for both email and phone)
 app.post("/auth/otp/email/send", (req, res) => {
-    console.log("Request to send email OTP:", req.body);
-    res.status(200).json({ message: "OTP sent successfully." });
+  console.log("Request to send email OTP:", req.body);
+  res.status(200).json({ message: "OTP sent successfully." });
 });
 
 app.post("/auth/otp/phone/send", (req, res) => {
-    console.log("Request to send phone OTP:", req.body);
-    res.status(200).json({ message: "OTP sent successfully." });
+  console.log("Request to send phone OTP:", req.body);
+  res.status(200).json({ message: "OTP sent successfully." });
 });
-
 
 // 2. Verify OTP (for both email and phone)
 // This handler covers all OTP verification endpoints.
 const handleOtpVerification = (req, res) => {
-    const { otp } = req.body;
-    console.log("Received OTP verification request:", req.body);
+  const { otp } = req.body;
+  console.log("Received OTP verification request:", req.body);
 
-    if (otp === "123456") {
-        return res.status(200).json({ message: "OTP verified successfully" });
-    } else {
-        return res.status(400).json({ message: "Invalid OTP" });
-    }
+  if (otp === "123456") {
+    return res.status(200).json({ message: "OTP verified successfully" });
+  } else {
+    return res.status(400).json({ message: "Invalid OTP" });
+  }
 };
 
 app.post("/auth/otp/verify", handleOtpVerification);
 app.post("/auth/otp/email/verify", handleOtpVerification);
 app.post("/auth/otp/phone/verify", handleOtpVerification);
 
-
 // 3. Fetch hardcoded phone number
 app.get("/auth/user_phone", (req, res) => {
-    console.log("Request to fetch phone by email:", req.query);
-    res.status(200).json({ phone: "9876543210" });
+  console.log("Request to fetch phone by email:", req.query);
+  res.status(200).json({ phone: "9876543210" });
 });
-
+const hardcodedDetails = {
+  full_name: "John Doe",
+  dob: "2000-05-15",
+  usn: "1RV20CS123",
+  personal_email: "johndoe@example.com",
+  address: "123 Main Street, Cityville",
+  department_id: 1, // must match one from your frontend department list
+  pass_out_year: "2026",
+};
 // 4. Fetch hardcoded user details
-app.get("/auth/user+_details", (req, res) => {
-    console.log("Request to fetch details by email:", req.query);
-    res.status(200).json(hardcodedDetails);
+app.get("/auth/user_details", (req, res) => {
+  console.log("Request to fetch details by email:", req.query);
+  res.status(200).json(hardcodedDetails);
 });
 
 // 5. Fetch hardcoded departments
 
-
-
 // 6. Final Registration
 app.post("/auth/register", (req, res) => {
-    console.log("Received final registration data:", req.body);
-    return res
-        .status(200)
-        .json({ message: "User signed up successfully.", token: student_token });
+  console.log("Received final registration data:", req.body);
+  return res
+    .status(200)
+    .json({ message: "User signed up successfully.", token: student_token });
 });
-
-
 
 let userProfile = {
   profile_pic: null, // or a URL string if available
@@ -1282,10 +1283,12 @@ app.get("/auth/interview/new/:id", (req, res) => {
   res.json(data);
 });
 
-app.post("/auth/interview/submit", (req, res) => {
+app.post("/auth/interview/submit/:id", (req, res) => {
   console.log("Answers submitted:", req.body);
   res.status(200).jsonp({ message: "Interview submitted successfully" });
 });
+
+
 
 // Define your resume HTML and CSS
 
@@ -1806,172 +1809,184 @@ bands = [
   },
 ];
 
-
 // Data store (using 'let' to allow modification)
 let departments = [
-    {
-        id: 1,
-        name: "Computer Science & Engineering",
-        code: "CSE",
-        coordinator_name: "Prof. Anjali Sharma",
-        coordinator_email: "anjali.s@college.edu",
-    },
-    {
-        id: 2,
-        name: "Mechanical Engineering",
-        code: "ME",
-        coordinator_name: "Prof. Vikram Singh",
-        coordinator_email: "vikram.s@college.edu",
-    },
-    {
-        id: 3,
-        name: "Electronics & Communication",
-        code: "ECE",
-        coordinator_name: "Dr. R. Mehta",
-        coordinator_email: "mehta.r@college.edu",
-    },
+  {
+    id: 1,
+    name: "Computer Science & Engineering",
+    code: "CSE",
+    coordinator_name: "Prof. Anjali Sharma",
+    coordinator_email: "anjali.s@college.edu",
+  },
+  {
+    id: 2,
+    name: "Mechanical Engineering",
+    code: "ME",
+    coordinator_name: "Prof. Vikram Singh",
+    coordinator_email: "vikram.s@college.edu",
+  },
+  {
+    id: 3,
+    name: "Electronics & Communication",
+    code: "ECE",
+    coordinator_name: "Dr. R. Mehta",
+    coordinator_email: "mehta.r@college.edu",
+  },
 ];
 
 let jobBands = [
-    {
-        id: 1,
-        name: "Dream Offer",
-        rule: { type: "GREATER_THAN", value1: 1500000, value2: null },
-    },
-    {
-        id: 2,
-        name: "Super Dream",
-        rule: { type: "BETWEEN", value1: 1000000, value2: 1500000 },
-    },
-    {
-        id: 3,
-        name: "Core Offer",
-        rule: { type: "BETWEEN", value1: 600000, value2: 1000000 },
-    },
+  {
+    id: 1,
+    name: "Dream Offer",
+    rule: { type: "GREATER_THAN", value1: 1500000, value2: null },
+  },
+  {
+    id: 2,
+    name: "Super Dream",
+    rule: { type: "BETWEEN", value1: 1000000, value2: 1500000 },
+  },
+  {
+    id: 3,
+    name: "Core Offer",
+    rule: { type: "BETWEEN", value1: 600000, value2: 1000000 },
+  },
 ];
 
 // Helper to generate a new ID for created items
 const getNextId = (arr) => {
-    if (arr.length === 0) return 1;
-    return Math.max(...arr.map(item => item.id)) + 1;
+  if (arr.length === 0) return 1;
+  return Math.max(...arr.map((item) => item.id)) + 1;
 };
-
 
 // --- Department Routes ---
 
 // GET /api/departments - Get all departments
 app.get("/auth/admin/department", (req, res) => {
-    console.log("GET /auth/admin/department - Responding with all departments.");
-    res.status(200).json(departments);
+  console.log("GET /auth/admin/department - Responding with all departments.");
+  res.status(200).json(departments);
 });
 
 // POST /api/departments - Add a new department
 app.post("/auth/admin/department", (req, res) => {
-    const { name, code, coordinator_name, coordinator_email } = req.body;
+  const { name, code, coordinator_name, coordinator_email } = req.body;
 
-    if (!name || !code) {
-        return res.status(400).json({ message: "Department name and code are required." });
-    }
+  if (!name || !code) {
+    return res
+      .status(400)
+      .json({ message: "Department name and code are required." });
+  }
 
-    const newDepartment = {
-        id: getNextId(departments),
-        name: name.trim(),
-        code: code.trim(),
-        coordinator_name: coordinator_name?.trim() || "",
-        coordinator_email: coordinator_email?.trim() || "",
-    };
+  const newDepartment = {
+    id: getNextId(departments),
+    name: name.trim(),
+    code: code.trim(),
+    coordinator_name: coordinator_name?.trim() || "",
+    coordinator_email: coordinator_email?.trim() || "",
+  };
 
-    departments.push(newDepartment);
-    console.log("POST /auth/admin/department - Added:", newDepartment);
-    res.status(201).json(newDepartment); // Return the newly created department, as expected by the frontend
+  departments.push(newDepartment);
+  console.log("POST /auth/admin/department - Added:", newDepartment);
+  res.status(201).json(newDepartment); // Return the newly created department, as expected by the frontend
 });
 
 // POST /api/departments/:id - Update an existing department
 app.post("/auth/admin/department/:id", (req, res) => {
-    const departmentId = parseInt(req.params.id, 10);
-    const departmentIndex = departments.findIndex(d => d.id === departmentId);
+  const departmentId = parseInt(req.params.id, 10);
+  const departmentIndex = departments.findIndex((d) => d.id === departmentId);
 
-    if (departmentIndex === -1) {
-        return res.status(404).json({ message: "Department not found." });
-    }
+  if (departmentIndex === -1) {
+    return res.status(404).json({ message: "Department not found." });
+  }
 
-    const updatedDepartment = { ...departments[departmentIndex], ...req.body };
-    departments[departmentIndex] = updatedDepartment;
+  const updatedDepartment = { ...departments[departmentIndex], ...req.body };
+  departments[departmentIndex] = updatedDepartment;
 
-    console.log(`POST /auth/admin/department/${departmentId} - Updated to:`, updatedDepartment);
-    res.status(200).json(updatedDepartment); // Return the updated data
+  console.log(
+    `POST /auth/admin/department/${departmentId} - Updated to:`,
+    updatedDepartment
+  );
+  res.status(200).json(updatedDepartment); // Return the updated data
 });
 
 // DELETE /api/departments/:id - Delete a department
 app.delete("/auth/admin/department/:id", (req, res) => {
-    const departmentId = parseInt(req.params.id, 10);
-    const initialLength = departments.length;
-    departments = departments.filter(d => d.id !== departmentId);
+  const departmentId = parseInt(req.params.id, 10);
+  const initialLength = departments.length;
+  departments = departments.filter((d) => d.id !== departmentId);
 
-    if (departments.length === initialLength) {
-        return res.status(404).json({ message: "Department not found." });
-    }
+  if (departments.length === initialLength) {
+    return res.status(404).json({ message: "Department not found." });
+  }
 
-    console.log(`DELETE /auth/admin/department/${departmentId} - Department deleted.`);
-    res.status(200).json({ message: "Department deleted successfully." });
+  console.log(
+    `DELETE /auth/admin/department/${departmentId} - Department deleted.`
+  );
+  res.status(200).json({ message: "Department deleted successfully." });
 });
-
 
 // --- Band Routes ---
 
 // GET /api/bands - Get all bands
 app.get("/auth/admin/bands", (req, res) => {
-    console.log("GET /auth/admin/bands - Responding with all bands.");
-    res.status(200).json(jobBands);
+  console.log("GET /auth/admin/bands - Responding with all bands.");
+  res.status(200).json(jobBands);
 });
 
 // POST /api/bands - Add a new band
 app.post("/auth/admin/bands", (req, res) => {
-    const { name, rule } = req.body;
+  const { name, rule } = req.body;
 
-    if (!name || !rule || !rule.type || rule.value1 === undefined || rule.value1 === '') {
-        return res.status(400).json({ message: "Band name and a valid rule are required." });
-    }
+  if (
+    !name ||
+    !rule ||
+    !rule.type ||
+    rule.value1 === undefined ||
+    rule.value1 === ""
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Band name and a valid rule are required." });
+  }
 
-    const newBand = {
-        id: getNextId(jobBands),
-        name: name.trim(),
-        rule,
-    };
+  const newBand = {
+    id: getNextId(jobBands),
+    name: name.trim(),
+    rule,
+  };
 
-    jobBands.push(newBand);
-    console.log("POST /auth/admin/bands - Added:", newBand);
-    res.status(201).json(newBand); // Return the newly created band
+  jobBands.push(newBand);
+  console.log("POST /auth/admin/bands - Added:", newBand);
+  res.status(201).json(newBand); // Return the newly created band
 });
 
 // POST /api/bands/:id - Update an existing band
 app.post("/auth/admin/bands/:id", (req, res) => {
-    const bandId = parseInt(req.params.id, 10);
-    const bandIndex = jobBands.findIndex(b => b.id === bandId);
+  const bandId = parseInt(req.params.id, 10);
+  const bandIndex = jobBands.findIndex((b) => b.id === bandId);
 
-    if (bandIndex === -1) {
-        return res.status(404).json({ message: "Band not found." });
-    }
-    
-    const updatedBand = { ...jobBands[bandIndex], ...req.body };
-    jobBands[bandIndex] = updatedBand;
+  if (bandIndex === -1) {
+    return res.status(404).json({ message: "Band not found." });
+  }
 
-    console.log(`POST /auth/admin/bands/${bandId} - Updated to:`, updatedBand);
-    res.status(200).json(updatedBand); // Return the updated data
+  const updatedBand = { ...jobBands[bandIndex], ...req.body };
+  jobBands[bandIndex] = updatedBand;
+
+  console.log(`POST /auth/admin/bands/${bandId} - Updated to:`, updatedBand);
+  res.status(200).json(updatedBand); // Return the updated data
 });
 
 // DELETE /api/bands/:id - Delete a band
 app.delete("/auth/admin/bands/:id", (req, res) => {
-    const bandId = parseInt(req.params.id, 10);
-    const initialLength = jobBands.length;
-    jobBands = jobBands.filter(b => b.id !== bandId);
+  const bandId = parseInt(req.params.id, 10);
+  const initialLength = jobBands.length;
+  jobBands = jobBands.filter((b) => b.id !== bandId);
 
-    if (jobBands.length === initialLength) {
-        return res.status(404).json({ message: "Band not found." });
-    }
+  if (jobBands.length === initialLength) {
+    return res.status(404).json({ message: "Band not found." });
+  }
 
-    console.log(`DELETE /auth/admin/bands/${bandId} - Band deleted.`);
-    res.status(200).json({ message: "Band deleted successfully." });
+  console.log(`DELETE /auth/admin/bands/${bandId} - Band deleted.`);
+  res.status(200).json({ message: "Band deleted successfully." });
 });
 
 // GET /auth/admin/student/:id
@@ -2700,7 +2715,7 @@ const interviews = [
       phone: "9876543210",
       email: "rohit@google.com",
     },
-  }
+  },
 ];
 
 // ─── single route ───
@@ -3047,14 +3062,13 @@ app.post("/auth/admin/interview/:id/applicants/status-by-usn", (req, res) => {
   res.json({ message: `Successfully updated ${updatedCount} applicants.` });
 });
 
-
 const ALL_INTERVIEWS_DB = {
   upcoming: Array.from({ length: 8 }, (_, i) => ({
     id: `intv-up-${i}`,
     job_title: `Upcoming Job ${i + 1}`,
     company_name: `Tech Innovators`,
     date: `2025-09-${15 + i}T10:00:00Z`,
-    status: 'upcoming',
+    status: "upcoming",
   })),
 
   attended: [
@@ -3101,9 +3115,8 @@ const ALL_INTERVIEWS_DB = {
   })),
 };
 
-
 // The API endpoint your React component will call
-app.get('/auth/scheduled_interview', (req, res) => {
+app.get("/auth/scheduled_interview", (req, res) => {
   const { status } = req.query; // e.g., ?status=upcoming
 
   console.log(`Received request for interviews with status: ${status}`);
@@ -3113,253 +3126,352 @@ app.get('/auth/scheduled_interview', (req, res) => {
     if (status && ALL_INTERVIEWS_DB[status]) {
       res.status(200).json(ALL_INTERVIEWS_DB[status]);
     } else {
-      res.status(404).json({ message: `No interviews found for status: ${status}` });
+      res
+        .status(404)
+        .json({ message: `No interviews found for status: ${status}` });
     }
-  },100); // 500ms delay
+  }, 100); // 500ms delay
 });
 
-
-app.get('/auth/scheduled_interview/:id/interview_status', (req, res) => {
+app.get("/auth/scheduled_interview/interview_status/:id", (req, res) => {
   const { id } = req.params;
   console.log(`[Status Check] Received request for ID: ${id}`);
 
   // Scenario 1: Interview is not yet available (e.g., starts in the future)
-  if (id.startsWith('intv-up-0')) {
+  if (id.startsWith("intv-up-0")) {
     return res.status(200).json({
       available: false,
-      remaining_time: 120 // 2 minutes
+      remaining_time: 120, // 2 minutes
     });
   }
 
   // Scenario 2: A server error occurs
-  if (id.startsWith('API-ERROR')) {
+  if (id.startsWith("API-ERROR")) {
     return res.status(500).json({ message: "A database error occurred." });
   }
 
   // Default Scenario: Interview is available
   return res.status(200).json({
-    available: true
+    available: true,
   });
 });
 
-
 /*
-* =================================================================
-*  API ENDPOINT: /api/interview/:id/student-status
-*  Checks if the specific student is allowed to take the test.
-* =================================================================
-*/
-app.get('/auth/scheduled_interview/:id/student_status', (req, res) => {
-    const { id } = req.params;
-    console.log(`[Student Status Check] Received request for ID: ${id}`);
+ * =================================================================
+ *  API ENDPOINT: /api/interview/:id/student-status
+ *  Checks if the specific student is allowed to take the test.
+ * =================================================================
+ */
+app.get("/auth/scheduled_interview/student_status/:id", (req, res) => {
+  const { id } = req.params;
+  console.log(`[Student Status Check] Received request for ID: ${id}`);
 
-    // Scenario 1: Student is explicitly blocked
-    if (id.startsWith('intv-up-1')) {
-        return res.status(200).json({ allowed: false });
-    }
+  // Scenario 1: Student is explicitly blocked
+  if (id.startsWith("intv-up-1")) {
+    return res.status(200).json({ allowed: false });
+  }
 
-    // Scenario 2: Student's participation requires manual approval
-    if (id.startsWith('intv-up-2')) {
-        return res.status(200).json({ allowed: null });
-    }
+  // Scenario 2: Student's participation requires manual approval
+  if (id.startsWith("intv-up-2")) {
+    return res.status(200).json({ allowed: null });
+  }
 
-    // Default Scenario: Student is allowed
-    return res.status(200).json({ allowed: true });
+  // Default Scenario: Student is allowed
+  return res.status(200).json({ allowed: true });
 });
 
+/*
+ * =================================================================
+ *  API ENDPOINT: /api/interview/:id/questions
+ *  Fetches the questions, duration, and section order for the test.
+ * =================================================================
+ */
+app.get("/auth/scheduled_interview/questions/:id", (req, res) => {
+  const { id } = req.params;
+  console.log(`[Get Questions] Received request for ID: ${id}`);
+
+  // Scenario 1: Interview is configured but has no questions/sections
+  if (id.startsWith("NO-QUESTIONS")) {
+    return res.status(200).json({
+      duration: 3600,
+      sectionOrder: [],
+      questions: {},
+    });
+  }
+
+  // Default "Happy Path" Scenario: A fully configured interview
+  return res.status(200).json({
+    duration: 3600,
+    sectionOrder: ["APTITUDE", "VOCABULARY", "GENERAL"],
+    questions: {
+      APTITUDE: {
+        mcq: [
+          {
+            question_id: "apt-mcq-1",
+            question_text:
+              "If a train travels 120km in 2 hours, what is its speed?",
+            options: [
+              { option_id: 1, text: "60 km/h" },
+              { option_id: 2, text: "80 km/h" },
+            ],
+          },
+          {
+            question_id: "apt-mcq-2",
+            question_text:
+              "If a train travels 120km in 2 hours, what is its speed?",
+            options: [
+              { option_id: 1, text: "60 km/h" },
+              { option_id: 2, text: "80 km/h" },
+            ],
+          },
+          {
+            question_id: "apt-mcq-3",
+            question_text:
+              "If a train travels 120km in 2 hours, what is its speed?",
+            options: [
+              { option_id: 1, text: "60 km/h" },
+              { option_id: 2, text: "80 km/h" },
+            ],
+          },
+        ],
+        short_answer: [
+          {
+            question_id: "apt-sa-1",
+            question_text:
+              "Explain the difference between permutation and combination.",
+          },
+          {
+            question_id: "apt-sa-2",
+            question_text:
+              "Explain the difference between permutation and combination.",
+          },
+          {
+            question_id: "apt-sa-3",
+            question_text:
+              "Explain the difference between permutation and combination.",
+          },
+        ],
+      },
+      VOCABULARY: {
+        mcq: [
+          {
+            question_id: "voc-mcq-1",
+            question_text: "Which word is a synonym for 'ephemeral'?",
+            options: [
+              { option_id: 1, text: "Everlasting" },
+              { option_id: 2, text: "Fleeting" },
+            ],
+          },
+        ],
+        short_answer: [
+          {
+            question_id: "apt-sa-1",
+            question_text:
+              "Explain the difference between permutation and combination.",
+          },
+          {
+            question_id: "apt-sa-2",
+            question_text:
+              "Explain the difference between permutation and combination.",
+          },
+          {
+            question_id: "apt-sa-3",
+            question_text:
+              "Explain the difference between permutation and combination.",
+          },
+        ],
+      },
+      GENERAL: {
+        short_answer: [
+          {
+            question_id: "apt-sa-1",
+            question_text:
+              "Explain the difference between permutation and combination.",
+          },
+          {
+            question_id: "apt-sa-2",
+            question_text:
+              "Explain the difference between permutation and combination.",
+          },
+          {
+            question_id: "apt-sa-3",
+            question_text:
+              "Explain the difference between permutation and combination.",
+          },
+        ],
+      },
+    },
+  });
+});
 
 /*
-* =================================================================
-*  API ENDPOINT: /api/interview/:id/questions
-*  Fetches the questions, duration, and section order for the test.
-* =================================================================
-*/
-app.get('/auth/scheduled_interview/:id/questions', (req, res) => {
-    const { id } = req.params;
-    console.log(`[Get Questions] Received request for ID: ${id}`);
-    
-    // Scenario 1: Interview is configured but has no questions/sections
-    if (id.startsWith('NO-QUESTIONS')) {
-        return res.status(200).json({
-            duration: 3600,
-            sectionOrder: [],
-            questions: {}
-        });
-    }
+ * =================================================================
+ *  API ENDPOINT: /api/interview/:id/submit-results
+ *  Receives the student's answers.
+ * =================================================================
+ */
+app.post("/auth/scheduled_interview/submit/:id", (req, res) => {
+  const { id } = req.params;
+  const { answers } = req.body;
 
-    // Default "Happy Path" Scenario: A fully configured interview
-    return res.status(200).json({
-        duration: 3600,
-        sectionOrder: ["APTITUDE", "VOCABULARY", "GENERAL"],
-        questions: {
-            "APTITUDE": {
-                mcq: [
-                    { question_id: "apt-mcq-1", question_text: "If a train travels 120km in 2 hours, what is its speed?", options: [{ option_id: 1, text: "60 km/h" }, { option_id: 2, text: "80 km/h" }] },
-                    { question_id: "apt-mcq-2", question_text: "If a train travels 120km in 2 hours, what is its speed?", options: [{ option_id: 1, text: "60 km/h" }, { option_id: 2, text: "80 km/h" }] },
-                    { question_id: "apt-mcq-3", question_text: "If a train travels 120km in 2 hours, what is its speed?", options: [{ option_id: 1, text: "60 km/h" }, { option_id: 2, text: "80 km/h" }] },
-                ],
-                short_answer: [
-                    { question_id: "apt-sa-1", question_text: "Explain the difference between permutation and combination." },
-                    { question_id: "apt-sa-2", question_text: "Explain the difference between permutation and combination." },
-                    { question_id: "apt-sa-3", question_text: "Explain the difference between permutation and combination." }
-                ]
-            },
-            "VOCABULARY": {
-                mcq: [
-                    { question_id: "voc-mcq-1", question_text: "Which word is a synonym for 'ephemeral'?", options: [{ option_id: 1, text: "Everlasting" }, { option_id: 2, text: "Fleeting" }] }
-                ],
-                short_answer: [
-                    { question_id: "apt-sa-1", question_text: "Explain the difference between permutation and combination." },
-                    { question_id: "apt-sa-2", question_text: "Explain the difference between permutation and combination." },
-                    { question_id: "apt-sa-3", question_text: "Explain the difference between permutation and combination." }
-                ]
-            },
-            "GENERAL": {
-                
-                short_answer: [
-                    { question_id: "apt-sa-1", question_text: "Explain the difference between permutation and combination." },
-                    { question_id: "apt-sa-2", question_text: "Explain the difference between permutation and combination." },
-                    { question_id: "apt-sa-3", question_text: "Explain the difference between permutation and combination." }
-                ]
-            }
-        }
+  console.log(`[Submit Results] Received submission for ID: ${id}`);
+  console.log("Received Answers:", JSON.stringify(answers, null, 2));
+
+  // You can add logic here to simulate a submission failure if needed
+  if (!answers) {
+    return res
+      .status(400)
+      .json({ message: "Bad Request: No answers provided." });
+  }
+
+  return res
+    .status(200)
+    .json({
+      message: "Interview submitted successfully!",
+      resultId: `res-${id}`,
     });
 });
-
-
-/*
-* =================================================================
-*  API ENDPOINT: /api/interview/:id/submit-results
-*  Receives the student's answers.
-* =================================================================
-*/
-app.post('/auth/scheduled_interview/:id/submit_results', (req, res) => {
-    const { id } = req.params;
-    const { answers } = req.body;
-
-    console.log(`[Submit Results] Received submission for ID: ${id}`);
-    console.log('Received Answers:', JSON.stringify(answers, null, 2));
-
-    // You can add logic here to simulate a submission failure if needed
-    if (!answers) {
-        return res.status(400).json({ message: "Bad Request: No answers provided." });
-    }
-    
-    return res.status(200).json({ message: "Interview submitted successfully!", resultId: `res-${id}` });
-});
-
-
 
 const interviewResultData = {
   max_score: 100,
   obtained_score: 87,
   max_mcq_score: 20,
   obtained_mcq_score: 17,
-  overall_feedback: "The candidate demonstrates a very strong understanding of advanced JavaScript concepts and React principles. The approach to component structure and state management is solid. The area for improvement would be in providing more detailed, textbook-style definitions for CSS concepts, although the practical application seems fine.",
+  overall_feedback:
+    "The candidate demonstrates a very strong understanding of advanced JavaScript concepts and React principles. The approach to component structure and state management is solid. The area for improvement would be in providing more detailed, textbook-style definitions for CSS concepts, although the practical application seems fine.",
   questions: {
     "JavaScript (Advanced)": {
-      mcq: [{
-        question_id: "js-mcq-1",
-        difficulty: "medium",
-        skill_tag: "JavaScript",
-        question_text: "What is a closure in JavaScript?",
-        options: [
-          { option_id: 1, text: "A block of code that executes immediately" },
-          { option_id: 2, text: "A way to bind `this` to a function" },
-          { option_id: 3, text: "A function that remembers its lexical scope" },
-          { option_id: 4, text: "A type of JavaScript object" },
-        ],
-        correct_answer: "A function that remembers its lexical scope",
-        user_answer: "A function that remembers its lexical scope",
-        score: 10,
-      }],
-      short_answer: [{
-        question_id: "jsadv-sa-1",
-        difficulty: "hard",
-        skill_tag: "JavaScript",
-        question_text: "Explain event delegation in JavaScript.",
-        user_answer: "It's a pattern where you attach a single event handler to a parent element to manage events on its descendants. This is more efficient than adding an event listener to every single child element.",
-        relevancy_score: 9,
-        score: 9,
-        feedback: "Excellent and concise explanation. Captures the core benefit of the pattern.",
-        correct_answer: "Event delegation is the practice of attaching a single event handler to a parent element to handle events that 'bubble up' from its child elements. This avoids attaching handlers to multiple individual nodes and can handle dynamically added children.",
-      }, ],
+      mcq: [
+        {
+          question_id: "js-mcq-1",
+          difficulty: "medium",
+          skill_tag: "JavaScript",
+          question_text: "What is a closure in JavaScript?",
+          options: [
+            { option_id: 1, text: "A block of code that executes immediately" },
+            { option_id: 2, text: "A way to bind `this` to a function" },
+            {
+              option_id: 3,
+              text: "A function that remembers its lexical scope",
+            },
+            { option_id: 4, text: "A type of JavaScript object" },
+          ],
+          correct_answer: "A function that remembers its lexical scope",
+          user_answer: "A function that remembers its lexical scope",
+          score: 10,
+        },
+      ],
+      short_answer: [
+        {
+          question_id: "jsadv-sa-1",
+          difficulty: "hard",
+          skill_tag: "JavaScript",
+          question_text: "Explain event delegation in JavaScript.",
+          user_answer:
+            "It's a pattern where you attach a single event handler to a parent element to manage events on its descendants. This is more efficient than adding an event listener to every single child element.",
+          relevancy_score: 9,
+          score: 9,
+          feedback:
+            "Excellent and concise explanation. Captures the core benefit of the pattern.",
+          correct_answer:
+            "Event delegation is the practice of attaching a single event handler to a parent element to handle events that 'bubble up' from its child elements. This avoids attaching handlers to multiple individual nodes and can handle dynamically added children.",
+        },
+      ],
     },
-    "React": {
-      mcq: [{
-        question_id: "react-mcq-1",
-        difficulty: "easy",
-        skill_tag: "React",
-        question_text: "What are hooks in React?",
-        options: [
-          { option_id: 1, text: "Functions that let you use state and other React features in functional components" },
-          { option_id: 2, text: "A way to fetch data in React" },
-          { option_id: 3, text: "An HTML attribute for components" },
-          { option_id: 4, text: "A replacement for props" },
-        ],
-        correct_answer: "Functions that let you use state and other React features in functional components",
-        user_answer: "A function that lets you use state and other React features in functional components", // A slightly incorrect user answer for demonstration
-        score: 7, // Score reflects the slight inaccuracy
-      }, ],
+    React: {
+      mcq: [
+        {
+          question_id: "react-mcq-1",
+          difficulty: "easy",
+          skill_tag: "React",
+          question_text: "What are hooks in React?",
+          options: [
+            {
+              option_id: 1,
+              text: "Functions that let you use state and other React features in functional components",
+            },
+            { option_id: 2, text: "A way to fetch data in React" },
+            { option_id: 3, text: "An HTML attribute for components" },
+            { option_id: 4, text: "A replacement for props" },
+          ],
+          correct_answer:
+            "Functions that let you use state and other React features in functional components",
+          user_answer:
+            "A function that lets you use state and other React features in functional components", // A slightly incorrect user answer for demonstration
+          score: 7, // Score reflects the slight inaccuracy
+        },
+      ],
       short_answer: [],
     },
-    "CSS": {
-      short_answer: [{
-        question_id: "css-sa-1",
-        difficulty: "easy",
-        skill_tag: "CSS",
-        question_text: "Explain the difference between `rem` and `em` units in CSS.",
-        user_answer: "Both are relative units. 'em' is relative to the font-size of its direct parent, whereas 'rem' is relative to the root (<html>) font-size.",
-        relevancy_score: 8,
-        score: 8,
-        feedback: "Correct. This is a clear and accurate distinction.",
-        correct_answer: "The `em` unit is relative to the font-size of its parent element, which can lead to compounding size changes. The `rem` (root em) unit is relative only to the font-size of the root `html` element, providing a more predictable and stable base for scaling.",
-      }, ],
+    CSS: {
+      short_answer: [
+        {
+          question_id: "css-sa-1",
+          difficulty: "easy",
+          skill_tag: "CSS",
+          question_text:
+            "Explain the difference between `rem` and `em` units in CSS.",
+          user_answer:
+            "Both are relative units. 'em' is relative to the font-size of its direct parent, whereas 'rem' is relative to the root (<html>) font-size.",
+          relevancy_score: 8,
+          score: 8,
+          feedback: "Correct. This is a clear and accurate distinction.",
+          correct_answer:
+            "The `em` unit is relative to the font-size of its parent element, which can lead to compounding size changes. The `rem` (root em) unit is relative only to the font-size of the root `html` element, providing a more predictable and stable base for scaling.",
+        },
+      ],
       mcq: [],
     },
     "React + CSS": {
-      short_answer: [{
-        question_id: "reactcss-sa-1",
-        difficulty: "medium",
-        skill_tag: "React, CSS",
-        question_text: "Given a design mockup, how would you structure your components and styles for reusability?",
-        user_answer: "I would break the UI down into small, atomic components (like Button, Input). Then, I'd compose them into larger organism components. For styling, I prefer CSS Modules to keep styles scoped locally and use a global theme file for variables like colors and spacing.",
-        relevancy_score: 9,
-        score: 9,
-        feedback: "Solid, modern approach. Mentioning atomic design principles and scoped styling demonstrates a strong understanding of maintainable front-end architecture.",
-        correct_answer: "A good approach involves breaking the design into reusable functional components (atomic design). Styles can be managed using scoped solutions like CSS Modules or CSS-in-JS libraries (e.g., Styled Components). A centralized theme file for design tokens (colors, fonts, spacing) should be used to ensure consistency.",
-      }, ],
+      short_answer: [
+        {
+          question_id: "reactcss-sa-1",
+          difficulty: "medium",
+          skill_tag: "React, CSS",
+          question_text:
+            "Given a design mockup, how would you structure your components and styles for reusability?",
+          user_answer:
+            "I would break the UI down into small, atomic components (like Button, Input). Then, I'd compose them into larger organism components. For styling, I prefer CSS Modules to keep styles scoped locally and use a global theme file for variables like colors and spacing.",
+          relevancy_score: 9,
+          score: 9,
+          feedback:
+            "Solid, modern approach. Mentioning atomic design principles and scoped styling demonstrates a strong understanding of maintainable front-end architecture.",
+          correct_answer:
+            "A good approach involves breaking the design into reusable functional components (atomic design). Styles can be managed using scoped solutions like CSS Modules or CSS-in-JS libraries (e.g., Styled Components). A centralized theme file for design tokens (colors, fonts, spacing) should be used to ensure consistency.",
+        },
+      ],
       mcq: [],
     },
   },
 };
 
-
 // Data for the /selection/:id endpoint
 const allSelectedStudents = [
-    { "name": "Priya Sharma", "usn": "1RN22CS120" },
-    { "name": "Rohan Gupta", "usn": "1RN22AI045" },
-    { "name": "Anjali Mehta", "usn": "1RN22IS011" },
-    { "name": "Vikram Singh", "usn": "1RN22CS210" },
-    { "name": "Sneha Reddy", "usn": "1RN22AI101" }
+  { name: "Priya Sharma", usn: "1RN22CS120" },
+  { name: "Rohan Gupta", usn: "1RN22AI045" },
+  { name: "Anjali Mehta", usn: "1RN22IS011" },
+  { name: "Vikram Singh", usn: "1RN22CS210" },
+  { name: "Sneha Reddy", usn: "1RN22AI101" },
 ];
 
 const selectionDataForSelectedStudent = {
   selected: true,
-  selected_students: allSelectedStudents
+  selected_students: allSelectedStudents,
 };
 
 const selectionDataForNotSelectedStudent = {
   selected: false,
-  selected_students: allSelectedStudents
+  selected_students: allSelectedStudents,
 };
 
 // --- API ENDPOINTS ---
 
 // Endpoint for interview results
-app.get('/auth/scheduled_interview/result/:id', (req, res) => {
+app.get("/auth/scheduled_interview/result/:id", (req, res) => {
   const { id } = req.params;
-  console.log(`[${new Date().toLocaleTimeString()}] GET /api/interview/result/${id} - Returning mock result data.`);
+  console.log(
+    `[${new Date().toLocaleTimeString()}] GET /api/interview/result/${id} - Returning mock result data.`
+  );
 
   // Simulate a network delay
   setTimeout(() => {
@@ -3368,14 +3480,16 @@ app.get('/auth/scheduled_interview/result/:id', (req, res) => {
 });
 
 // Endpoint for selection status
-app.get('/auth/scheduled_interview/selection/:id', (req, res) => {
+app.get("/auth/scheduled_interview/selection/:id", (req, res) => {
   const { id } = req.params;
-  console.log(`[${new Date().toLocaleTimeString()}] GET /api/interview/selection/${id} - Returning mock selection data.`);
-  
+  console.log(
+    `[${new Date().toLocaleTimeString()}] GET /api/interview/selection/${id} - Returning mock selection data.`
+  );
+
   // Simple logic to test both "selected" and "not selected" cases
   // If the ID contains the word "fail" or an even number, return not selected.
   let responseData;
-  if (id.includes('fail') || parseInt(id.slice(-1)) % 2 === 0) {
+  if (id.includes("fail") || parseInt(id.slice(-1)) % 2 === 0) {
     console.log(` -> Responding with 'Not Selected' status for ID: ${id}`);
     responseData = selectionDataForNotSelectedStudent;
   } else {
