@@ -34,6 +34,8 @@ const authenticateToken = (req, res, next) => {
 const student_token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc1MjczNDkzOSwianRpIjoiNDMwYzlkYjItNTgwNi00MTFjLWFlYzYtODE2NTJmMmQyYTg3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjgiLCJuYmYiOjE3NTI3MzQ5MzksImNzcmYiOiJjNzg3OTM1Ny0zZGIwLTRiMGUtOTE4OS0xODRiMmE4NWE3NjEiLCJleHAiOjE3NTI3NzA5MzksInJvbGUiOiJzdHVkZW50IiwibmFtZSI6IkFtcnV0aGEgUmFvIn0.g-2DkOJT7rWkKOagnUtVv-QfNZDSkg_DddBMOuC3AFI";
 
+const clg_admin =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJyb2xlIjoiY29sbGVnZV9hZG1pbiIsInVzZXJfaWQiOiIxMjMiLCJpc3MiOiJ0ZXN0LWlzc3VlciIsImF1ZCI6InRlc3QtYXVkaWVuY2UiLCJpYXQiOjE3NTYzODgyNjQsIm5iZiI6MTc1NjM4ODI2NCwiZXhwIjoxNzU2MzkxODY0fQ.rP-bSWdFDMbTG7MJeLaDX63p_NmIKKqCRiwn2se8H98";
 const admin_token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMjMsInVzZXJuYW1lIjoiam9obl9kb2UiLCJyb2xlIjoiYWRtaW4ifQ.unsHQCc_McbecKoLBUx9hmBgwI-Fed8UuK6IZ-fcBII";
 const token =
@@ -49,6 +51,9 @@ app.post("/auth/login", (req, res) => {
     return res.status(200).json({ token });
   } else if (email == "a@a.com" && password === "b") {
     const token = admin_token;
+    return res.status(200).json({ token });
+  } else if (email == "a@a.com" && password === "c") {
+    const token = clg_admin;
     return res.status(200).json({ token });
   } else {
     return res.status(401).json({ message: "Unauthorized" });
@@ -409,27 +414,6 @@ app.post("/auth/otp/verify", (req, res) => {
   } else {
     return res.status(400).json({ message: "Invalid OTP" });
   }
-});
-
-app.get("/auth/billing", (req, res) => {
-  res.json({
-    totalLicenses: 1000,
-    usedLicenses: 870,
-    licenseExpiry: "31-Dec-2025",
-    planType: "Annual",
-    billingEmail: "admin@college.edu",
-    billingAddress: "123 College Street, India",
-    lastPayment: "01-Jul-2025",
-    paymentMethod: "Visa •••• 1234",
-    dueAmount: 1250,
-    whatsapp: {
-      messagesSent: 3560,
-      costPerMessage: 0.35,
-      totalChargeThisMonth: 1246,
-      billingCycle: "Monthly",
-    },
-    paymentHistory: [],
-  });
 });
 
 let plans = {
@@ -1288,8 +1272,6 @@ app.post("/auth/interview/submit/:id", (req, res) => {
   res.status(200).jsonp({ message: "Interview submitted successfully" });
 });
 
-
-
 // Define your resume HTML and CSS
 
 app.post("/auth/template", (req, res) => {
@@ -1585,11 +1567,37 @@ let adminProfile = {
 };
 
 let collegeProfile = {
-  name: "Example University",
-  code: "EXU123",
-  email: "contact@exampleuniversity.edu",
-  contact: "0987654321",
-  address: "456 College Ave, City, Country",
+  // General Tab -> Basic Information
+  college_name: "Example University",
+  college_code: "EXU123",
+  establishment_year: "1998",
+
+  // General Tab -> Location and Contact
+  college_address: "456 College Ave, City, Country",
+  pincode: "560001",
+  college_phone: "0987654321",
+  college_email: "contact@exampleuniversity.edu",
+
+  // General Tab -> Affiliation and Personnel
+  aicte_code: "1-12345678",
+  affiliation_number: "UNIV-AFF-9876",
+  principal_name: "Dr. John Smith",
+  principal_email: "principal@exampleuniversity.edu",
+  principal_phone: "+91-9988776655",
+
+  // Students Tab
+  exam_month_odd_sem: "December", // Changed
+  exam_month_even_sem: "June", // Added
+  allowed_email_domains: ["exampleuniversity.edu"],
+
+  // Email Tab
+  sending_email: "noreply@exampleuniversity.edu",
+  app_password: "your_app_password_here",
+
+  // WhatsApp Tab
+  wa_phone_number_id: "100001234567890",
+  wa_business_account_id: "200001234567890",
+  wa_access_token: "your_whatsapp_access_token_here",
 };
 
 // GET Admin Profile
@@ -2036,7 +2044,7 @@ const allJobs = Array.from({ length: 100 }).map((_, i) => {
     job_title: role,
     company_name: `Company ${i + 1}`,
     job_location: location,
-    job_type: jobType,
+    job_type: [jobType],
     remote: location === "Remote",
     experience: (i % 5) + 1,
 
@@ -2362,7 +2370,65 @@ app.get("/auth/admin/job/:jobId/applicants", (req, res) => {
     currentPage,
   });
 });
+// --- Route 3: Update single applicant status ---
+app.put("/auth/admin/job/:jobId/applicant/:id/status", (req, res) => {
+  const { jobId, id } = req.params;
+  const { round_statuses } = req.body;
+  console.log("Updating applicant", id, "for job", jobId);
 
+  // const applicant = students.find((s) => s.id === id);
+  // if (!applicant) {
+  //   return res.status(404).json({ error: "Applicant not found" });
+  // }
+
+  // applicant.round_statuses = round_statuses;
+  res.json({ message: "Applicant status updated"});
+});app.put("/auth/admin/job/:jobId/applicant/:id/status", (req, res) => {
+  const { jobId, id } = req.params;
+  const { round_statuses } = req.body;
+  console.log("Updating applicant", id, "for job", jobId);
+
+  // const applicant = students.find((s) => s.id === id);
+  // if (!applicant) {
+  //   return res.status(404).json({ error: "Applicant not found" });
+  // }
+
+  // applicant.round_statuses = round_statuses;
+  res.json({ message: "Applicant status updated"});
+});
+
+
+app.post("/auth/admin/job/:jobId/rounds", (req, res) => {
+  const { jobId } = req.params;
+  
+
+  // const applicant = students.find((s) => s.id === id);
+  // if (!applicant) {
+  //   return res.status(404).json({ error: "Applicant not found" });
+  // }
+
+  // applicant.round_statuses = round_statuses;
+  res.json({ message: "Applicant status updated", jobId});
+});
+
+// --- Route 4: Bulk update applicant statuses ---
+app.put("/auth/admin/job/:jobId/applicants/status/bulk", (req, res) => {
+  const { jobId } = req.params;
+  const { applicantIds, roundIndex, status } = req.body;
+
+  let updated = 0;
+  students.forEach((s) => {
+    if (applicantIds.includes(s.id)) {
+      if (!s.round_statuses) {
+        s.round_statuses = [];
+      }
+      s.round_statuses[roundIndex] = status;
+      updated++;
+    }
+  });
+
+  res.json({ message: "Bulk status update successful", updated });
+});
 const jobb = {
   job_title: "Software Engineer",
   companyName: "Tech Corp",
@@ -3324,12 +3390,10 @@ app.post("/auth/scheduled_interview/submit/:id", (req, res) => {
       .json({ message: "Bad Request: No answers provided." });
   }
 
-  return res
-    .status(200)
-    .json({
-      message: "Interview submitted successfully!",
-      resultId: `res-${id}`,
-    });
+  return res.status(200).json({
+    message: "Interview submitted successfully!",
+    resultId: `res-${id}`,
+  });
 });
 
 const interviewResultData = {
@@ -3502,6 +3566,233 @@ app.get("/auth/scheduled_interview/selection/:id", (req, res) => {
     res.status(200).json(responseData);
   }, 800); // 0.8 second delay
 });
+
+let admins = [
+  {
+    id: 1,
+    name: "Alice Johnson",
+    email: "alice.j@corp.com",
+    access_type: "finance_editor",
+  },
+  {
+    id: 2,
+    name: "Bob Smith",
+    email: "bob.smith@corp.com",
+    access_type: "placement_officer",
+  },
+  {
+    id: 3,
+    name: "Catherine Williams",
+    email: "cathy.w@corp.com",
+    access_type: "finance_editor",
+  },
+];
+let nextId = 4;
+
+// --- Helper for simulated delay ---
+const simulateDelay = (req, res, next) => {
+  setTimeout(next, 5); // 500ms delay
+};
+
+// --- API Endpoints ---
+
+// GET /api/admins - Fetch all admins
+app.get("/auth/admin/admins", simulateDelay, (req, res) => {
+  console.log("GET /api/admins -> Fectching all admins");
+  res.status(200).json(admins);
+});
+
+// POST /api/admins - Add a new admin
+app.post("/auth/admin/admins", simulateDelay, (req, res) => {
+  const { name, email, access_type } = req.body;
+
+  if (!name || !email || !access_type) {
+    return res
+      .status(400)
+      .json({ message: "Name, email, and access_type are required." });
+  }
+
+  const newAdmin = { id: nextId++, name, email, access_type };
+  admins.unshift(newAdmin); // Add to the beginning of the array
+
+  console.log("POST /api/admins -> Added new admin:", newAdmin);
+  res.status(201).json(newAdmin);
+});
+
+// PUT /api/admins/:id - Update an existing admin
+app.put("/auth/admin/admins/:id", simulateDelay, (req, res) => {
+  const adminId = parseInt(req.params.id, 10);
+  const { name, email, access_type } = req.body;
+
+  const adminIndex = admins.findIndex((admin) => admin.id === adminId);
+
+  if (adminIndex === -1) {
+    return res.status(404).json({ message: "Admin not found." });
+  }
+
+  const updatedAdmin = { ...admins[adminIndex], name, email, access_type };
+  admins[adminIndex] = updatedAdmin;
+
+  console.log(`PUT /api/admins/${adminId} -> Updated admin:`, updatedAdmin);
+  res.status(200).json(updatedAdmin);
+});
+
+// DELETE /api/admins/:id - Delete an admin
+app.delete("/auth/admin/admins/:id", simulateDelay, (req, res) => {
+  const adminId = parseInt(req.params.id, 10);
+  const initialLength = admins.length;
+  admins = admins.filter((admin) => admin.id !== adminId);
+
+  if (admins.length === initialLength) {
+    return res.status(404).json({ message: "Admin not found." });
+  }
+
+  console.log(`DELETE /api/admins/${adminId} -> Admin deleted.`);
+  res.status(204).send(); // 204 No Content for successful deletion
+});
+
+const billingData = {
+  annual_plan: {
+    name: "Annual 1000 License Pack",
+    total_licenses: 1000,
+    renews_on: "2026-08-01T00:00:00Z",
+    overage_rate: 25.0,
+  },
+  license_usage: {
+    used: 750,
+  },
+  quarterly_usage: {
+    next_invoice_date: "2025-10-01T00:00:00Z",
+    overage: {
+      count: 0,
+      cost: 0,
+    },
+    total_unbilled: 170.0,
+  },
+  payment_method: {
+    card_type: "Visa",
+    last4: "4242",
+    expiry: "12/28",
+  },
+  billing_history: [
+    {
+      id: "inv_quarter_2_2025",
+      date: "2025-07-01T00:00:00Z",
+      description: "Quarterly Usage (Apr - Jun 2025)",
+      amount: 250.0,
+      pdf_url: "#",
+    },
+    {
+      id: "inv_quarter_1_2025",
+      date: "2025-04-01T00:00:00Z",
+      description: "Quarterly Usage (Jan - Mar 2025)",
+      amount: 180.5,
+      pdf_url: "#",
+    },
+  ],
+};
+
+// API Endpoint
+app.get("/auth/admin/billing", (req, res) => {
+  console.log("GET /api/billing-overview hit");
+  // Simulate network delay
+  setTimeout(() => {
+    res.json(billingData);
+  }, 100);
+});
+
+
+app.patch('/auth/admin/student/:id/status', (req, res) => {
+    const id = parseInt(req.params.id);
+  
+    
+    console.log(`Updated student ${id}:`);
+    res.json({ message: 'Student updated successfully' });
+});
+
+// PATCH /students/bulk-status - Bulk update status for multiple students
+app.patch('/auth/admin/student/bulk_status', (req, res) => {
+    
+    console.log(`Bulk updated students.`);
+    res.json({ message: 'Bulk update successful' });
+});
+
+
+const notifications = [
+    {
+      "id": 1,
+      "title": "New Job Opportunity",
+      "message": "TCS is hiring.",
+      "read": false
+    },
+    {
+      "id": 2,
+      "title": "Application Viewed",
+      "message": "Your application for Google has been viewed.",
+      "read": false
+    },
+    {
+      "id": 3,
+      "title": "Drive Reminder",
+      "message": "Infosys placement drive tomorrow.",
+      "read": true
+    },{
+      "id": 4,
+      "title": "New Job Opportunity",
+      "message": "TCS is hiring.",
+      "read": false
+    },
+    {
+      "id": 5,
+      "title": "Application Viewed",
+      "message": "Your application for Google has been viewed.",
+      "read": false
+    },
+    {
+      "id": 6,
+      "title": "Drive Reminder",
+      "message": "Infosys placement drive tomorrow.",
+      "read": true
+    },{
+      "id": 7,
+      "title": "New Job Opportunity",
+      "message": "TCS is hiring.",
+      "read": false
+    },
+    {
+      "id": 8,
+      "title": "Application Viewed",
+      "message": "Your application for Google has been viewed.",
+      "read": false
+    },
+    {
+      "id": 9,
+      "title": "Drive Reminder",
+      "message": "Infosys placement drive tomorrow.",
+      "read": true
+    },{
+      "id": 10,
+      "title": "New Job Opportunity",
+      "message": "TCS is hiring.",
+      "read": false
+    },
+    {
+      "id": 11,
+      "title": "Application Viewed",
+      "message": "Your application for Google has been viewed.",
+      "read": false
+    },
+    {
+      "id": 12,
+      "title": "Drive Reminder",
+      "message": "Infosys placement drive tomorrow.",
+      "read": true
+    }
+  ]
+app.get('/auth/notifications', (req, res) => {
+  res.json(notifications)
+})
+
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:3000`, port);
