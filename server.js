@@ -349,12 +349,12 @@ app.get("/auth/profile", (req, res) => {
   res.status(200).json({ ...up });
 });
 
-app.get("/auth/profile/complete", (req, res) => {
+app.get("/auth/profile/eligibility", (req, res) => {
   const randomNumber = Math.floor(Math.random() * 11) + 3; // 0–10 + 10 => 10–20
   console.log("randomNumber: ", randomNumber);
-  const isComplete = randomNumber > 10;
+  const is_eligible = true;
 
-  res.status(200).json({ isComplete });
+  res.status(200).json({ is_eligible });
 });
 
 app.post("/auth/profile", (req, res) => {
@@ -478,8 +478,8 @@ let mockJobs = Array.from({ length: 100 }, (_, i) => {
   const locations = ["Bangalore", "Mumbai", "Remote", "Delhi", "Hyderabad"];
   const remoteTypes = ["Remote", "Onsite", "Hybrid"];
 
-  const role = roles[i % roles.length];
-  const company = companies[i % companies.length];
+  const job_title = roles[i % roles.length];
+  const company_name = companies[i % companies.length];
   const location = locations[i % locations.length];
   const remoteType = remoteTypes[i % remoteTypes.length];
   const remote = remoteType === "Remote";
@@ -487,8 +487,8 @@ let mockJobs = Array.from({ length: 100 }, (_, i) => {
   return {
     logo: "https://i.ibb.co/hFJgrGNR/googlelogo.png",
     id: i + 1,
-    company,
-    role,
+    company_name,
+    job_title,
     location,
     remoteType,
     remote,
@@ -513,9 +513,9 @@ let mockJobsApplied = Array.from({ length: 10 }, (_, i) => {
   const remoteTypes = ["Remote", "Onsite", "Hybrid"];
   const statuses = ["in_progess", "selected", "rejected"];
 
-  const role = roles[i % roles.length];
+  const job_title = roles[i % roles.length];
   const status = statuses[i % statuses.length];
-  const company = companies[i % companies.length];
+  const company_name = companies[i % companies.length];
   const location = locations[i % locations.length];
   const remoteType = remoteTypes[i % remoteTypes.length];
   const remote = remoteType === "Remote";
@@ -523,8 +523,8 @@ let mockJobsApplied = Array.from({ length: 10 }, (_, i) => {
   return {
     logo: "https://i.ibb.co/hFJgrGNR/googlelogo.png",
     id: i + 1,
-    company,
-    role,
+    company_name,
+    job_title,
     status,
     location,
     remoteType,
@@ -541,7 +541,7 @@ let mockJobsApplied = Array.from({ length: 10 }, (_, i) => {
 // Mock in-memory store for starred jobs per user
 let userStarredJobs = {}; // { userId: [jobId1, jobId2, ...] }
 
-app.get("/auth/job", (req, res) => {
+app.get("/auth/admin/job", (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 10;
 
@@ -552,8 +552,8 @@ app.get("/auth/job", (req, res) => {
 
   let filtered = mockJobs.filter((job) => {
     const matchesSearch =
-      job.role.toLowerCase().includes(search) ||
-      job.company.toLowerCase().includes(search);
+      job.job_title.toLowerCase().includes(search) ||
+      job.company_name.toLowerCase().includes(search);
     const matchesLocation = location ? job.location === location : true;
     const matchesRemote = remote ? job.remote : true; // Filter by remote status
     return matchesSearch && matchesLocation && matchesRemote;
@@ -575,7 +575,7 @@ app.get("/auth/job", (req, res) => {
   });
 });
 
-app.get("/auth/job/:id", (req, res) => {
+app.get("/auth/admin/job/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const userId = req.query.userId || "default"; // If you want starred status per user
 
@@ -2040,7 +2040,7 @@ const allJobs = Array.from({ length: 100 }).map((_, i) => {
   }
 
   return {
-    id: i + 1,
+    id: String(i + 1),
     job_title: role,
     company_name: `Company ${i + 1}`,
     job_location: location,
@@ -2168,6 +2168,18 @@ app.get("/auth/admin/job/filters", (req, res) => {
   res.json({ roles, locations });
 });
 
+app.get("/auth/admin/job/:jobId/rounds", (req, res) => {
+  const { jobId } = req.params;
+  const job = allJobs.find((j) => j.id === jobId);
+  if (!job) return res.status(404).json({ message: "Job not found" });
+  res.json({ rounds: job.rounds });
+});
+
+// --- NEW: Update rounds for a job ---
+app.post("/auth/admin/job/:jobId/rounds", (req, res) => {
+  res.json({ message: "Rounds updated successfully" });
+});
+
 // Helper: filter, search, sort, paginate jobs
 function filterJobs(jobs, filters) {
   let filtered = jobs;
@@ -2256,7 +2268,7 @@ app.get("/auth/admin/job", (req, res) => {
   });
 });
 
-app.get("/auth/admin/applied_job", (req, res) => {
+app.get("/auth/applied_job", (req, res) => {
   const {
     page = 1,
     search = "",
@@ -2382,8 +2394,9 @@ app.put("/auth/admin/job/:jobId/applicant/:id/status", (req, res) => {
   // }
 
   // applicant.round_statuses = round_statuses;
-  res.json({ message: "Applicant status updated"});
-});app.put("/auth/admin/job/:jobId/applicant/:id/status", (req, res) => {
+  res.json({ message: "Applicant status updated" });
+});
+app.put("/auth/admin/job/:jobId/applicant/:id/status", (req, res) => {
   const { jobId, id } = req.params;
   const { round_statuses } = req.body;
   console.log("Updating applicant", id, "for job", jobId);
@@ -2394,21 +2407,7 @@ app.put("/auth/admin/job/:jobId/applicant/:id/status", (req, res) => {
   // }
 
   // applicant.round_statuses = round_statuses;
-  res.json({ message: "Applicant status updated"});
-});
-
-
-app.post("/auth/admin/job/:jobId/rounds", (req, res) => {
-  const { jobId } = req.params;
-  
-
-  // const applicant = students.find((s) => s.id === id);
-  // if (!applicant) {
-  //   return res.status(404).json({ error: "Applicant not found" });
-  // }
-
-  // applicant.round_statuses = round_statuses;
-  res.json({ message: "Applicant status updated", jobId});
+  res.json({ message: "Applicant status updated" });
 });
 
 // --- Route 4: Bulk update applicant statuses ---
@@ -3701,98 +3700,168 @@ app.get("/auth/admin/billing", (req, res) => {
   }, 100);
 });
 
+app.patch("/auth/admin/student/:id/status", (req, res) => {
+  const id = parseInt(req.params.id);
 
-app.patch('/auth/admin/student/:id/status', (req, res) => {
-    const id = parseInt(req.params.id);
-  
-    
-    console.log(`Updated student ${id}:`);
-    res.json({ message: 'Student updated successfully' });
+  console.log(`Updated student ${id}:`);
+  res.json({ message: "Student updated successfully" });
 });
 
 // PATCH /students/bulk-status - Bulk update status for multiple students
-app.patch('/auth/admin/student/bulk_status', (req, res) => {
-    
-    console.log(`Bulk updated students.`);
-    res.json({ message: 'Bulk update successful' });
+app.patch("/auth/admin/student/bulk_status", (req, res) => {
+  console.log(`Bulk updated students.`);
+  res.json({ message: "Bulk update successful" });
 });
 
-
 const notifications = [
-    {
-      "id": 1,
-      "title": "New Job Opportunity",
-      "message": "TCS is hiring.",
-      "read": false
-    },
-    {
-      "id": 2,
-      "title": "Application Viewed",
-      "message": "Your application for Google has been viewed.",
-      "read": false
-    },
-    {
-      "id": 3,
-      "title": "Drive Reminder",
-      "message": "Infosys placement drive tomorrow.",
-      "read": true
-    },{
-      "id": 4,
-      "title": "New Job Opportunity",
-      "message": "TCS is hiring.",
-      "read": false
-    },
-    {
-      "id": 5,
-      "title": "Application Viewed",
-      "message": "Your application for Google has been viewed.",
-      "read": false
-    },
-    {
-      "id": 6,
-      "title": "Drive Reminder",
-      "message": "Infosys placement drive tomorrow.",
-      "read": true
-    },{
-      "id": 7,
-      "title": "New Job Opportunity",
-      "message": "TCS is hiring.",
-      "read": false
-    },
-    {
-      "id": 8,
-      "title": "Application Viewed",
-      "message": "Your application for Google has been viewed.",
-      "read": false
-    },
-    {
-      "id": 9,
-      "title": "Drive Reminder",
-      "message": "Infosys placement drive tomorrow.",
-      "read": true
-    },{
-      "id": 10,
-      "title": "New Job Opportunity",
-      "message": "TCS is hiring.",
-      "read": false
-    },
-    {
-      "id": 11,
-      "title": "Application Viewed",
-      "message": "Your application for Google has been viewed.",
-      "read": false
-    },
-    {
-      "id": 12,
-      "title": "Drive Reminder",
-      "message": "Infosys placement drive tomorrow.",
-      "read": true
-    }
-  ]
-app.get('/auth/notifications', (req, res) => {
-  res.json(notifications)
-})
+  {
+    id: 1,
+    title: "New Job Opportunity",
+    message: "TCS is hiring.",
+    read: false,
+  },
+  {
+    id: 2,
+    title: "Application Viewed",
+    message: "Your application for Google has been viewed.",
+    read: false,
+  },
+  {
+    id: 3,
+    title: "Drive Reminder",
+    message: "Infosys placement drive tomorrow.",
+    read: true,
+  },
+  {
+    id: 4,
+    title: "New Job Opportunity",
+    message: "TCS is hiring.",
+    read: false,
+  },
+  {
+    id: 5,
+    title: "Application Viewed",
+    message: "Your application for Google has been viewed.",
+    read: false,
+  },
+  {
+    id: 6,
+    title: "Drive Reminder",
+    message: "Infosys placement drive tomorrow.",
+    read: true,
+  },
+  {
+    id: 7,
+    title: "New Job Opportunity",
+    message: "TCS is hiring.",
+    read: false,
+  },
+  {
+    id: 8,
+    title: "Application Viewed",
+    message: "Your application for Google has been viewed.",
+    read: false,
+  },
+  {
+    id: 9,
+    title: "Drive Reminder",
+    message: "Infosys placement drive tomorrow.",
+    read: true,
+  },
+  {
+    id: 10,
+    title: "New Job Opportunity",
+    message: "TCS is hiring.",
+    read: false,
+  },
+  {
+    id: 11,
+    title: "Application Viewed",
+    message: "Your application for Google has been viewed.",
+    read: false,
+  },
+  {
+    id: 12,
+    title: "Drive Reminder",
+    message: "Infosys placement drive tomorrow.",
+    read: true,
+  },
+];
+app.get("/auth/notifications", (req, res) => {
+  res.json(notifications);
+});
 
+app.post("/auth/admin/embedded_signup", (req, res) => {
+  console.log(req.body);
+  res.json({ message: "Super" });
+});
+
+const dashboardSummary = {
+  stats: {
+    total_students: 425,
+    resumes_submitted: 380,
+    active_placement_drives: 6,
+    students_placed: 75,
+  },
+  placement_report: {
+    kpi: {
+      total_offers: 320,
+      avg_package: "₹8.2 LPA",
+      highest_package: "₹18 LPA",
+      placement_percentage: "82%",
+      most_active_dept: "Computer Science",
+      top_companies: "TCS, Infosys, Accenture",
+    },
+    company_details: [
+      { company_name: "TCS", offers: 120, avg: "₹8 LPA", highest: "₹12 LPA" },
+      {
+        company_name: "Infosys",
+        offers: 80,
+        avg: "₹7 LPA",
+        highest: "₹10 LPA",
+      },
+      {
+        company_name: "Accenture",
+        offers: 50,
+        avg: "₹9 LPA",
+        highest: "₹14 LPA",
+      },
+      {
+        company_name: "Deloitte",
+        offers: 40,
+        avg: "₹10 LPA",
+        highest: "₹15 LPA",
+      },
+      {
+        company_name: "Wipro",
+        offers: 30,
+        avg: "₹7.5 LPA",
+        highest: "₹11 LPA",
+      },
+    ],
+  },
+  ai_mock_interview_stats: {
+    summary: {
+      total_interviews: 142,
+      average_score: 78,
+      students_participated: 95,
+    },
+    weekly_performance: {
+      labels: ["week_1", "week_2", "week_3", "week_4", "week_5"],
+      interviews_taken: [12, 18, 24, 20, 28],
+      average_scores: [72, 75, 78, 74, 80],
+    },
+    recent_attempts: [
+      { id: 1, student: "Arjun Sharma", date: "2025-10-08", score: 85 },
+      { id: 2, student: "Priya Patel", date: "2025-10-07", score: 72 },
+      { id: 3, student: "Ravi Kumar", date: "2025-10-06", score: 90 },
+    ],
+  },
+};
+
+app.get("/auth/admin/dashboard", (req, res) => {
+  res.json(dashboardSummary);
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:3000`, port);
