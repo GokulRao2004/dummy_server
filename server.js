@@ -3858,9 +3858,48 @@ const dashboardSummary = {
     ],
   },
 };
+const studentDashboardSummary = {
+  userName: "Priya",
+  profileCompletion: 85,
+  stats: {
+    profileCompletion: 85,
+    aiInterviewsTaken: 4,
+    upcomingInterviews: 2,
+    jobsApplied: 12,
+  },
+  upcomingDrives: [
+    {
+      id: "drive1",
+      date: "Oct 15",
+      title: "Software Engineer",
+      company: "Google",
+      location: "Bangalore",
+      color: "var(--primary-500)",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+    },
+    {
+      id: "drive2",
+      date: "Oct 20",
+      title: "Data Analyst",
+      company: "Amazon",
+      location: "Hyderabad",
+      color: "var(--secondary-500)",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+    },
+  ],
+  peerComparison: [
+    { metric: "Applications Submitted", you: 12, average: 9, top: 20 },
+    { metric: "Interviews Scheduled", you: 3, average: 2, top: 6 },
+    { metric: "Resume Views", you: 18, average: 14, top: 35 },
+  ],
+};
 
 app.get("/auth/admin/dashboard", (req, res) => {
   res.json(dashboardSummary);
+});
+
+app.get("/auth/dashboard", (req, res) => {
+  res.json(studentDashboardSummary);
 });
 
 app.listen(port, () => {
