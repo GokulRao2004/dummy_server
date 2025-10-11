@@ -2695,53 +2695,66 @@ const futureISO = () => {
 };
 
 const makeInterview = () => {
-  const id = NEXT_ID++;
+  const id = `INT-${NEXT_ID++}`;
   const job = rand(mockJobs);
-  const batchCount = Math.floor(Math.random() * 3) + 1;
-  const batches = Array.from({ length: batchCount }, (_, i) => ({
-    id: i + 1,
-    name: `Batch-${i + 1}`,
-    venue: `Hall-${i + 1}`,
-    start: futureISO(),
-    end: futureISO(),
-  }));
+  const mode = rand(["ONLINE", "ON_CAMPUS", "COMPANY_SITE"]);
 
-  const applicants = Array.from({ length: 15 }, (_, i) =>
-    makeApplicant(i + 1, rand(batches).id)
-  );
+  let batches = [];
+  let test_details = [];
+  let company_address = null;
+
+  if (mode !== "COMPANY_SITE") {
+    const batchCount = Math.floor(Math.random() * 2) + 1;
+    batches = Array.from({ length: batchCount }, (_, i) => ({
+      venue: mode === "ON_CAMPUS" ? `Hall-${String.fromCharCode(65 + i)}` : null,
+      start: futureISO(),
+      end: futureISO(6),
+    }));
+
+    test_details = [
+      {
+        category: "TECHNICAL",
+        difficulties: ["MED", "HARD"],
+        question_count: 20,
+      },
+      {
+        category: "APTITUDE",
+        difficulties: ["EASY", "MED"],
+        question_count: 15,
+      },
+    ];
+  } else {
+      company_address = {
+          street: "123 Tech Park",
+          city: "Bengaluru",
+          state: "Karnataka",
+          zip: "560100"
+      };
+  }
 
   return {
     id,
     job_id: job.id,
     job_title: job.job_title,
     company_name: job.company_name,
-    mode: rand(["ONLINE", "ON_CAMPUS"]),
-    online_link: "https://meet.example.com/xyz",
-    start_time: futureISO(),
-    pass_out_year: 2026,
-    departments: dept,
-    cutoff: { type: "PERCENT", value: 60 },
-    special_instructions: "Be on time",
-    contact_person: {
-      name: "Alice Smith",
-      phone: "+91-9876543210",
-      email: "alice@corp.com",
-    },
-    difficulties: ["EASY", "MED"],
-    question_categories: ["TECHNICAL", "APTITUDE"],
-    question_formats: ["MCQ", "CODING"],
-    total_questions: 30,
-    mcq_count: 20,
+    department_ids: null, // Default for job-specific
+    pass_out_year: null, // Default for job-specific
+    mode,
+    online_link: mode === "ONLINE" ? "https://meet.example.com/new-interview" : null,
+    company_address,
     batches,
-    applicants,
+    test_details,
+    cutoff: { type: "PERCENT", value: 65 },
+    special_instructions: "Candidates should join 10 minutes early.",
+    contact_person: {
+      name: "John Doe",
+      phone: "+91-9988776655",
+      email: "john.doe@example.com",
+    },
   };
 };
 
-/* in-memory DB */
-
-/* ───────── look-up routes ───────── */
-
-/* ───────── interview list ───────── */
+// UPDATED: In-memory DB with the new data structure
 const interviews = [
   {
     id: "INT-101",
@@ -2752,23 +2765,32 @@ const interviews = [
     pass_out_year: null,
     mode: "ON_CAMPUS",
     online_link: null,
+    company_address: null,
     batches: [
       {
         venue: "Auditorium-A",
-        start: "2025-09-12T09:00:00.000Z",
-        end: "2025-09-12T10:30:00.000Z",
+        start: "2025-11-12T09:00:00.000Z",
+        end: "2025-11-12T10:30:00.000Z",
       },
       {
         venue: "Auditorium-B",
-        start: "2025-09-12T11:00:00.000Z",
-        end: "2025-09-12T12:30:00.000Z",
+        start: "2025-11-12T11:00:00.000Z",
+        end: "2025-11-12T12:30:00.000Z",
       },
     ],
-    difficulties: ["MED", "HARD"],
-    question_categories: ["TECHNICAL", "APTITUDE"],
-    question_formats: ["MCQ", "CODING"],
-    total_questions: 50,
-    mcq_count: 40,
+    // New `test_details` structure
+    test_details: [
+        {
+            category: "TECHNICAL",
+            difficulties: ["MED", "HARD"],
+            question_count: 30
+        },
+        {
+            category: "APTITUDE",
+            difficulties: ["MED"],
+            question_count: 20
+        }
+    ],
     cutoff: {
       type: "PERCENT",
       value: 75,
@@ -2778,27 +2800,33 @@ const interviews = [
     contact_person: {
       name: "Rohit Verma",
       phone: "9876543210",
-      email: "rohit@google.com",
+      email: "rohit.v@akamai.com",
     },
   },
 ];
-
 // ─── single route ───
 app.get("/auth/admin/interviews", (_, res) => res.json(interviews));
 /* ───────── schedule (create) ───────── */
 app.post("/auth/admin/interview/schedule", (req, res) => {
-  console.log("\n📥 Received Interview Schedule:\n");
+  console.log("\n📥 Received Interview Schedule Payload:\n");
   console.dir(req.body, { depth: null });
 
-  const newInterview = { ...makeInterview(), ...req.body, id: NEXT_ID++ };
+  // Create a new interview object using the request body
+  const newInterview = {
+      ...req.body, // The entire valid payload from the frontend
+      id: `INT-${NEXT_ID++}`, // Assign a new ID
+      // Add any other server-generated properties if needed
+      company_name: mockJobs.find(j => j.id === req.body.job_id)?.company_name,
+      job_title: mockJobs.find(j => j.id === req.body.job_id)?.job_title,
+  };
   interviews.push(newInterview);
 
   res
     .status(200)
-    .json({ id: newInterview.id, message: "Interview scheduled (mock)" });
+    .json({ id: newInterview.id, message: "Interview scheduled successfully (mock)" });
 });
 
-/* ───────── read one ───────── */
+// --- Read one interview by ID ---
 app.get("/auth/admin/interview/:id", (req, res) => {
   const interview = interviews.find((i) => i.id == req.params.id);
   if (!interview)
@@ -2806,147 +2834,22 @@ app.get("/auth/admin/interview/:id", (req, res) => {
   res.json(interview);
 });
 
-/* ───────── update (edit form) ───────── */
-app.put("/auth/admin/interview/schedule/:id", (req, res) => {
+// --- Update an existing interview ---
+app.put("/auth/admin/interview/:id", (req, res) => {
   const idx = interviews.findIndex((i) => i.id == req.params.id);
   if (idx === -1)
     return res.status(404).json({ message: "Interview not found" });
 
+  // Merge the updated fields from the request body
   interviews[idx] = { ...interviews[idx], ...req.body };
-  console.log(`\n✏️  Interview ${req.params.id} updated:\n`);
+  
+  console.log(`\n✏️  Interview ${req.params.id} updated with payload:\n`);
   console.dir(req.body, { depth: null });
 
-  res.status(204).end();
+  res.status(200).json({ message: "Interview updated successfully (mock)" });
 });
-
 /* ───────── applicants list ───────── */
-// A larger pool of mock applicants to draw from for randomization
-// A more realistic and diverse pool of applicants for thorough testing
-const allPossibleApplicants = [
-  {
-    id: 101,
-    name: "Aarav Sharma",
-    email: "aarav.sharma@example.com",
-    usn: "1CR21CS001",
-    batch_id: "B1",
-    status: "PENDING",
-  },
-  {
-    id: 102,
-    name: "Saanvi Gupta",
-    email: "saanvi.gupta@example.com",
-    usn: "1CR21CS002",
-    batch_id: "B2",
-    status: "PENDING",
-  },
-  {
-    id: 103,
-    name: "Vivaan Singh",
-    email: "vivaan.singh@example.com",
-    usn: "1CR21EC003",
-    batch_id: "B1",
-    status: "ALLOWED",
-  },
-  {
-    id: 104,
-    name: "Myra Reddy",
-    email: "myra.reddy@example.com",
-    usn: "1CR21EE004",
-    batch_id: "B3",
-    status: "PENDING",
-  },
-  {
-    id: 105,
-    name: "Advik Patel",
-    email: "advik.patel@example.com",
-    usn: "1CR21CS005",
-    batch_id: "B2",
-    status: "BLOCKED",
-  },
-  {
-    id: 106,
-    name: "Ananya Iyer",
-    email: "ananya.iyer@example.com",
-    usn: "1CR21IS006",
-    batch_id: "B1",
-    status: "PENDING",
-  },
-  {
-    id: 107,
-    name: "Kabir Kumar",
-    email: "kabir.kumar@example.com",
-    usn: "1CR21ME007",
-    batch_id: "B3",
-    status: "ALLOWED",
-  },
-  {
-    id: 108,
-    name: "Diya Mehta",
-    email: "diya.mehta@example.com",
-    usn: "1CR21CS008",
-    batch_id: "B2",
-    status: "PENDING",
-  },
-  {
-    id: 109,
-    name: "Reyansh Joshi",
-    email: "reyansh.joshi@example.com",
-    usn: "1CR21CV009",
-    batch_id: "B1",
-    status: "BLOCKED",
-  },
-  {
-    id: 110,
-    name: "Kiara Nair",
-    email: "kiara.nair@example.com",
-    usn: "1CR21CS010",
-    batch_id: "B3",
-    status: "PENDING",
-  },
-  {
-    id: 111,
-    name: "Zoya Khan",
-    email: "zoya.khan@example.com",
-    usn: "1CR21EC011",
-    batch_id: "B1",
-    status: "PENDING",
-  },
-  {
-    id: 112,
-    name: "Ishaan Agarwal",
-    email: "ishaan.agarwal@example.com",
-    usn: "1CR21CS012",
-    batch_id: "B2",
-    status: "ALLOWED",
-  },
-  {
-    id: 113,
-    name: "Priya Singh",
-    email: "priya.singh@example.com",
-    usn: "1CR21ME013",
-    batch_id: "B3",
-    status: "PENDING",
-  },
-  {
-    id: 114,
-    name: "Arjun Verma",
-    email: "arjun.verma@example.com",
-    usn: "1CR21CS014",
-    batch_id: "B1",
-    status: "ALLOWED",
-  },
-  {
-    id: 115,
-    name: "Riya Sharma",
-    email: "riya.sharma@example.com",
-    usn: "1CR21IS015",
-    batch_id: "B2",
-    status: "PENDING",
-  },
-];
 
-// No longer need the shuffle function for this deterministic logic
-// function shuffleArray(array) { ... }
 
 // Use 'let' to allow modification for status updates
 let allApplicants = [
