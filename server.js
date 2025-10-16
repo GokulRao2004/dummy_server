@@ -486,7 +486,7 @@ let mockJobs = Array.from({ length: 100 }, (_, i) => {
 
   return {
     logo: "https://i.ibb.co/hFJgrGNR/googlelogo.png",
-    id: i + 1,
+    id: String(i + 1),
     company_name,
     job_title,
     location,
@@ -576,7 +576,7 @@ app.get("/auth/admin/job", (req, res) => {
 });
 
 app.get("/auth/admin/job/:id", (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = req.params.id;
   const userId = req.query.userId || "default"; // If you want starred status per user
 
   const job = mockJobs.find((j) => j.id === id);
@@ -595,51 +595,61 @@ app.get("/auth/admin/job/:id", (req, res) => {
   const isStarred = starredJobs.includes(job.id);
 
   res.json({
-    job: {
-      id: job.id,
-      company: job.company,
-      logo: job.logo,
-      role: job.role,
-      location: job.location,
-      remoteType: job.remoteType,
-      remote: job.remote,
-      experience: job.experience,
-      salary: job.salary,
-      postedOn: job.postedOn,
-      deadline: deadlineDate.toISOString().split("T")[0], // YYYY-MM-DD format
-      starred: isStarred,
-      link: job.link,
-      templateId: job.templateId,
-      description: `
-        We are seeking an experienced Software Engineer to join our dynamic team. 
-        In this role, you will work closely with cross-functional teams to design, 
-        develop, and deploy high-quality software solutions. You will be responsible 
-        for writing clean, maintainable code, participating in code reviews, and 
-        driving the technical direction of projects.
-
-        Responsibilities:
-        - Develop scalable and efficient code
-        - Collaborate with product managers, designers, and engineers
-        - Ensure code quality through testing and reviews
-        - Participate in sprint planning and agile ceremonies
-        - Continuously improve software engineering practices
-
-        Requirements:
-        - Bachelor’s degree in Computer Science or related field
-        - 3+ years of experience in software development
-        - Proficient in JavaScript, React, Node.js (or your stack)
-        - Familiarity with cloud platforms like AWS or Azure
-        - Excellent problem-solving and communication skills
-
-        Benefits:
-        - Competitive salary and stock options
-        - Flexible working hours and remote-friendly environment
-        - Health insurance and wellness programs
-        - Learning and development opportunities
-        - Supportive and inclusive company culture
-      `,
+  "add_schedule_later": false,
+  "application_deadline": "2025-09-30",
+  "backlog_policy": "More than 2 allowed",
+  "band_id": 1,
+  "cgpa_requirement": 3.0,
+  "company_name": "Sumukha AI Private Limited",
+  "contact_email": "gokul@gmail.com",
+  "ctc": 2500000.0,
+  "ctc_period": "annual",
+  "description": "Sumukha AI Pvt Ltd is a fast-growing technology solutions provider committed to delivering innovative digital experiences. We\u2019re looking for a creative Web Designer to join our team and help shape modern, user-friendly websites.\r\nRole Overview\r\nAs a Web Designer, you will be responsible for designing visually appealing, responsive, and intuitive websites that align with our brand and client needs. You\u2019ll collaborate with developers, content teams, and marketing professionals to bring concepts to life.\r\nKey Responsibilities\r\nDesign and maintain website layouts, graphics, and UI elements.\r\nEnsure websites are mobile-friendly, accessible, and optimized\r\nWork closely with cross-functional teams to deliver seamless user experiences.\r\nStay updated with design trends and implement best practices.\r\nBachelor\u2019s degree in Web/Graphic Design or equivalent experience\r\nProficiency in tools like Figma, Adobe XD, Photoshop, Illustrator.\r\nStrong understanding of HTML, CSS, and UX/UI principles.\r\nCreative mindset with excellent attention to detail.\r\nWhy Join Us?\r\nAt SAI Pvt Ltd, you\u2019ll work on diverse projects, grow your skills, and be part of a collaborative and innovative environment.",
+  "eligible_departments": [
+    "AIML",
+    "CE",
+    "ME"
+  ],
+  "id": "1",
+  "job_location": "New York",
+  "job_title": "Web Designer",
+  "job_type": [
+    "Full-time"
+  ],
+  "languages": [],
+  "number_of_rounds": 0,
+  "other_requirements": null,
+  "passout_year": 2027,
+  "posted_on": "2025-09-21T13:34:22.711470",
+  "remote": false,
+  "requirements": null,
+  "rounds": [
+    {
+      "date": "2025-09-30",
+      "description": "Tech Round 1 of 1002",
+      "end_time": "13:00",
+      "id": "825b3b3f-198b-4193-946e-5094d61c37ff",
+      "job_id": "5daa000b-64ae-4687-ac17-57afb3ab0a69",
+      "location": "Mini Audi 102",
+      "start_time": "12:00"
     },
-  });
+    {
+      "date": "2025-10-01",
+      "description": "Tech Round 2 of 1002",
+      "end_time": "09:30",
+      "id": "ec54c28c-50ed-494e-ae67-b77fc5c5c03f",
+      "job_id": "5daa000b-64ae-4687-ac17-57afb3ab0a69",
+      "location": "Mini Audi 02",
+      "start_time": "08:00"
+    }
+  ],
+  "status": "Open",
+  "stipend": null,
+  "stipend_period": "monthly",
+  "total_applicants": 2,
+  "whatsapp_group_link": "https://chat.whatsapp.com/a",
+  "work_mode": "Hybrid"
+})
 });
 
 // Star/Unstar a job
@@ -2232,41 +2242,6 @@ function filterJobs(jobs, filters) {
   return filtered;
 }
 
-app.get("/auth/admin/job", (req, res) => {
-  const {
-    page = 1,
-    search = "",
-    role = "",
-    location = "",
-    remote,
-    sortBy = "deadline",
-  } = req.query;
-
-  const roleFilters = role ? role.split(",") : [];
-  const locationFilters = location ? location.split(",") : [];
-
-  let filteredJobs = filterJobs(allJobs, {
-    search,
-    role: roleFilters,
-    location: locationFilters,
-    remote,
-    sortBy,
-  });
-
-  // Pagination
-  const pageSize = 10;
-  const currentPage = parseInt(page, 10);
-  const totalPages = Math.ceil(filteredJobs.length / pageSize);
-  const pagedJobs = filteredJobs.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
-  res.json({
-    jobs: pagedJobs,
-    pages: totalPages,
-  });
-});
 
 app.get("/auth/applied_job", (req, res) => {
   const {
