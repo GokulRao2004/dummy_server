@@ -2295,7 +2295,7 @@ app.get("/auth/admin/job/:jobId", (req, res) => {
 // Route 2: Get applicants for a specific job with pagination and filters
 app.get("/auth/admin/job/:jobId/applicants", (req, res) => {
   const jobId = parseInt(req.params.jobId, 10);
-  const job = allJobs.find((j) => j.id === jobId);
+  const job = allJobs[0]
 
   if (!job) {
     return res.status(404).json({ error: "Job not found" });
