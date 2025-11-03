@@ -41,6 +41,12 @@ const admin_token =
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNCIsInVzZXJfbmFtZSI6IlNocmVlIFJhbWEgVGFsZW50IFNvbHV0aW9ucyIsImV4cCI6MTcyNjkyMzA1MH0.dHgJSYwwOp27LJCmtq3KwoEZfx_2-BrwvHziTCpJrOM";
 
+app.get("/auth/admin/job/filters", (req, res) => {
+console.log('req: ', req);
+  console.log("inside filters");  
+  res.json({ roles, locations });
+});
+
 app.post("/auth/login", (req, res) => {
   console.log("Received data:", req.body);
 
@@ -467,39 +473,39 @@ app.get("/auth/plan", (req, res) => {
   res.json({ plan: plans, selected: "Pro Plan" });
 });
 
-let mockJobs = Array.from({ length: 100 }, (_, i) => {
-  const roles = [
-    "Frontend Developer",
-    "Backend Engineer",
-    "Full Stack Developer",
-    "Data Scientist",
-  ];
-  const companies = ["Google", "Microsoft", "Amazon", "Netflix", "Meta"];
-  const locations = ["Bangalore", "Mumbai", "Remote", "Delhi", "Hyderabad"];
-  const remoteTypes = ["Remote", "Onsite", "Hybrid"];
+// let mockJobs = Array.from({ length: 100 }, (_, i) => {
+//   const roles = [
+//     "Frontend Developer",
+//     "Backend Engineer",
+//     "Full Stack Developer",
+//     "Data Scientist",
+//   ];
+//   const companies = ["Google", "Microsoft", "Amazon", "Netflix", "Meta"];
+//   const locations = ["Bangalore", "Mumbai", "Remote", "Delhi", "Hyderabad"];
+//   const remoteTypes = ["Remote", "Onsite", "Hybrid"];
 
-  const job_title = roles[i % roles.length];
-  const company_name = companies[i % companies.length];
-  const location = locations[i % locations.length];
-  const remoteType = remoteTypes[i % remoteTypes.length];
-  const remote = remoteType === "Remote";
+//   const job_title = roles[i % roles.length];
+//   const company_name = companies[i % companies.length];
+//   const location = locations[i % locations.length];
+//   const remoteType = remoteTypes[i % remoteTypes.length];
+//   const remote = remoteType === "Remote";
 
-  return {
-    logo: "https://i.ibb.co/hFJgrGNR/googlelogo.png",
-    id: String(i + 1),
-    company_name,
-    job_title,
-    location,
-    remoteType,
-    remote,
-    experience: `${1 + (i % 5)}-${2 + (i % 5)} years`,
-    salary: `${6 + (i % 5)}-${10 + (i % 5)} LPA`,
-    postedOn: new Date(Date.now() - i * 86400000).toISOString().split("T")[0],
-    starred: false, // default starred status is false,
-    link: "https://www.google.com",
-    templateId: 18,
-  };
-});
+//   return {
+//     logo: "https://i.ibb.co/hFJgrGNR/googlelogo.png",
+//     id: String(i + 1),
+//     company_name,
+//     job_title,
+//     location,
+//     remoteType,
+//     remote,
+//     experience: `${1 + (i % 5)}-${2 + (i % 5)} years`,
+//     salary: `${6 + (i % 5)}-${10 + (i % 5)} LPA`,
+//     postedOn: new Date(Date.now() - i * 86400000).toISOString().split("T")[0],
+//     starred: false, // default starred status is false,
+//     link: "https://www.google.com",
+//     templateId: 18,
+//   };
+// });
 
 let mockJobsApplied = Array.from({ length: 10 }, (_, i) => {
   const roles = [
@@ -541,7 +547,370 @@ let mockJobsApplied = Array.from({ length: 10 }, (_, i) => {
 // Mock in-memory store for starred jobs per user
 let userStarredJobs = {}; // { userId: [jobId1, jobId2, ...] }
 
+let mockJobs = Array.from({ length: 100 }, (_, i) => {
+  const roles = [
+    "Frontend Developer",
+    "Backend Engineer",
+    "Full Stack Developer",
+    "Data Scientist",
+  ];
+  const companies = ["Google", "Microsoft", "Amazon", "Netflix", "Meta"];
+  const locations = ["Bangalore", "Mumbai", "Pune", "Delhi", "Hyderabad"];
+  const remoteTypes = ["Remote", "On-site", "Hybrid"];
+  const statuses = ["Open", "Closed"];
+  
+  const job_title = roles[i % roles.length];
+  const company_name = companies[i % companies.length];
+  const job_location = locations[i % locations.length];
+  const remoteType = remoteTypes[i % remoteTypes.length];
+  const remote = remoteType === "Remote";
+  const work_mode = remoteType;
+  
+  // Generate realistic dates
+  const postedDate = new Date(Date.now() - i * 86400000);
+  const application_deadline = new Date(Date.now() + (30 - (i % 30)) * 86400000);
+  
+  return {
+    id: String(i + 1),
+    company_name,
+    job_title,
+    job_location,
+    band: ["Dream", "Core", "Super Dream", "Test"][i % 4],
+    work_mode,
+    remote,
+    job_type: [["Full-time"], ["Internship"], ["Full-time", "Internship"], ["Part-time"]][i % 4],
+    ctc: (6 + (i % 10)) * 100000,
+    ctc_period: "annual",
+    stipend: i % 3 === 0 ? (20000 + (i % 5) * 5000) : null,
+    stipend_period: i % 3 === 0 ? "monthly" : null,
+    applications: Math.floor(Math.random() * 150),
+    application_deadline: application_deadline.toISOString().split("T")[0],
+    status: statuses[Math.floor(Math.random() * statuses.length)],
+    postedOn: postedDate.toISOString().split("T")[0],
+    logo: null, // or a logo URL if you have one
+    description: `We are looking for a talented ${job_title} to join our team at ${company_name}. This is a great opportunity to grow your skills and work on challenging projects.`,
+    contact_email: `careers@${company_name.toLowerCase()}.com`,
+    whatsapp_group_link: `https://chat.whatsapp.com/group${i}`,
+    eligible_departments: ["CSE", "IT", "ECE"][i % 3],
+    cgpa_requirement: (6.0 + (i % 10) * 0.1).toFixed(1),
+    backlog_policy: ["No backlog", "1 backlog allowed", "2 backlogs allowed"][i % 3],
+    passout_year: String(2025 + (i % 3)),
+    rounds: [
+      {
+        id: `round-${i}-1`,
+        date: new Date(Date.now() + 7 * 86400000).toISOString().split("T")[0],
+        start_time: "10:00",
+        end_time: "11:00",
+        location: "Online",
+        description: "Online Assessment",
+      },
+      {
+        id: `round-${i}-2`,
+        date: new Date(Date.now() + 14 * 86400000).toISOString().split("T")[0],
+        start_time: "14:00",
+        end_time: "15:30",
+        location: job_location,
+        description: "Technical Interview",
+      },
+    ],
+    starred: false, // default starred status
+  };
+});
+
 app.get("/auth/admin/job", (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    const search = req.query.search?.toLowerCase() || "";
+    const location = req.query.location || "";
+    const role = req.query.role || "";
+    const remote = req.query.remote || "";
+    const sortBy = req.query.sortBy || "deadline";
+    const sortOrder = req.query.sortOrder || "asc";
+    const userId = req.query.userId || "default";
+
+    // Filter jobs
+    let filtered = mockJobs.filter((job) => {
+      // Search filter
+      const matchesSearch =
+        search === "" ||
+        job.job_title.toLowerCase().includes(search) ||
+        job.company_name.toLowerCase().includes(search) ||
+        job.job_location.toLowerCase().includes(search);
+
+      // Location filter
+      const matchesLocation = location === "" || job.job_location === location;
+
+      // Role filter
+      const matchesRole = role === "" || job.job_title.toLowerCase().includes(role.toLowerCase());
+
+      // Remote/Work Mode filter
+      const matchesRemote =
+        remote === "" ||
+        job.work_mode === remote ||
+        (remote === "Remote" && job.remote) ||
+        (remote === "On-site" && !job.remote);
+
+      return matchesSearch && matchesLocation && matchesRole && matchesRemote;
+    });
+
+    // Mark starred jobs
+    const starredJobs = userStarredJobs[userId] || [];
+    filtered = filtered.map((job) => ({
+      ...job,
+      starred: starredJobs.includes(job.id),
+    }));
+
+    // Sorting
+    filtered.sort((a, b) => {
+      let aValue, bValue;
+
+      switch (sortBy) {
+        case "deadline":
+          aValue = new Date(a.application_deadline);
+          bValue = new Date(b.application_deadline);
+          break;
+        case "salary":
+        case "ctc":
+          aValue = a.ctc || 0;
+          bValue = b.ctc || 0;
+          break;
+        case "applications":
+          aValue = a.applications || 0;
+          bValue = b.applications || 0;
+          break;
+        case "status":
+          aValue = a.status;
+          bValue = b.status;
+          break;
+        case "company_name":
+          aValue = a.company_name.toLowerCase();
+          bValue = b.company_name.toLowerCase();
+          break;
+        case "job_title":
+          aValue = a.job_title.toLowerCase();
+          bValue = b.job_title.toLowerCase();
+          break;
+        case "job_location":
+          aValue = a.job_location.toLowerCase();
+          bValue = b.job_location.toLowerCase();
+          break;
+        case "application_deadline":
+          aValue = new Date(a.application_deadline);
+          bValue = new Date(b.application_deadline);
+          break;
+        default:
+          return 0;
+      }
+
+      if (aValue < bValue) {
+        return sortOrder === "asc" ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortOrder === "asc" ? 1 : -1;
+      }
+      return 0;
+    });
+
+    // Pagination
+    const totalPages = Math.ceil(filtered.length / limit);
+    const validPage = Math.min(Math.max(page, 1), totalPages || 1);
+    const paginated = filtered.slice((validPage - 1) * limit, validPage * limit);
+
+    // Return response matching the JobView component requirements
+    res.json({
+      jobs: paginated,
+      total_pages: totalPages,
+      current_page: validPage,
+      total_jobs: filtered.length,
+    });
+  } catch (error) {
+    console.error("Error in GET /auth/admin/job:", error);
+    res.status(500).json({
+      error: "Internal server error",
+      message: error.message,
+    });
+  }
+});
+
+const generateMockResults = (page = 1, limit = 10, sortKey = 'rank', sortDirection = 'asc', search = '') => {
+  const names = [
+    'Rahul Kumar', 'Priya Singh', 'Arjun Patel', 'Neha Sharma', 'Vikram Reddy',
+    'Ananya Gupta', 'Rohan Verma', 'Divya Nair', 'Aditya Sinha', 'Pooja Desai',
+    'Amit Kumar', 'Sneha Bhat', 'Nikhil Menon', 'Kavya Iyer', 'Sanjay Rao',
+    'Sakshi Kulkarni', 'Varun Chopra', 'Isha Mishra', 'Harshit Jain', 'Yuki Tanaka'
+  ];
+
+  const usns = [
+    '1AB21CS001', '1AB21CS002', '1AB21CS003', '1AB21CS004', '1AB21CS005',
+    '1AB21CS006', '1AB21CS007', '1AB21CS008', '1AB21CS009', '1AB21CS010',
+    '1AB21CS011', '1AB21CS012', '1AB21CS013', '1AB21CS014', '1AB21CS015',
+    '1AB21CS016', '1AB21CS017', '1AB21CS018', '1AB21CS019', '1AB21CS020'
+  ];
+
+  const generateScore = (seed) => {
+    // Use seeded random for consistency
+    const random = Math.sin(seed * 12.9898) * 43758.5453;
+    return Math.round(((random - Math.floor(random)) * 35 + 60) * 100) / 100;
+  };
+
+  // Generate results
+  let results = names.map((name, idx) => ({
+    id: `result_${idx + 1}`,
+    name: name,
+    usn: usns[idx],
+    score: generateScore(idx),
+    rank: idx + 1,
+    selection_status: idx % 3 === 0 ? 'REJECTED' : 'SELECTED'
+  }));
+
+  // Apply search filter
+  if (search && search.trim() !== '') {
+    results = results.filter(r =>
+      r.name.toLowerCase().includes(search.toLowerCase()) ||
+      r.usn.toLowerCase().includes(search.toLowerCase())
+    );
+  }
+
+  // Apply sorting
+  if (sortKey && results.length > 0) {
+    results.sort((a, b) => {
+      const aVal = a[sortKey];
+      const bVal = b[sortKey];
+
+      if (aVal === undefined || bVal === undefined) return 0;
+
+      if (typeof aVal === 'string') {
+        return sortDirection === 'asc'
+          ? aVal.localeCompare(bVal)
+          : bVal.localeCompare(aVal);
+      }
+
+      return sortDirection === 'asc'
+        ? aVal - bVal
+        : bVal - aVal;
+    });
+
+    // Re-rank after sorting
+    results = results.map((r, idx) => ({
+      ...r,
+      rank: idx + 1
+    }));
+  }
+
+  // Calculate comprehensive statistics
+  const scores = results.map(r => r.score);
+  const selectedCount = results.filter(r => r.selection_status === 'SELECTED').length;
+
+  if (scores.length === 0) {
+    return {
+      results: [],
+      stats: {
+        total_selected: 0,
+        avg_score: 0,
+        max_score: 0,
+        min_score: 0,
+        median_score: 0,
+        std_deviation: 0,
+        selection_rate: 0
+      },
+      totalPages: 0,
+      currentPage: 1,
+      totalResults: 0
+    };
+  }
+
+  const sortedScores = [...scores].sort((a, b) => a - b);
+  const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+  const variance = scores.reduce((sq, n) => sq + Math.pow(n - mean, 2), 0) / scores.length;
+  const stdDev = Math.sqrt(variance);
+  const median = sortedScores.length % 2 === 0
+    ? (sortedScores[sortedScores.length / 2 - 1] + sortedScores[sortedScores.length / 2]) / 2
+    : sortedScores[Math.floor(sortedScores.length / 2)];
+
+  const stats = {
+    total_selected: results.length,
+    avg_score: Math.round(mean * 100) / 100,
+    max_score: Math.round(Math.max(...scores) * 100) / 100,
+    min_score: Math.round(Math.min(...scores) * 100) / 100,
+    median_score: Math.round(median * 100) / 100,
+    std_deviation: Math.round(stdDev * 100) / 100,
+    selection_rate: Math.round((selectedCount / results.length) * 10000) / 100
+  };
+
+  // Apply pagination
+  const totalPages = Math.ceil(results.length / limit);
+  const startIdx = (page - 1) * limit;
+  const endIdx = startIdx + limit;
+  const paginatedResults = results.slice(startIdx, endIdx);
+
+  return {
+    results: paginatedResults,
+    stats: stats,
+    totalPages: totalPages,
+    currentPage: parseInt(page),
+    totalResults: results.length
+  };
+};
+
+// ========== ROUTES ==========
+
+// Get results for a specific interview
+app.get('/auth/admin/interview/:interviewId/results', (req, res) => {
+  try {
+    const { page = 1, limit = 10, sortKey = 'rank', sortDirection = 'asc', search = '' } = req.query;
+
+    const data = generateMockResults(
+      parseInt(page),
+      parseInt(limit),
+      sortKey,
+      sortDirection,
+      search
+    );
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Error fetching results:', error);
+    res.status(500).json({ error: 'Failed to fetch results', message: error.message });
+  }
+});
+// app.get("/auth/admin/job", (req, res) => {
+//   const page = parseInt(req.query.page) || 1;
+//   const limit = 10;
+
+//   const search = req.query.search?.toLowerCase() || "";
+//   const location = req.query.location || "";
+//   const remote = req.query.remote === "true"; // Convert 'true'/'false' to boolean
+//   const userId = req.query.userId || "default"; // Assuming user ID is passed
+
+//   let filtered = mockJobs.filter((job) => {
+//     const matchesSearch =
+//       job.job_title.toLowerCase().includes(search) ||
+//       job.company_name.toLowerCase().includes(search);
+//     const matchesLocation = location ? job.location === location : true;
+//     const matchesRemote = remote ? job.remote : true; // Filter by remote status
+//     return matchesSearch && matchesLocation && matchesRemote;
+//   });
+
+//   // Check if the user has starred jobs
+//   const starredJobs = userStarredJobs[userId] || [];
+//   filtered = filtered.map((job) => ({
+//     ...job,
+//     starred: starredJobs.includes(job.id), // mark jobs that the user has starred
+//   }));
+
+//   const totalPages = Math.ceil(filtered.length / limit);
+//   const paginated = filtered.slice((page - 1) * limit, page * limit);
+
+//   res.json({
+//     jobs: paginated,
+//     total_pages : totalPages,
+//     current_page : parseInt(page)
+//   });
+// });
+
+app.get("/auth/job", (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 10;
 
@@ -563,7 +932,7 @@ app.get("/auth/admin/job", (req, res) => {
   const starredJobs = userStarredJobs[userId] || [];
   filtered = filtered.map((job) => ({
     ...job,
-    starred: starredJobs.includes(job.id), // mark jobs that the user has starred
+    is_applied: Math.random() < 0.5, // mark jobs that the user has starred
   }));
 
   const totalPages = Math.ceil(filtered.length / limit);
@@ -571,7 +940,8 @@ app.get("/auth/admin/job", (req, res) => {
 
   res.json({
     jobs: paginated,
-    totalPages,
+    current_page  : page,
+    total_pages:totalPages,
   });
 });
 
@@ -631,7 +1001,8 @@ app.get("/auth/admin/job/:id", (req, res) => {
       "id": "825b3b3f-198b-4193-946e-5094d61c37ff",
       "job_id": "5daa000b-64ae-4687-ac17-57afb3ab0a69",
       "location": "Mini Audi 102",
-      "start_time": "12:00"
+      "start_time": "12:00",
+      "order" : 0
     },
     {
       "date": "2025-10-01",
@@ -640,7 +1011,8 @@ app.get("/auth/admin/job/:id", (req, res) => {
       "id": "ec54c28c-50ed-494e-ae67-b77fc5c5c03f",
       "job_id": "5daa000b-64ae-4687-ac17-57afb3ab0a69",
       "location": "Mini Audi 02",
-      "start_time": "08:00"
+      "start_time": "08:00",
+      "order" : 1
     }
   ],
   "status": "Open",
@@ -649,6 +1021,87 @@ app.get("/auth/admin/job/:id", (req, res) => {
   "total_applicants": 2,
   "whatsapp_group_link": "https://chat.whatsapp.com/a",
   "work_mode": "Hybrid"
+})
+});
+
+app.get("/auth/job/:id", (req, res) => {
+  const id = req.params.id;
+  const userId = req.query.userId || "default"; // If you want starred status per user
+
+  const job = mockJobs.find((j) => j.id === id);
+
+  if (!job) {
+    return res.status(404).json({ error: "Job not found" });
+  }
+
+  // For demonstration, let's add a deadline field (e.g., 30 days after postedOn)
+  const postedDate = new Date(job.postedOn);
+  const deadlineDate = new Date(postedDate);
+  deadlineDate.setDate(deadlineDate.getDate() + 30);
+
+  // Check starred status for user
+  const starredJobs = userStarredJobs[userId] || [];
+  const isStarred = starredJobs.includes(job.id);
+
+  res.json({
+  "add_schedule_later": false,
+  "application_deadline": "2025-09-30",
+  "backlog_policy": "More than 2 allowed",
+  "band_id": 1,
+  "cgpa_requirement": 3.0,
+  "company_name": "Sumukha AI Private Limited",
+  "contact_email": "gokul@gmail.com",
+  "ctc": 2500000.0,
+  "ctc_period": "annual",
+  "description": "Sumukha AI Pvt Ltd is a fast-growing technology solutions provider committed to delivering innovative digital experiences. We\u2019re looking for a creative Web Designer to join our team and help shape modern, user-friendly websites.\r\nRole Overview\r\nAs a Web Designer, you will be responsible for designing visually appealing, responsive, and intuitive websites that align with our brand and client needs. You\u2019ll collaborate with developers, content teams, and marketing professionals to bring concepts to life.\r\nKey Responsibilities\r\nDesign and maintain website layouts, graphics, and UI elements.\r\nEnsure websites are mobile-friendly, accessible, and optimized\r\nWork closely with cross-functional teams to deliver seamless user experiences.\r\nStay updated with design trends and implement best practices.\r\nBachelor\u2019s degree in Web/Graphic Design or equivalent experience\r\nProficiency in tools like Figma, Adobe XD, Photoshop, Illustrator.\r\nStrong understanding of HTML, CSS, and UX/UI principles.\r\nCreative mindset with excellent attention to detail.\r\nWhy Join Us?\r\nAt SAI Pvt Ltd, you\u2019ll work on diverse projects, grow your skills, and be part of a collaborative and innovative environment.",
+  "eligible_departments": [
+    "AIML",
+    "CE",
+    "ME"
+  ],
+  "id": "1",
+  "job_location": "New York",
+  "job_title": "Web Designer",
+  "job_type": [
+    "Full-time"
+  ],
+  "languages": [],
+  "number_of_rounds": 0,
+  "other_requirements": null,
+  "passout_year": 2027,
+  "posted_on": "2025-09-21T13:34:22.711470",
+  "remote": false,
+  "requirements": null,
+  "rounds": [
+    {
+      "date": "2025-09-30",
+      "description": "Tech Round 1 of 1002",
+      "end_time": "13:00",
+      "id": "825b3b3f-198b-4193-946e-5094d61c37ff",
+      "job_id": "5daa000b-64ae-4687-ac17-57afb3ab0a69",
+      "location": "Mini Audi 102",
+      "start_time": "12:00",
+      "order" : 1
+    },
+    {
+      "date": "2025-10-01",
+      "description": "Tech Round 2 of 1002",
+      "end_time": "09:30",
+      "id": "ec54c28c-50ed-494e-ae67-b77fc5c5c03f",
+      "job_id": "5daa000b-64ae-4687-ac17-57afb3ab0a69",
+      "location": "Mini Audi 02",
+      "start_time": "08:00",
+      "order" : 2
+
+    }
+  ],
+  "status": "Open",
+  "stipend": null,
+  "stipend_period": "monthly",
+  "total_applicants": 2,
+  "whatsapp_group_link": "https://chat.whatsapp.com/a",
+  "work_mode": "Hybrid",
+  "is_applied" : true
 })
 });
 
@@ -2174,9 +2627,7 @@ const starredByUser = {
 };
 
 // Endpoint: jobFilters
-app.get("/auth/admin/job/filters", (req, res) => {
-  res.json({ roles, locations });
-});
+
 
 app.get("/auth/admin/job/:jobId/rounds", (req, res) => {
   const { jobId } = req.params;
@@ -2279,18 +2730,6 @@ app.get("/auth/applied_job", (req, res) => {
   });
 });
 
-// Route 1: Get job details only
-app.get("/auth/admin/job/:jobId", (req, res) => {
-  const jobId = parseInt(req.params.jobId, 10);
-  const job = allJobs.find((j) => j.id === jobId);
-
-  if (!job) {
-    return res.status(404).json({ error: "Job not found" });
-  }
-
-  // Return in the new required format:
-  res.json(job);
-});
 
 // Route 2: Get applicants for a specific job with pagination and filters
 app.get("/auth/admin/job/:jobId/applicants", (req, res) => {
@@ -3737,40 +4176,72 @@ const dashboardSummary = {
   },
 };
 const studentDashboardSummary = {
-  userName: "Priya",
-  profileCompletion: 85,
+  user_name: "Amrutha Rao",
+  profile_completion: 85,
   stats: {
-    profileCompletion: 85,
-    aiInterviewsTaken: 4,
-    upcomingInterviews: 2,
-    jobsApplied: 12,
+    ai_interviews_taken: 4,
+    upcoming_interviews: 2,
+    jobs_applied: 12,
+    offers_received: 100,
   },
-  upcomingDrives: [
+  upcoming_drives: [
     {
-      id: "drive1",
-      date: "Oct 15",
-      title: "Software Engineer",
-      company: "Google",
+      id: "1",
+      company_name: "Google",
+      job_title: "Software Engineer",
       location: "Bangalore",
-      color: "var(--primary-500)",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+      registration_deadline: "2025-11-08",
+      ctc: "15LPA",
     },
     {
-      id: "drive2",
-      date: "Oct 20",
-      title: "Data Analyst",
-      company: "Amazon",
+      id: "2",
+      company_name: "Amazon",
+      job_title: "Data Analyst",
       location: "Hyderabad",
-      color: "var(--secondary-500)",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
+      registration_deadline: "2025-11-12",
+      ctc: "13LPA",
+    },
+    {
+      id: "3",
+      company_name: "Microsoft",
+      job_title: "Cloud Engineer",
+      location: "Pune",
+      registration_deadline: "2025-11-18",
+      ctc: "18LPA",
     },
   ],
-  peerComparison: [
-    { metric: "Applications Submitted", you: 12, average: 9, top: 20 },
-    { metric: "Interviews Scheduled", you: 3, average: 2, top: 6 },
-    { metric: "Resume Views", you: 18, average: 14, top: 35 },
+  peer_comparison: [
+    {
+      id: "comp_1",
+      metric_name: "Applications Submitted",
+      your_value: 12,
+      avg_value: 9,
+      top_value: 20,
+    },
+    {
+      id: "comp_15",
+      metric_name: "Best Offer CTC (LPA)",
+      your_value: 16,
+      avg_value: 12,
+      top_value: 45
+    },
   ],
+  ai_interview_stats: {
+    time: "2025-11-03T15:19:00+05:30",
+    global: {
+      students_attempted: 163,
+      avg_score: 74,
+      top_score: 96,
+    },
+    student: {
+      id: "123sdf123",
+      attempts_count: 4,
+      avg_score: 79,
+      top_score: 92,
+    },
+  },
 };
+
 
 app.get("/auth/admin/dashboard", (req, res) => {
   res.json(dashboardSummary);
