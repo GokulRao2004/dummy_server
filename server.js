@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
 const upload = multer();
-const app = express();
+const app= express();
 const port = process.env.PORT || 3000;
 // Use the CORS middleware
 app.use(cors()); // Allows all origins by default
@@ -1704,7 +1704,7 @@ app.get("/auth/interview/new/:id", (req, res) => {
           difficulty: "medium",
           skill_tag: "PostgreSQL",
           question_text:
-            "Your web app is loading slowly. You suspect the database is the bottleneck. What steps would you take to investigate and fix the issue?",
+            "Your web appis loading slowly. You suspect the database is the bottleneck. What steps would you take to investigate and fix the issue?",
         },
       ],
       languages: [
@@ -2331,13 +2331,13 @@ const getNextId = (arr) => {
 
 // --- Department Routes ---
 
-// GET /api/departments - Get all departments
+// GET /auth/departments - Get all departments
 app.get("/auth/admin/department", (req, res) => {
   console.log("GET /auth/admin/department - Responding with all departments.");
   res.status(200).json(departments);
 });
 
-// POST /api/departments - Add a new department
+// POST /auth/departments - Add a new department
 app.post("/auth/admin/department", (req, res) => {
   const { name, code, coordinator_name, coordinator_email } = req.body;
 
@@ -4250,6 +4250,1223 @@ app.get("/auth/admin/dashboard", (req, res) => {
 app.get("/auth/dashboard", (req, res) => {
   res.json(studentDashboardSummary);
 });
+
+const mockEvents = [
+    {
+      "id": "event001",
+      "title": "Tech Career Fair 2024",
+      "description": "Annual career fair featuring top tech companies recruiting for internships and full-time positions.",
+      "date": "2026-06-15",
+      "time": "10:00",
+      "location": "Main Auditorium, Building A",
+      "organizer": "Placement Cell",
+      "max_attendees": 500,
+      "attendees": [
+        "student001",
+        "student002",
+        "student003"
+      ],
+      "poster_url": "https://example.com/posters/career-fair-2024.jpg",
+      "documents": [
+        {
+          "name": "Event_Schedule.pdf",
+          "url": "https://example.com/docs/schedule.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Company_List.xlsx",
+          "url": "https://example.com/docs/companies.xlsx",
+          "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+      ],
+      "created_at": "2024-05-01T10:00:00.000Z",
+      "updated_at": "2024-05-10T14:30:00.000Z",
+      "attendee_count": 3,
+      "status": "Done"
+    },
+    {
+      "id": "event002",
+      "title": "AI & Machine Learning Workshop",
+      "description": "Hands-on workshop covering fundamentals of AI and ML with industry experts from Google.",
+      "date": "2024-06-20",
+      "time": "14:00",
+      "location": "Computer Lab 301",
+      "organizer": "CS Department",
+      "max_attendees": 50,
+      "attendees": [
+        "student004",
+        "student005"
+      ],
+      "poster_url": "https://example.com/posters/ai-workshop.jpg",
+      "documents": [
+        {
+          "name": "Workshop_Materials.zip",
+          "url": "https://example.com/docs/materials.zip",
+          "type": "application/zip"
+        }
+      ],
+      "created_at": "2024-05-05T09:00:00.000Z",
+      "updated_at": "2024-05-12T11:00:00.000Z",
+      "attendee_count": 2,
+      "status": "past"
+    },
+    {
+      "id": "event003",
+      "title": "Resume Building Seminar",
+      "description": "Learn how to craft an impressive resume and cover letter that stands out to recruiters.",
+      "date": "2024-05-25",
+      "time": "15:30",
+      "location": "Seminar Hall B",
+      "organizer": "Career Services",
+      "max_attendees": 100,
+      "attendees": [
+        "student001",
+        "student006",
+        "student007"
+      ],
+      "poster_url": null,
+      "documents": [],
+      "created_at": "2024-04-20T08:00:00.000Z",
+      "updated_at": "2024-05-01T10:00:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    }
+    ,
+    {
+      "id": "event004",
+      "title": "Startup Pitch Competition",
+      "description": "Present your startup ideas to a panel of investors and win seed funding up to $50,000.",
+      "date": "2024-07-10",
+      "time": "09:00",
+      "location": "Innovation Hub",
+      "organizer": "Entrepreneurship Cell",
+      "max_attendees": 200,
+      "attendees": [
+        "student008"
+      ],
+      "poster_url": "https://example.com/posters/pitch-competition.jpg",
+      "documents": [
+        {
+          "name": "Competition_Rules.pdf",
+          "url": "https://example.com/docs/rules.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Registration_Form.docx",
+          "url": "https://example.com/docs/registration.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        }
+      ],
+      "created_at": "2024-05-15T12:00:00.000Z",
+      "updated_at": "2024-05-20T16:00:00.000Z",
+      "attendee_count": 1,
+      "status": "past"
+    },{
+      "id": "event001",
+      "title": "Tech Career Fair 2024",
+      "description": "Annual career fair featuring top tech companies recruiting for internships and full-time positions.",
+      "date": "2024-06-15",
+      "time": "10:00",
+      "location": "Main Auditorium, Building A",
+      "organizer": "Placement Cell",
+      "max_attendees": 500,
+      "attendees": [
+        "student001",
+        "student002",
+        "student003"
+      ],
+      "poster_url": "https://example.com/posters/career-fair-2024.jpg",
+      "documents": [
+        {
+          "name": "Event_Schedule.pdf",
+          "url": "https://example.com/docs/schedule.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Company_List.xlsx",
+          "url": "https://example.com/docs/companies.xlsx",
+          "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+      ],
+      "created_at": "2024-05-01T10:00:00.000Z",
+      "updated_at": "2024-05-10T14:30:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    },
+    {
+      "id": "event002",
+      "title": "AI & Machine Learning Workshop",
+      "description": "Hands-on workshop covering fundamentals of AI and ML with industry experts from Google.",
+      "date": "2024-06-20",
+      "time": "14:00",
+      "location": "Computer Lab 301",
+      "organizer": "CS Department",
+      "max_attendees": 50,
+      "attendees": [
+        "student004",
+        "student005"
+      ],
+      "poster_url": "https://example.com/posters/ai-workshop.jpg",
+      "documents": [
+        {
+          "name": "Workshop_Materials.zip",
+          "url": "https://example.com/docs/materials.zip",
+          "type": "application/zip"
+        }
+      ],
+      "created_at": "2024-05-05T09:00:00.000Z",
+      "updated_at": "2024-05-12T11:00:00.000Z",
+      "attendee_count": 2,
+      "status": "past"
+    },
+    {
+      "id": "event003",
+      "title": "Resume Building Seminar",
+      "description": "Learn how to craft an impressive resume and cover letter that stands out to recruiters.",
+      "date": "2024-05-25",
+      "time": "15:30",
+      "location": "Seminar Hall B",
+      "organizer": "Career Services",
+      "max_attendees": 100,
+      "attendees": [
+        "student001",
+        "student006",
+        "student007"
+      ],
+      "poster_url": null,
+      "documents": [],
+      "created_at": "2024-04-20T08:00:00.000Z",
+      "updated_at": "2024-05-01T10:00:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    }
+    ,
+    {
+      "id": "event004",
+      "title": "Startup Pitch Competition",
+      "description": "Present your startup ideas to a panel of investors and win seed funding up to $50,000.",
+      "date": "2024-07-10",
+      "time": "09:00",
+      "location": "Innovation Hub",
+      "organizer": "Entrepreneurship Cell",
+      "max_attendees": 200,
+      "attendees": [
+        "student008"
+      ],
+      "poster_url": "https://example.com/posters/pitch-competition.jpg",
+      "documents": [
+        {
+          "name": "Competition_Rules.pdf",
+          "url": "https://example.com/docs/rules.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Registration_Form.docx",
+          "url": "https://example.com/docs/registration.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        }
+      ],
+      "created_at": "2024-05-15T12:00:00.000Z",
+      "updated_at": "2024-05-20T16:00:00.000Z",
+      "attendee_count": 1,
+      "status": "past"
+    },{
+      "id": "event001",
+      "title": "Tech Career Fair 2024",
+      "description": "Annual career fair featuring top tech companies recruiting for internships and full-time positions.",
+      "date": "2024-06-15",
+      "time": "10:00",
+      "location": "Main Auditorium, Building A",
+      "organizer": "Placement Cell",
+      "max_attendees": 500,
+      "attendees": [
+        "student001",
+        "student002",
+        "student003"
+      ],
+      "poster_url": "https://example.com/posters/career-fair-2024.jpg",
+      "documents": [
+        {
+          "name": "Event_Schedule.pdf",
+          "url": "https://example.com/docs/schedule.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Company_List.xlsx",
+          "url": "https://example.com/docs/companies.xlsx",
+          "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+      ],
+      "created_at": "2024-05-01T10:00:00.000Z",
+      "updated_at": "2024-05-10T14:30:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    },
+    {
+      "id": "event002",
+      "title": "AI & Machine Learning Workshop",
+      "description": "Hands-on workshop covering fundamentals of AI and ML with industry experts from Google.",
+      "date": "2024-06-20",
+      "time": "14:00",
+      "location": "Computer Lab 301",
+      "organizer": "CS Department",
+      "max_attendees": 50,
+      "attendees": [
+        "student004",
+        "student005"
+      ],
+      "poster_url": "https://example.com/posters/ai-workshop.jpg",
+      "documents": [
+        {
+          "name": "Workshop_Materials.zip",
+          "url": "https://example.com/docs/materials.zip",
+          "type": "application/zip"
+        }
+      ],
+      "created_at": "2024-05-05T09:00:00.000Z",
+      "updated_at": "2024-05-12T11:00:00.000Z",
+      "attendee_count": 2,
+      "status": "past"
+    },
+    {
+      "id": "event003",
+      "title": "Resume Building Seminar",
+      "description": "Learn how to craft an impressive resume and cover letter that stands out to recruiters.",
+      "date": "2024-05-25",
+      "time": "15:30",
+      "location": "Seminar Hall B",
+      "organizer": "Career Services",
+      "max_attendees": 100,
+      "attendees": [
+        "student001",
+        "student006",
+        "student007"
+      ],
+      "poster_url": null,
+      "documents": [],
+      "created_at": "2024-04-20T08:00:00.000Z",
+      "updated_at": "2024-05-01T10:00:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    }
+    ,
+    {
+      "id": "event004",
+      "title": "Startup Pitch Competition",
+      "description": "Present your startup ideas to a panel of investors and win seed funding up to $50,000.",
+      "date": "2024-07-10",
+      "time": "09:00",
+      "location": "Innovation Hub",
+      "organizer": "Entrepreneurship Cell",
+      "max_attendees": 200,
+      "attendees": [
+        "student008"
+      ],
+      "poster_url": "https://example.com/posters/pitch-competition.jpg",
+      "documents": [
+        {
+          "name": "Competition_Rules.pdf",
+          "url": "https://example.com/docs/rules.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Registration_Form.docx",
+          "url": "https://example.com/docs/registration.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        }
+      ],
+      "created_at": "2024-05-15T12:00:00.000Z",
+      "updated_at": "2024-05-20T16:00:00.000Z",
+      "attendee_count": 1,
+      "status": "past"
+    },{
+      "id": "event001",
+      "title": "Tech Career Fair 2024",
+      "description": "Annual career fair featuring top tech companies recruiting for internships and full-time positions.",
+      "date": "2024-06-15",
+      "time": "10:00",
+      "location": "Main Auditorium, Building A",
+      "organizer": "Placement Cell",
+      "max_attendees": 500,
+      "attendees": [
+        "student001",
+        "student002",
+        "student003"
+      ],
+      "poster_url": "https://example.com/posters/career-fair-2024.jpg",
+      "documents": [
+        {
+          "name": "Event_Schedule.pdf",
+          "url": "https://example.com/docs/schedule.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Company_List.xlsx",
+          "url": "https://example.com/docs/companies.xlsx",
+          "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+      ],
+      "created_at": "2024-05-01T10:00:00.000Z",
+      "updated_at": "2024-05-10T14:30:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    },
+    {
+      "id": "event002",
+      "title": "AI & Machine Learning Workshop",
+      "description": "Hands-on workshop covering fundamentals of AI and ML with industry experts from Google.",
+      "date": "2024-06-20",
+      "time": "14:00",
+      "location": "Computer Lab 301",
+      "organizer": "CS Department",
+      "max_attendees": 50,
+      "attendees": [
+        "student004",
+        "student005"
+      ],
+      "poster_url": "https://example.com/posters/ai-workshop.jpg",
+      "documents": [
+        {
+          "name": "Workshop_Materials.zip",
+          "url": "https://example.com/docs/materials.zip",
+          "type": "application/zip"
+        }
+      ],
+      "created_at": "2024-05-05T09:00:00.000Z",
+      "updated_at": "2024-05-12T11:00:00.000Z",
+      "attendee_count": 2,
+      "status": "past"
+    },
+    {
+      "id": "event003",
+      "title": "Resume Building Seminar",
+      "description": "Learn how to craft an impressive resume and cover letter that stands out to recruiters.",
+      "date": "2024-05-25",
+      "time": "15:30",
+      "location": "Seminar Hall B",
+      "organizer": "Career Services",
+      "max_attendees": 100,
+      "attendees": [
+        "student001",
+        "student006",
+        "student007"
+      ],
+      "poster_url": null,
+      "documents": [],
+      "created_at": "2024-04-20T08:00:00.000Z",
+      "updated_at": "2024-05-01T10:00:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    }
+    ,
+    {
+      "id": "event004",
+      "title": "Startup Pitch Competition",
+      "description": "Present your startup ideas to a panel of investors and win seed funding up to $50,000.",
+      "date": "2024-07-10",
+      "time": "09:00",
+      "location": "Innovation Hub",
+      "organizer": "Entrepreneurship Cell",
+      "max_attendees": 200,
+      "attendees": [
+        "student008"
+      ],
+      "poster_url": "https://example.com/posters/pitch-competition.jpg",
+      "documents": [
+        {
+          "name": "Competition_Rules.pdf",
+          "url": "https://example.com/docs/rules.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Registration_Form.docx",
+          "url": "https://example.com/docs/registration.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        }
+      ],
+      "created_at": "2024-05-15T12:00:00.000Z",
+      "updated_at": "2024-05-20T16:00:00.000Z",
+      "attendee_count": 1,
+      "status": "past"
+    },{
+      "id": "event001",
+      "title": "Tech Career Fair 2024",
+      "description": "Annual career fair featuring top tech companies recruiting for internships and full-time positions.",
+      "date": "2024-06-15",
+      "time": "10:00",
+      "location": "Main Auditorium, Building A",
+      "organizer": "Placement Cell",
+      "max_attendees": 500,
+      "attendees": [
+        "student001",
+        "student002",
+        "student003"
+      ],
+      "poster_url": "https://example.com/posters/career-fair-2024.jpg",
+      "documents": [
+        {
+          "name": "Event_Schedule.pdf",
+          "url": "https://example.com/docs/schedule.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Company_List.xlsx",
+          "url": "https://example.com/docs/companies.xlsx",
+          "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+      ],
+      "created_at": "2024-05-01T10:00:00.000Z",
+      "updated_at": "2024-05-10T14:30:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    },
+    {
+      "id": "event002",
+      "title": "AI & Machine Learning Workshop",
+      "description": "Hands-on workshop covering fundamentals of AI and ML with industry experts from Google.",
+      "date": "2024-06-20",
+      "time": "14:00",
+      "location": "Computer Lab 301",
+      "organizer": "CS Department",
+      "max_attendees": 50,
+      "attendees": [
+        "student004",
+        "student005"
+      ],
+      "poster_url": "https://example.com/posters/ai-workshop.jpg",
+      "documents": [
+        {
+          "name": "Workshop_Materials.zip",
+          "url": "https://example.com/docs/materials.zip",
+          "type": "application/zip"
+        }
+      ],
+      "created_at": "2024-05-05T09:00:00.000Z",
+      "updated_at": "2024-05-12T11:00:00.000Z",
+      "attendee_count": 2,
+      "status": "past"
+    },
+    {
+      "id": "event003",
+      "title": "Resume Building Seminar",
+      "description": "Learn how to craft an impressive resume and cover letter that stands out to recruiters.",
+      "date": "2024-05-25",
+      "time": "15:30",
+      "location": "Seminar Hall B",
+      "organizer": "Career Services",
+      "max_attendees": 100,
+      "attendees": [
+        "student001",
+        "student006",
+        "student007"
+      ],
+      "poster_url": null,
+      "documents": [],
+      "created_at": "2024-04-20T08:00:00.000Z",
+      "updated_at": "2024-05-01T10:00:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    }
+    ,
+    {
+      "id": "event004",
+      "title": "Startup Pitch Competition",
+      "description": "Present your startup ideas to a panel of investors and win seed funding up to $50,000.",
+      "date": "2024-07-10",
+      "time": "09:00",
+      "location": "Innovation Hub",
+      "organizer": "Entrepreneurship Cell",
+      "max_attendees": 200,
+      "attendees": [
+        "student008"
+      ],
+      "poster_url": "https://example.com/posters/pitch-competition.jpg",
+      "documents": [
+        {
+          "name": "Competition_Rules.pdf",
+          "url": "https://example.com/docs/rules.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Registration_Form.docx",
+          "url": "https://example.com/docs/registration.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        }
+      ],
+      "created_at": "2024-05-15T12:00:00.000Z",
+      "updated_at": "2024-05-20T16:00:00.000Z",
+      "attendee_count": 1,
+      "status": "past"
+    },{
+      "id": "event001",
+      "title": "Tech Career Fair 2024",
+      "description": "Annual career fair featuring top tech companies recruiting for internships and full-time positions.",
+      "date": "2024-06-15",
+      "time": "10:00",
+      "location": "Main Auditorium, Building A",
+      "organizer": "Placement Cell",
+      "max_attendees": 500,
+      "attendees": [
+        "student001",
+        "student002",
+        "student003"
+      ],
+      "poster_url": "https://example.com/posters/career-fair-2024.jpg",
+      "documents": [
+        {
+          "name": "Event_Schedule.pdf",
+          "url": "https://example.com/docs/schedule.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Company_List.xlsx",
+          "url": "https://example.com/docs/companies.xlsx",
+          "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+      ],
+      "created_at": "2024-05-01T10:00:00.000Z",
+      "updated_at": "2024-05-10T14:30:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    },
+    {
+      "id": "event002",
+      "title": "AI & Machine Learning Workshop",
+      "description": "Hands-on workshop covering fundamentals of AI and ML with industry experts from Google.",
+      "date": "2024-06-20",
+      "time": "14:00",
+      "location": "Computer Lab 301",
+      "organizer": "CS Department",
+      "max_attendees": 50,
+      "attendees": [
+        "student004",
+        "student005"
+      ],
+      "poster_url": "https://example.com/posters/ai-workshop.jpg",
+      "documents": [
+        {
+          "name": "Workshop_Materials.zip",
+          "url": "https://example.com/docs/materials.zip",
+          "type": "application/zip"
+        }
+      ],
+      "created_at": "2024-05-05T09:00:00.000Z",
+      "updated_at": "2024-05-12T11:00:00.000Z",
+      "attendee_count": 2,
+      "status": "past"
+    },
+    {
+      "id": "event003",
+      "title": "Resume Building Seminar",
+      "description": "Learn how to craft an impressive resume and cover letter that stands out to recruiters.",
+      "date": "2024-05-25",
+      "time": "15:30",
+      "location": "Seminar Hall B",
+      "organizer": "Career Services",
+      "max_attendees": 100,
+      "attendees": [
+        "student001",
+        "student006",
+        "student007"
+      ],
+      "poster_url": null,
+      "documents": [],
+      "created_at": "2024-04-20T08:00:00.000Z",
+      "updated_at": "2024-05-01T10:00:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    }
+    ,
+    {
+      "id": "event004",
+      "title": "Startup Pitch Competition",
+      "description": "Present your startup ideas to a panel of investors and win seed funding up to $50,000.",
+      "date": "2024-07-10",
+      "time": "09:00",
+      "location": "Innovation Hub",
+      "organizer": "Entrepreneurship Cell",
+      "max_attendees": 200,
+      "attendees": [
+        "student008"
+      ],
+      "poster_url": "https://example.com/posters/pitch-competition.jpg",
+      "documents": [
+        {
+          "name": "Competition_Rules.pdf",
+          "url": "https://example.com/docs/rules.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Registration_Form.docx",
+          "url": "https://example.com/docs/registration.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        }
+      ],
+      "created_at": "2024-05-15T12:00:00.000Z",
+      "updated_at": "2024-05-20T16:00:00.000Z",
+      "attendee_count": 1,
+      "status": "past"
+    },{
+      "id": "event001",
+      "title": "Tech Career Fair 2024",
+      "description": "Annual career fair featuring top tech companies recruiting for internships and full-time positions.",
+      "date": "2024-06-15",
+      "time": "10:00",
+      "location": "Main Auditorium, Building A",
+      "organizer": "Placement Cell",
+      "max_attendees": 500,
+      "attendees": [
+        "student001",
+        "student002",
+        "student003"
+      ],
+      "poster_url": "https://example.com/posters/career-fair-2024.jpg",
+      "documents": [
+        {
+          "name": "Event_Schedule.pdf",
+          "url": "https://example.com/docs/schedule.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Company_List.xlsx",
+          "url": "https://example.com/docs/companies.xlsx",
+          "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        }
+      ],
+      "created_at": "2024-05-01T10:00:00.000Z",
+      "updated_at": "2024-05-10T14:30:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    },
+    {
+      "id": "event002",
+      "title": "AI & Machine Learning Workshop",
+      "description": "Hands-on workshop covering fundamentals of AI and ML with industry experts from Google.",
+      "date": "2024-06-20",
+      "time": "14:00",
+      "location": "Computer Lab 301",
+      "organizer": "CS Department",
+      "max_attendees": 50,
+      "attendees": [
+        "student004",
+        "student005"
+      ],
+      "poster_url": "https://example.com/posters/ai-workshop.jpg",
+      "documents": [
+        {
+          "name": "Workshop_Materials.zip",
+          "url": "https://example.com/docs/materials.zip",
+          "type": "application/zip"
+        }
+      ],
+      "created_at": "2024-05-05T09:00:00.000Z",
+      "updated_at": "2024-05-12T11:00:00.000Z",
+      "attendee_count": 2,
+      "status": "past"
+    },
+    {
+      "id": "event003",
+      "title": "Resume Building Seminar",
+      "description": "Learn how to craft an impressive resume and cover letter that stands out to recruiters.",
+      "date": "2024-05-25",
+      "time": "15:30",
+      "location": "Seminar Hall B",
+      "organizer": "Career Services",
+      "max_attendees": 100,
+      "attendees": [
+        "student001",
+        "student006",
+        "student007"
+      ],
+      "poster_url": null,
+      "documents": [],
+      "created_at": "2024-04-20T08:00:00.000Z",
+      "updated_at": "2024-05-01T10:00:00.000Z",
+      "attendee_count": 3,
+      "status": "past"
+    }
+    ,
+    {
+      "id": "event004",
+      "title": "Startup Pitch Competition",
+      "description": "Present your startup ideas to a panel of investors and win seed funding up to $50,000.",
+      "date": "2026-07-10",
+      "time": "09:00",
+      "location": "Innovation Hub",
+      "organizer": "Entrepreneurship Cell",
+      "max_attendees": 200,
+      "attendees": [
+        "student008"
+      ],
+      "poster_url": "https://example.com/posters/pitch-competition.jpg",
+      "documents": [
+        {
+          "name": "Competition_Rules.pdf",
+          "url": "https://example.com/docs/rules.pdf",
+          "type": "application/pdf"
+        },
+        {
+          "name": "Registration_Form.docx",
+          "url": "https://example.com/docs/registration.docx",
+          "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        }
+      ],
+      "created_at": "2024-05-15T12:00:00.000Z",
+      "updated_at": "2024-05-20T16:00:00.000Z",
+      "attendee_count": 1,
+      "status": "past"
+    },
+]
+
+// Sample Students for Attendance
+const mockStudents = [
+  {
+    id: "student001",
+    name: "John Doe",
+    email: "john.doe@college.edu",
+    usn: "CS2021001",
+    department: "Computer Science"
+  },
+  {
+    id: "student002",
+    name: "Jane Smith",
+    email: "jane.smith@college.edu",
+    usn: "CS2021002",
+    department: "Computer Science"
+  },
+  {
+    id: "student003",
+    name: "Michael Johnson",
+    email: "michael.j@college.edu",
+    usn: "IT2021015",
+    department: "Information Technology"
+  }
+];
+
+
+// Assuming you have an Express appinstance
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+function getEventStatus(eventDate) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const evtDate = new Date(eventDate);
+  evtDate.setHours(0, 0, 0, 0);
+
+  if (evtDate < today) {
+    return 'past';
+  } else if (evtDate.getTime() === today.getTime()) {
+    return 'today';
+  } else {
+    return 'upcoming';
+  }
+}
+
+// ============================================
+// ADMIN ENDPOINTS
+// ============================================
+
+// GET /api/admin/events - Get all events (with pagination)
+app.get('/auth/admin/events', (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const search = req.query.search || '';
+
+  let filteredEvents = mockEvents;
+  if (search) {
+    filteredEvents = mockEvents.filter(event =>
+      event.title.toLowerCase().includes(search.toLowerCase()) ||
+      event.organizer.toLowerCase().includes(search.toLowerCase())
+    );
+  }
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedEvents = filteredEvents.slice(startIndex, endIndex);
+
+  res.json({
+    success: true,
+    events: paginatedEvents.map(event => ({
+      ...event,
+      attendee_count: event.attendees.length,
+      status: getEventStatus(event.date)
+    })),
+    current_page: page,
+    total_pages: Math.ceil(filteredEvents.length / limit),
+    total_events: filteredEvents.length
+  });
+});
+
+// GET /api/admin/event/:id - Get single event details
+app.get('/auth/admin/event/:id', (req, res) => {
+  const event = mockEvents.find(e => e.id === req.params.id);
+
+  if (!event) {
+    return res.status(404).json({
+      success: false,
+      message: "Event not found"
+    });
+  }
+
+  const attendeesWithDetails = event.attendees.map(studentId => {
+    const student = mockStudents.find(s => s.id === studentId);
+    return student || { id: studentId, name: "Unknown Student" };
+  });
+
+  res.json({
+    success: true,
+    event: {
+      ...event,
+      attendees: attendeesWithDetails,
+      attendee_count: event.attendees.length,
+      status: getEventStatus(event.date)
+    }
+  });
+});
+
+// POST /api/admin/events - Create new event
+app.post('/auth/admin/events', (req, res) => {
+  const {
+    title,
+    description,
+    date,
+    time,
+    location,
+    organizer,
+    max_attendees,
+    poster_url,
+    documents
+  } = req.body;
+
+  // if (!title || !date) {
+  //   return res.status(400).json({
+  //     success: false,
+  //     message: "Missing required fields"
+  //   });
+  // }
+
+  const newEvent = {
+    id: `event${Date.now()}`,
+    title,
+    description: description || "",
+    date,
+    time,
+    location,
+    organizer: organizer || "Admin",
+    max_attendees: max_attendees || 100,
+    attendees: [],
+    poster_url: poster_url || null,
+    documents: documents || [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  mockEvents.push(newEvent);
+
+  res.status(201).json({
+    success: true,
+    message: "Event created successfully",
+    event: newEvent
+  });
+});
+
+// PUT /auth/admin/event/:id - Update event
+app.put('/auth/admin/event/:id', (req, res) => {
+  const eventIndex = mockEvents.findIndex(e => e.id === req.params.id);
+
+  if (eventIndex === -1) {
+    return res.status(404).json({
+      success: false,
+      message: "Event not found"
+    });
+  }
+
+  const updatedEvent = {
+    ...mockEvents[eventIndex],
+    ...req.body,
+    id: req.params.id,
+    updatedAt: new Date().toISOString()
+  };
+
+  mockEvents[eventIndex] = updatedEvent;
+
+  res.json({
+    success: true,
+    message: "Event updated successfully",
+    event: updatedEvent
+  });
+});
+
+// DELETE /auth/admin/event/:id - Delete event
+app.delete('/auth/admin/event/:id', (req, res) => {
+  const eventIndex = mockEvents.findIndex(e => e.id === req.params.id);
+
+  if (eventIndex === -1) {
+    return res.status(404).json({
+      success: false,
+      message: "Event not found"
+    });
+  }
+
+  mockEvents.splice(eventIndex, 1);
+
+  res.json({
+    success: true,
+    message: "Event deleted successfully"
+  });
+});
+
+// POST /auth/admin/event/upload - Upload poster or documents
+app.post('/auth/admin/event/upload', (req, res) => {
+  const file = req.file; 
+
+  if (!file) {
+    return res.status(400).json({
+      success: false,
+      message: "No file uploaded"
+    });
+  }
+
+  const fileUrl = `https://example.com/uploads/${Date.now()}_${file.originalname}`;
+
+  res.json({
+    success: true,
+    message: "File uploaded successfully",
+    url: fileUrl,
+    fileName: file.originalname,
+    fileType: file.mimetype
+  });
+});
+
+// POST /auth/admin/event/:id/mark-attendance - Mark attendance manually
+app.post('/auth/admin/event/:id/mark-attendance', (req, res) => {
+  const { studentId } = req.body;
+  const event = mockEvents.find(e => e.id === req.params.id);
+
+  if (!event) {
+    return res.status(404).json({
+      success: false,
+      message: "Event not found"
+    });
+  }
+
+  if (event.attendees.includes(studentId)) {
+    return res.status(400).json({
+      success: false,
+      message: "Attendance already marked"
+    });
+  }
+
+  if (event.attendees.length >= event.max_attendees) {
+    return res.status(400).json({
+      success: false,
+      message: "Event is full"
+    });
+  }
+
+  event.attendees.push(studentId);
+  event.updatedAt = new Date().toISOString();
+
+  res.json({
+    success: true,
+    message: "Attendance marked successfully",
+    attendee_count: event.attendees.length
+  });
+});
+
+// POST /auth/admin/event/:id/scan-qr - Scan QR code for attendance
+app.post('/auth/admin/event/:id/scan-qr', (req, res) => {
+  const { qrData } = req.body;
+  const event = mockEvents.find(e => e.id === req.params.id);
+
+  if (!event) {
+    return res.status(404).json({
+      success: false,
+      message: "Event not found"
+    });
+  }
+
+  const studentId = qrData.replace('STUDENT:', '');
+
+  if (event.attendees.includes(studentId)) {
+    return res.status(400).json({
+      success: false,
+      message: "Attendance already marked"
+    });
+  }
+
+  if (event.attendees.length >= event.max_attendees) {
+    return res.status(400).json({
+      success: false,
+      message: "Event is full"
+    });
+  }
+
+  event.attendees.push(studentId);
+  event.updatedAt = new Date().toISOString();
+
+  const student = mockStudents.find(s => s.id === studentId);
+
+  res.json({
+    success: true,
+    message: "Attendance marked successfully",
+    student: student || { id: studentId, name: "Unknown Student" },
+    attendee_count: event.attendees.length
+  });
+});
+
+
+// ============================================
+// STUDENT ENDPOINTS
+// ============================================
+
+// GET /auth/student/events - Get all events for students
+app.get('/auth/events', (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 12;
+  const studentId = req.user?.id || "student001";
+
+  const enhancedEvents = mockEvents.map(event => ({
+    id: event.id,
+    title: event.title,
+    description: event.description,
+    date: event.date,
+    time: event.time,
+    location: event.location,
+    organizer: event.organizer,
+    max_attendees: event.max_attendees,
+    attendee_count: event.attendees.length,
+    poster_url: event.poster_url,
+    status: getEventStatus(event.date),
+    attended: event.attendees.includes(studentId),
+    isFull: event.attendees.length >= event.max_attendees
+  }));
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedEvents = enhancedEvents.slice(startIndex, endIndex);
+
+  res.json({
+    success: true,
+    events: paginatedEvents,
+    currentPage: page,
+    totalPages: Math.ceil(enhancedEvents.length / limit),
+    totalEvents: enhancedEvents.length
+  });
+});
+
+// GET /auth/student/event/:id - Get single event details for student
+app.get('/auth/event/:id', (req, res) => {
+  const studentId = req.user?.id || "student001";
+  const event = mockEvents[0]
+
+
+  res.json({
+    success: true,
+    event: {
+      id: event.id,
+      title: event.title,
+      description: event.description,
+      date: event.date,
+      time: event.time,
+      location: event.location,
+      organizer: event.organizer,
+      max_attendees: event.max_attendees,
+      attendee_count: event.attendees.length,
+      poster_url: event.poster_url,
+      documents: event.documents,
+      status: getEventStatus(event.date),
+      attended: event.attendees.includes(studentId),
+      isFull: event.attendees.length >= event.max_attendees
+    }
+  });
+});
+
+// POST /auth/student/event/:id/register - Register for event
+app.post('/auth/event/:id/register', (req, res) => {
+  const studentId = req.user?.id || "student001";
+  const event = mockEvents.find(e => e.id === req.params.id);
+
+  if (!event) {
+    return res.status(404).json({
+      success: false,
+      message: "Event not found"
+    });
+  }
+
+  if (event.attendees.includes(studentId)) {
+    return res.status(400).json({
+      success: false,
+      message: "You are already registered for this event"
+    });
+  }
+
+  if (event.attendees.length >= event.max_attendees) {
+    return res.status(400).json({
+      success: false,
+      message: "Event is full. Registration closed."
+    });
+  }
+
+  const eventDate = new Date(event.date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  if (eventDate < today) {
+    return res.status(400).json({
+      success: false,
+      message: "Cannot register for past events"
+    });
+  }
+
+  event.attendees.push(studentId);
+  event.updatedAt = new Date().toISOString();
+
+  res.json({
+    success: true,
+    message: "Successfully registered for the event",
+    attendee_count: event.attendees.length
+  });
+});
+
+// DELETE /auth/student/event/:id/unregister - Unregister from event
+app.delete('/auth/event/:id/unregister', (req, res) => {
+  const studentId = req.user?.id || "student001";
+  const event = mockEvents.find(e => e.id === req.params.id);
+
+  if (!event) {
+    return res.status(404).json({
+      success: false,
+      message: "Event not found"
+    });
+  }
+
+  const attendeeIndex = event.attendees.indexOf(studentId);
+
+  if (attendeeIndex === -1) {
+    return res.status(400).json({
+      success: false,
+      message: "You are not registered for this event"
+    });
+  }
+
+  event.attendees.splice(attendeeIndex, 1);
+  event.updatedAt = new Date().toISOString();
+
+  res.json({
+    success: true,
+    message: "Successfully unregistered from the event",
+    attendee_count: event.attendees.length
+  });
+});
+
+// Export app
+
+
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:3000`, port);
